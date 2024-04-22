@@ -38,6 +38,10 @@ body {
   box-shadow: 0 0 20px #0000000d;
 }
 
+.textshadow {
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 
 
 .wrapper {
@@ -76,7 +80,7 @@ body {
 .contents {
   position: relative;
 	min-height: 100vh;
-	margin-top: 20px;
+	margin-top: 40px;
 	
 	/* background-color: gray; */
 }
