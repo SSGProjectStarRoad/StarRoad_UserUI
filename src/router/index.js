@@ -14,6 +14,11 @@ const routes = [
     path: '/reward/main',
     component: () => import('@/views/reward/RewardMain.vue'),
   },
+  {
+    path: '/storelist',
+    component: () => import('@/views/store.vue'),
+  },
+
   // 추가적인 라우트...
 ];
 
