@@ -2,6 +2,7 @@
   <div class="contents">
     <!-- 필요에 따라 back.png 살릴것 -->
     <!-- <img class="backimg" src="@/img/back.png" alt="" /> -->
+    메인
   </div>
 </template>
 
