@@ -10,6 +10,10 @@ const routes = [
     path: '/main',
     component: () => import('@/views/MainView.vue'),
   },
+  {
+    path: '/reward/main',
+    component: () => import('@/views/reward/RewardMain.vue'),
+  },
   // 추가적인 라우트...
 ];
 
