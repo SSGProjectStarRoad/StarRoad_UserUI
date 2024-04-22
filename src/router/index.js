@@ -10,6 +10,10 @@ const routes = [
     path: '/main',
     component: () => import('@/views/MainView.vue'),
   },
+  {
+    path:'/storelist',
+    component: ()=> import('@/views/store.vue'),
+  }
   // 추가적인 라우트...
 ];
 
