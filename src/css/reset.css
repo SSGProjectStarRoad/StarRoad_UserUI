@@ -1,0 +1,71 @@
+html,
+body {
+
+	background-color: white;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	font-family: 'Spoqa Han Sans', 'Sans-serif';
+}
+
+.wrapper {
+	position: relative;
+	min-height: 100vh;
+	max-width: 480px;
+    margin: 0 auto;
+    width: auto;
+    position: relative;
+	box-shadow: 0 0 20px #0000000d;
+}
+
+/* 배경색은 구분용, 나중에 삭제할것 */
+.header {
+	top: 0;
+	font-size: 30px;
+	position: sticky;
+	height: 48px;
+	align-content: center;
+  text-align: center;
+	z-index: 99;
+	background-color: white;
+}
+
+
+.contents {
+	min-height: 100vh;
+	top: 90px;
+	margin-top: 20px;
+	
+	/* background-color: gray; */
+}
+
+.footer {
+	display: flex;
+	/* background-color: blueviolet; */
+	width: 480px;
+	height: 48px;
+	justify-content: center;
+	position: fixed;
+    bottom: 0;
+    z-index: 99;
+}
+
+.footer .menu {
+	position: relative;
+    display: block;
+    flex: 1;
+    height: 48px;
+		align-content: center;
+		text-align: center;
+
+}
+
+.footer img {
+	width: 30px;
+	height: 30px;
+	/* display: block; */
+}

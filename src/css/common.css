@@ -1,0 +1,119 @@
+html,
+body {
+
+	background-color: white;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	font-family: 'Spoqa Han Sans', 'Sans-serif';
+}
+
+/* common */
+
+.navy {
+  color: #407AFF;
+}
+
+.gray {
+  color: #8391A1;
+}
+
+.mint {
+  color: #6CFACD;
+}
+
+.border-degree {
+  border-radius: 8px;
+}
+
+.shadow {
+  box-shadow: 0 0 20px #0000000d;
+}
+
+
+
+.wrapper {
+	position: relative;
+	min-height: 100vh;
+	max-width: 480px;
+    margin: 0 auto;
+    width: auto;
+    position: relative;
+	box-shadow: 0 0 20px #0000000d;
+}
+
+/* header */
+
+/* 배경색은 구분용, 나중에 삭제할것 */
+.header {
+  display: flex;
+  justify-content: center;
+  	top: 0;
+	font-size: 30px;
+	position: sticky;
+	height: 48px;
+  text-align: center;
+	z-index: 99;
+	background-color: white;
+}
+
+.header img{
+  margin-right: 10px;
+  width: 40px;
+	height: 40px;
+}
+
+/* main */
+
+.contents {
+  position: relative;
+	min-height: 100vh;
+	margin-top: 20px;
+	
+	/* background-color: gray; */
+}
+
+.contents .backimg{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 40px;
+  height: 40px;
+}
+
+
+
+/* footer */
+.footer {
+	display: flex;
+	/* background-color: blueviolet; */
+	width: 480px;
+	height: 48px;
+	justify-content: center;
+	position: fixed;
+    bottom: 0;
+    z-index: 99;
+}
+
+.footer .menu {
+	position: relative;
+    display: block;
+    flex: 1;
+    height: 48px;
+		align-content: center;
+		text-align: center;
+
+}
+
+.footer img {
+	width: 30px;
+	height: 30px;
+	/* display: block; */
+}
+
+
+
