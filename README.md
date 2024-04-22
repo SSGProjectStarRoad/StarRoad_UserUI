@@ -8,7 +8,8 @@ https://github.com/SSGView/SSGBoardProject
 <br>
 
 1. 코드 작성 전, github의 업데이트 내용을 따라가야 하기 떄문에 코드 현황 상태를 가져옵니다.
-- `git pull`
+- `git pull origin main`
+- main branch, 나의 브랜치에서 모두 pull 하여 동기화 유지
 
 
 2. issue 에 주어진 템플릿에 따라 자신이 무엇을 하는지 작성 합니다.
