@@ -17,7 +17,7 @@ https://github.com/SSGView/SSGBoardProject
 5. commit 을 할 떄 자신이 올린 이슈 넘버를 포함해서 작성합니다
     - `git commit -m "#1 구체적으로 무엇을 했는가"`
 
-6. `git push origin 나의브랜치`
+6. `git push origin 나의브랜치`   안될 경우 `git push --all origin`
 7. merge가 된 것을 확인 하면 다시 `git pull`
 
 # npm 16.20.2 d
