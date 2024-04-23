@@ -2,11 +2,19 @@
   <div class="contents">
     <img src="@/img/spaceman_big.png" alt="" />
     <h2>탐색 중</h2>
+    <!-- 임시태그 -->
+    <button @click="confirmUse">쿠폰사용완료</button>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    confirmUse() {
+      this.$router.push('/reward/select?modal=true'); // 쿼리 파라미터로 모달 상태 전달
+    },
+  },
+};
 </script>
 
 <style scoped>

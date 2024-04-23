@@ -1,32 +1,32 @@
 <template>
   <div class="contents">
+    <!-- 모달 배경 -->
+    <div class="modal-backdrop" v-if="isModalVisible" @click="closeModal"></div>
+
+    <!-- 모달 컨텐츠 -->
+    <div class="modal" v-if="isModalVisible">
+      <h3>쿠폰 사용이 확인되었습니다!</h3>
+      <p>리뷰를 작성해주세요</p>
+      <a href="/review">리뷰쓰기</a>
+    </div>
     <div class="rewardcard">
       <div class="swiper-container">
         <div class="swiper-wrapper">
-          <div class="swiper-slide card">
-            <h1>첫번째 별</h1>
-            <div class="couponimg"><img src="" alt="쿠폰이미지" /></div>
-            <a href="javascript:void(0)" class="btn">의류쇼핑쿠폰</a>
-          </div>
-          <div class="swiper-slide card">
-            <h1>두번째 별</h1>
-            <div class="couponimg"><img src="" alt="쿠폰이미지" /></div>
-            <a href="javascript:void(0)" class="btn">의류쇼핑쿠폰</a>
-          </div>
-          <div class="swiper-slide card">
-            <h1>세번째 별</h1>
-            <div class="couponimg"><img src="" alt="쿠폰이미지" /></div>
-            <a href="javascript:void(0)" class="btn">의류쇼핑쿠폰</a>
-          </div>
-          <div class="swiper-slide card">
-            <h1>네번째 별</h1>
-            <div class="couponimg"><img src="" alt="쿠폰이미지" /></div>
-            <a href="javascript:void(0)" class="btn">의류쇼핑쿠폰</a>
-          </div>
-          <div class="swiper-slide card">
-            <h1>다섯번째 별</h1>
-            <div class="couponimg"><img src="" alt="쿠폰이미지" /></div>
-            <a href="javascript:void(0)" class="btn">의류쇼핑쿠폰</a>
+          <div
+            class="swiper-slide card"
+            v-for="(card, index) in cards"
+            :key="index"
+          >
+            <h1>{{ card.title }}</h1>
+            <div class="couponimg"><img :src="card.image" alt="" /></div>
+            <a
+              href="javascript:void(0)"
+              class="btn"
+              v-if="card.showButton"
+              @click="issueCoupon(index)"
+              >{{ card.buttonText }}</a
+            >
+            <p :class="card.fadeClass">{{ card.message }}</p>
           </div>
         </div>
       </div>
@@ -39,8 +39,86 @@
 import { onMounted } from 'vue';
 import Swiper from 'swiper';
 import 'swiper/swiper-bundle.css';
+import mystar1 from '@/img/mystar1.png';
 export default {
+  data() {
+    return {
+      // 기존 카드 데이터
+      isModalVisible: false, // 모달 상태
+      cards: [
+        {
+          title: '첫번째 별',
+          image: mystar1,
+          message: '',
+          showButton: true,
+          buttonText: '의류쇼핑쿠폰',
+        },
+        {
+          title: '두번째 별',
+          image: '@/img/mystar1.png',
+          message: '',
+          showButton: true,
+          buttonText: '의류쇼핑쿠폰',
+        },
+        {
+          title: '세번째 별',
+          image: '@/img/mystar1.png',
+          message: '',
+          showButton: true,
+          buttonText: '의류쇼핑쿠폰',
+        },
+        {
+          title: '네번째 별',
+          image: '@/img/mystar1.png',
+          message: '',
+          showButton: true,
+          buttonText: '의류쇼핑쿠폰',
+        },
+        {
+          title: '다섯번째 별',
+          image: '@/img/mystar1.png',
+          message: '',
+          showButton: true,
+          buttonText: '의류쇼핑쿠폰',
+        },
+      ],
+    };
+  },
+  methods: {
+    closeModal() {
+      this.isModalVisible = false;
+      this.$router.push('/reward/select'); // 모달을 닫을 때 URL에서 쿼리 파라미터 제거
+    },
+    openModal() {
+      this.isModalVisible = true;
+    },
+    checkModalState() {
+      if (this.$route.query.modal) {
+        this.isModalVisible = true; // URL 쿼리 파라미터에 따라 모달 상태 변경
+      }
+    },
+
+    issueCoupon(index) {
+      // 메시지 초기화
+      this.cards[index].message = '';
+      // 변경 사항을 다음 틱에서 적용하여 Vue가 DOM 업데이트를 반영하도록 함
+      this.$nextTick(() => {
+        this.cards[index].message = '쿠폰이 발급되었습니다.';
+        this.cards[index].showButton = false; // 버튼을 숨깁니다.
+        // 클래스를 직접 할당
+        this.cards[index].fadeClass = 'fade-in';
+        // 5초 후에 페이지 이동
+        setTimeout(() => {
+          this.redirectToSearch();
+        }, 3000);
+      });
+    },
+    redirectToSearch() {
+      window.location.href = '/reward/search';
+    },
+  },
   mounted() {
+    this.checkModalState();
     new Swiper('.rewardcard .swiper-container', {
       on: {
         slideChange: function () {
@@ -84,6 +162,30 @@ export default {
 </script>
 
 <style scoped>
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 반투명 회색 배경 */
+  z-index: 1000; /* 모달을 다른 요소들 위에 표시 */
+}
+
+.modal {
+  position: fixed;
+  top: 180px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001; /* 배경보다 앞에 표시 */
+  background-color: white;
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+  border: 8px solid var(--mint-color);
+  /* 스타일링은 원하는 대로 조정 */
+}
+
 .contents {
   overflow: hidden;
 }
@@ -95,12 +197,12 @@ export default {
 .rewardcard .swiper-container {
   /* overflow: hidden; */
   /* width: 100%; 컨테이너를 부모의 전체 너비로 설정 */
-  max-width: 750px; /* 최대 너비를 제한하고 싶다면 여기서 설정 */
+  max-width: 700px; /* 최대 너비를 제한하고 싶다면 여기서 설정 */
   height: 320px;
   position: absolute;
   top: 180px;
   left: 50%; /* 중앙 정렬을 위해 사용 */
-  transform: translateX(-57%); /* 정확히 중앙에 배치 */
+  transform: translateX(-57.5%); /* 정확히 중앙에 배치 */
 }
 .card {
   align-content: center;
@@ -114,5 +216,18 @@ export default {
   color: var(--navy-color);
   height: 120px;
   margin-bottom: 10px;
+}
+.couponimg img {
+  width: 100px;
+}
+
+.card p {
+  transition: opacity 1s ease-in-out;
+  opacity: 0; /* 초기에는 투명 */
+  font-size: 14px; /* 폰트 크기 줄임 */
+}
+
+.card p.fade-in {
+  opacity: 1; /* 메시지가 변경되면 투명도를 1로 설정 */
 }
 </style>
