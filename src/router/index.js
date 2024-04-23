@@ -31,9 +31,29 @@ const routes = [
     component: () => import('@/views/reward/RewardCompleted.vue'),
   },
   {
-    path: '/storelist',
-    component: () => import('@/views/store.vue'),
+    path: '/store/main',
+    component: () => import('@/views/store/StoreMain.vue'),
   },
+  {
+    path: '/store/detail',
+    component: () => import('@/views/store/StoreDetail.vue'),
+  },
+  {
+    path: '/store/come',
+    component: () => import('@/views/store/StoreCome.vue'),
+  },
+  {
+    path: '/store/mallmap',
+    component: () => import('@/views/store/MallMap.vue'),
+  },
+  {
+    path: '/store/review',
+    component: ()=> import('@/views/store/StoreReview.vue'),
+  },
+  {
+    path: '/store/map',
+    component:()=> import('@/views/store/StoreMap.vue')
+  }
 
   // 추가적인 라우트...
 ];
