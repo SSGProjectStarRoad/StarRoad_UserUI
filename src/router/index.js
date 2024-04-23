@@ -31,10 +31,6 @@ const routes = [
     component: () => import('@/views/store/StoreMain.vue'),
   },
   {
-    path: '/store/detail',
-    component: () => import('@/views/store/StoreDetail.vue'),
-  },
-  {
     path: '/store/come',
     component: () => import('@/views/store/StoreCome.vue'),
   },
