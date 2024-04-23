@@ -19,6 +19,10 @@ const routes = [
     component: () => import('@/views/reward/RewardSelect.vue'),
   },
   {
+    path: '/reward/mystar',
+    component: () => import('@/views/reward/RewardMystar.vue'),
+  },
+  {
     path: '/reward/search',
     component: () => import('@/views/reward/RewardSearch.vue'),
   },
