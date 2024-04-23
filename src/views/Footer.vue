@@ -10,7 +10,7 @@
       /></router-link>
     </div>
     <div class="menu">
-      <router-link to="/storelist"
+      <router-link to="/store/main"
         ><img src="@/img/store.png" alt=""
       /></router-link>
     </div>
