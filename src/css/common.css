@@ -98,7 +98,7 @@ body {
 /* footer */
 .footer {
 	display: flex;
-	/* background-color: blueviolet; */
+	background-color: white;
 	width: 480px;
 	height: 48px;
 	justify-content: center;
