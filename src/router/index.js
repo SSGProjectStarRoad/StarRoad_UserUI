@@ -11,6 +11,10 @@ const routes = [
     component: () => import('@/views/MainView.vue'),
   },
   {
+    path: '/review/main',
+    component: () => import('@/views/review/ReviewFollowing.vue'),
+  },
+  {
     path: '/reward/main',
     component: () => import('@/views/reward/RewardMain.vue'),
   },
@@ -25,6 +29,10 @@ const routes = [
   {
     path: '/reward/search',
     component: () => import('@/views/reward/RewardSearch.vue'),
+  },
+  {
+    path: '/reward/getstar',
+    component: () => import('@/views/reward/RewardGetstar.vue'),
   },
   {
     path: '/reward/completed',
@@ -49,6 +57,18 @@ const routes = [
   {
     path: '/store/map',
     component: () => import('@/views/store/StoreMap.vue'),
+  },
+  {
+    path: '/mypage/main',
+    component: () => import('@/views/mypage/MypageMain.vue'),
+  },
+  {
+    path: '/mypage/notice',
+    component: () => import('@/views/mypage/MypageNotice.vue'),
+  },
+  {
+    path: '/mypage/coupon',
+    component: () => import('@/views/mypage/MypageCoupon.vue'),
   },
 
   // 추가적인 라우트...

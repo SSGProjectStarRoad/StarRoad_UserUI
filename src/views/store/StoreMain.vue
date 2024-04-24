@@ -1,48 +1,47 @@
 <template>
   <div class="parent-with-scroll">
-  <div class="fix">
-    <div class="center-item">
-      <p></p>
-      <div class="search">
-        <img class="searchimg" src="@/img/search.png" alt="" />
-        <input class="search-input" type="text" placeholder="매장명 검색" />
+    <div class="fix">
+      <div class="center-item">
+        <p></p>
+        <div class="search">
+          <img class="searchimg" src="@/img/search.png" alt="" />
+          <input class="search-input" type="text" placeholder="매장명 검색" />
+        </div>
       </div>
-    </div>
 
-
-    <h3 class="info">STORE INFO</h3>
-    <h3 class="info">매장안내</h3>
-    <div class="category">
-      <button id="categoryButton" class="button">카테고리별</button>
-      <div class="category-slide" ref="categorySlide">
-        <div class="category-slide-container" ref="categorySlideContainer">
-          <div v-for="(category, index) in categories" :key="index">
-            <button class="d-button">{{ category }}</button>
+      <h3 class="info">STORE INFO</h3>
+      <h3 class="info">매장안내</h3>
+      <div class="category">
+        <button id="categoryButton" class="button">카테고리별</button>
+        <div class="category-slide" ref="categorySlide">
+          <div class="category-slide-container" ref="categorySlideContainer">
+            <div v-for="(category, index) in categories" :key="index">
+              <button class="d-button">{{ category }}</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="category">
-      <button id="floorButton" class="button">층별</button>
-      <div class="floor-slide" ref="floorSlide">
-        <div class="floor-slide-container" ref="floorSlideContainer">
-          <div v-for="(floor, index) in floors" :key="index">
-            <button class="d-button">{{ floor }}</button>
+      <div class="category">
+        <button id="floorButton" class="button">층별</button>
+        <div class="floor-slide" ref="floorSlide">
+          <div class="floor-slide-container" ref="floorSlideContainer">
+            <div v-for="(floor, index) in floors" :key="index">
+              <button class="d-button">{{ floor }}</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
   <div class="contents">
     <list />
   </div>
 </template>
 <script>
-import search from "@/components/store/Search.vue";
-import list from "@/components/store/list.vue";
-import Swiper from "swiper";
-import "swiper/css";
+import search from '@/components/store/Search.vue';
+import list from '@/components/store/list.vue';
+import Swiper from 'swiper';
+import 'swiper/css';
 export default {
   components: {
     search,
@@ -51,24 +50,24 @@ export default {
   data() {
     return {
       categories: [
-        "레스토랑&카페",
-        "뷰티",
-        "의류",
-        "엔터테인먼트",
-        "트레이더스",
-        "홈퍼니싱",
-        "라이프스타일",
-        "키즈",
+        '레스토랑&카페',
+        '뷰티',
+        '의류',
+        '엔터테인먼트',
+        '트레이더스',
+        '홈퍼니싱',
+        '라이프스타일',
+        '키즈',
       ],
-      floors: ["1층", "2층", "3층", "4층", "B1", "B2"],
+      floors: ['1층', '2층', '3층', '4층', 'B1', 'B2'],
       categorySwiper: null,
       floorSwiper: null,
     };
   },
   mounted() {
     this.$nextTick(() => {
-      this.checkSlideOverflow("category");
-      this.checkSlideOverflow("floor");
+      this.checkSlideOverflow('category');
+      this.checkSlideOverflow('floor');
     });
   },
   methods: {
@@ -81,18 +80,18 @@ export default {
       }
     },
     initializeSwiper(type) {
-      if (type === "category") {
+      if (type === 'category') {
         this.categorySwiper = new Swiper(this.$refs.categorySlide, {
-          slidesPerView: "auto",
+          slidesPerView: 'auto',
           spaceBetween: 10,
           freeMode: true,
           freeModeSticky: true,
           grabCursor: true,
           resistanceRatio: 0,
         });
-      } else if (type === "floor") {
+      } else if (type === 'floor') {
         this.floorSwiper = new Swiper(this.$refs.floorSlide, {
-          slidesPerView: "auto",
+          slidesPerView: 'auto',
           spaceBetween: 10,
           freeMode: true,
           freeModeSticky: true,
@@ -105,7 +104,7 @@ export default {
 };
 </script>
 <style scoped>
-@import "@/css/common.css";
+@import '@/css/common.css';
 .parent-with-scroll {
   height: 250px; /* 부모 요소의 높이를 설정하여 스크롤이 가능하도록 함 */
   overflow-y: auto; /* 세로 스크롤이 필요한 경우 스크롤이 표시되도록 함 */
