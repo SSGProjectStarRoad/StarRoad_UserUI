@@ -19,7 +19,7 @@ export default {
   name: "list",
   data() {
     return {
-      phoneNumber: "010-6573-2265" // 임의의 전화번호로 설정
+      phoneNumber: "010-2025-1986" // 임의의 전화번호로 설정
     };
   }
 };
