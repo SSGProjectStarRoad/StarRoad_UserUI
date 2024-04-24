@@ -1,0 +1,562 @@
+:root {
+  --swiper-navigation-size: 44px;
+}
+:root {
+  --swiper-theme-color: #007aff;
+}
+
+.contents {
+	margin-top: 10px;
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  word-break: break-word;
+  line-height: normal;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+main {
+  display: block;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+  color: #000;
+  font-size: 14px;
+}
+
+.timeline-post-item-feed {
+  border-bottom: 10px solid #ececec;
+}
+
+.timeline-post-item {
+  padding: 16px 20px 20px;
+}
+
+.timeline-header {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  margin-bottom: 10px;
+}
+
+.timeline-recom-follow {
+    overflow: hidden;
+    padding: 20px;
+    margin-top: -10px;
+    background: #f1f1f1;
+}
+
+.timeline-recom-follow .swiper {
+  overflow: visible;
+}
+
+.swiper-wrapper {
+  transition-timing-function: linear(0 0%, 1.16 100%);
+}
+
+.swiper-container-android .swiper-slide, .swiper-wrapper {
+  transform: translateZ(0);
+}
+
+.swiper-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  transition-property: transform;
+  box-sizing: content-box;
+}
+
+.v-scroll {
+  overflow-x: auto;
+  margin: 0 -30px -14px;
+  padding-bottom: 14px;
+}
+
+.v-scroll .v-scroll-inner {
+  padding: 0 30px;
+  display: inline-block;
+}
+
+.timeline-recom-follow .swiper .swiper-slide {
+  width: auto !important;
+}
+.swiper-slide {
+  flex-shrink: 0;
+  height: 100%;
+  position: relative;
+  transition-property: transform;
+}
+
+.v-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.timeline-recom-follow .__follow-list-item {
+  padding: 12px 20px;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
+
+.timeline-recom-follow .__follow-list-item .__user-info {
+  margin-bottom: 8px;
+}
+
+.timeline-recom-follow .__follow-list-item .__user-info .profile {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.timeline-recom-follow .__follow-list-item .__user-info .profile .profile-pic {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 6px;
+}
+
+.timeline-recom-follow .__follow-list-item .__user-info .profile .profile-pic .img {
+  width: 56px;
+  height: 56px;
+}
+
+.profile-pic {
+  position: relative;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  word-break: keep-all;
+}
+
+.profile .name {
+  display: flex;
+  align-items: center;
+  line-height: normal;
+  flex: 1;
+  font-weight: 700;
+}
+
+.username {
+  font-weight: 500;
+  font-size: 14px;
+  position: relative;
+  display: flex;
+  min-width: 0;
+}
+
+.timeline-recom-follow .__follow-list-item .__user-info .username .txt {
+  overflow: hidden;
+  display: block;
+  width: 70px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+  font-size: 12px;
+}
+
+.username .txt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+  min-width: 0;
+  line-height: normal;
+}
+
+.profile .profile-pic {
+  margin-right: 10px;
+}
+
+.profile .name {
+  display: flex;
+  align-items: center;
+  line-height: normal;
+  flex: 1;
+  font-weight: 700;
+}
+
+.timeline-header .userinfo {
+  margin-right: 8px;
+  font-size: 12px;
+  line-height: 19px;
+  color: #666;
+}
+
+.btn {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  appearance: none;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.timeline-header .btn {
+  width: 4.25em;
+  min-width: 4.25em;
+  height: 32px;
+  margin-left: auto;
+  padding: 0;
+}
+
+.profile-pic .img {
+  width: 30px;
+  height: 30px;
+  background: 50% 50% no-repeat;
+  background-size: cover;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.timeline-recom-follow .__follow-list-item .__user-info .profile {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  word-break: keep-all;
+}
+
+.timeline-recom-follow .__follow-list-item .btn {
+  width: 6em;
+  height: 32px;
+  margin: 0 auto;
+  padding: 0;
+  font-size: 12px;
+}
+
+.btn-rounded.btn-orange {
+  background: #ff6632;
+  border-radius: 24px;
+  color: #fff;
+  border-color: #ff6632;
+}
+
+.btn-rounded.btn-orange .label {
+  color: #fff;
+}
+
+.timeline-gallery .imgin img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.timeline-post-content .__post-meta {
+  display: flex;
+  margin-top: 16px;
+  margin-bottom: 10px;
+}
+
+.timeline-post-content .__post-meta .__rating {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.timeline-post-content .__post-meta .__date {
+  margin-left: auto;
+  font-size: 12px;
+  color: #666;
+}
+
+.timeline-post-content .__post-meta .__rating:before {
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  background: url(../../img/review/star-yellow.svg) 0% 50% no-repeat;
+  background-size: contain;
+  content: "";
+}
+
+.timeline-post-content .restaurant-info {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f1f2fa;
+  border-radius: 4px;
+  isolation: isolate;
+  margin-top: 16px;
+  padding-right: 12px;
+}
+
+.timeline-post-content .restaurant-info .thumb {
+  display: block;
+  width: 48px;
+  height: 48px;
+  min-width: 32px;
+  border: 1px solid #f1f2fa;
+  border-radius: 4px 0 0 4px;
+  object-fit: cover;
+}
+
+.timeline-post-content .restaurant-info .__info {
+  overflow: hidden;
+  flex: 1;
+  margin-right: 10px;
+  padding: 6px 0;
+  font-size: 12px;
+}
+
+.timeline-post-content .restaurant-info .__info .__meta {
+  margin-top: 4px;
+  color: #666;
+}
+
+._10fm75hj {
+  align-items: center;
+}
+
+._10fm75hg {
+  justify-content: space-between;
+}
+
+._10fm75h6 {
+  display: flex;
+}
+
+.timeline-post-footer .__post-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.timeline-post-footer .__post-meta span.__like:before,
+.timeline-post-footer .__post-meta a.__like:before {
+  background-image: url(../../img/review/heart-new.svg);
+}
+
+.timeline-post-footer .__post-meta span:before,
+.timeline-post-footer .__post-meta a:before {
+  display: block;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  margin-right: 2px;
+  background: 50% 50% no-repeat;
+  content: "";
+}
+
+.timeline-post-footer .__post-meta span,
+.timeline-post-footer .__post-meta a {
+  display: flex;
+  align-items: center;
+  color: #666;
+}
+
+.la3t9m0 {
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline-post-footer .__post-meta span.__comment:before,
+.timeline-post-footer .__post-meta a.__comment:before {
+  background-size: 24px;
+  background-image: url(../../img/review/comment-new.webp);
+}
+
+._1vfgwok1 {
+  background: url(../../img/review/btn-more-d.svg) 50% 50% no-repeat;
+  width: 20px;
+  height: 20px;
+}
+
+._1e99eu30 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  border: 0;
+  z-index: -1;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+}
+
+.timeline-post-item-feed {
+  border-bottom: 10px solid #ececec;
+}
+
+.tab-menu.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.tab-menu {
+  border-bottom: 2px solid #f1f1f1;
+  background: #fff;
+}
+
+.tab-menu ul {
+  display: flex;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+.tab-menu ul li {
+  flex: 1;
+}
+
+.tab-menu {
+  border-bottom: 2px solid #f1f1f1;
+  background: #fff;
+}
+
+.tab-menu ul li a {
+  padding: 16px 4px;
+  padding-top: 16px;
+  padding-right: 4px;
+  padding-bottom: 16px;
+  padding-left: 4px;
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  font-weight: 500;
+}
+
+.tab-menu ul li a span {
+  position: relative;
+}
+
+.tab-menu ul li.active a:after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #000;
+}
+
+.tab-menu ul li.active a {
+  color: #000;
+  font-weight: 700;
+}

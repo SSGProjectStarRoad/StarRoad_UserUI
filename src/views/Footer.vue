@@ -3,7 +3,11 @@
     <div class="menu">
       <router-link to="/main"><img src="@/img/home.png" alt="" /></router-link>
     </div>
-    <div class="menu"><img src="@/img/review.png" alt="" /></div>
+    <div class="menu">
+      <router-link to="/review/main"
+        ><img src="@/img/review.png" alt=""
+      /></router-link>
+    </div>
     <div class="menu">
       <router-link to="/reward/main"
         ><img src="@/img/reward.png" alt=""
