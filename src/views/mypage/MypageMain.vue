@@ -51,7 +51,7 @@
         </div>
         <div class="inquiry">
           <div class="ownimg"><img src="@/img/howto.png" alt="" /></div>
-          <div class="text">1:1 문의하기</div>
+          <div class="text">문의하기</div>
         </div>
       </div>
     </div>
