@@ -58,6 +58,18 @@ const routes = [
     path: '/store/map',
     component: () => import('@/views/store/StoreMap.vue'),
   },
+  {
+    path: '/mypage/main',
+    component: () => import('@/views/mypage/MypageMain.vue'),
+  },
+  {
+    path: '/mypage/notice',
+    component: () => import('@/views/mypage/MypageNotice.vue'),
+  },
+  {
+    path: '/mypage/coupon',
+    component: () => import('@/views/mypage/MypageCoupon.vue'),
+  },
 
   // 추가적인 라우트...
 ];
