@@ -54,6 +54,10 @@ const routes = [
     path: '/store/map',
     component: () => import('@/views/store/StoreMap.vue'),
   },
+  {
+    path: '/mypage/main',
+    component: () => import('@/views/mypage/MypageMain.vue'),
+  },
 
   // 추가적인 라우트...
 ];

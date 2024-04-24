@@ -14,7 +14,11 @@
         ><img src="@/img/store.png" alt=""
       /></router-link>
     </div>
-    <div class="menu"><img src="@/img/mypage.png" alt="" /></div>
+    <div class="menu">
+      <router-link to="/mypage/main"
+        ><img src="@/img/mypage.png" alt=""
+      /></router-link>
+    </div>
   </div>
 </template>
 
