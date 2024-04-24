@@ -11,6 +11,10 @@ const routes = [
     component: () => import('@/views/MainView.vue'),
   },
   {
+    path: '/review/main',
+    component: () => import('@/views/review/ReviewFollowing.vue'),
+  },
+  {
     path: '/reward/main',
     component: () => import('@/views/reward/RewardMain.vue'),
   },
