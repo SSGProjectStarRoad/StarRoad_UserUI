@@ -62,6 +62,10 @@ const routes = [
     path: '/mypage/notice',
     component: () => import('@/views/mypage/MypageNotice.vue'),
   },
+  {
+    path: '/mypage/coupon',
+    component: () => import('@/views/mypage/MypageCoupon.vue'),
+  },
 
   // 추가적인 라우트...
 ];
