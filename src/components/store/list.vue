@@ -1,5 +1,5 @@
 <template>
-  <div class="list" v-for="(item,index) in 10" :key="index">
+  <div class="list" v-for="(item, index) in 10" :key="index">
     <div class="store-header">
       <img class="store-img" src="@/img/ZARA.png" alt="" />
       <span class="store-name">자라</span>
@@ -11,22 +11,21 @@
       <img class="store-location" src="@/img/location.png" alt="" />
     </div>
   </div>
-  
 </template>
 
 <script>
 export default {
-  name: "list",
+  name: 'list',
   data() {
     return {
-      phoneNumber: "010-6573-2265" // 임의의 전화번호로 설정
+      phoneNumber: '010-6573-2265', // 임의의 전화번호로 설정
     };
-  }
+  },
 };
 </script>
 
 <style scoped>
-@import "@/css/common.css";
+@import '@/css/common.css';
 
 .list {
   margin: 5px;

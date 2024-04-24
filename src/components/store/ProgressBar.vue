@@ -1,14 +1,12 @@
 <template>
   <!-- 프로그래스바 컨테이너 -->
   <div class="progress-bar">
-     <!-- 텍스트를 위한 슬롯 -->
-     <div class="text">
-        <slot name="text"></slot>
-      </div>
-    <!-- 실제 프로그래스바 -->
-    <div class="progress" :style="{ width: progress + '%' }">
-     
+    <!-- 텍스트를 위한 슬롯 -->
+    <div class="text">
+      <slot name="text"></slot>
     </div>
+    <!-- 실제 프로그래스바 -->
+    <div class="progress" :style="{ width: progress + '%' }"></div>
     <!-- 숫자를 위한 슬롯 -->
     <div class="number">
       <slot name="number"></slot>
@@ -23,14 +21,14 @@ export default {
     // 프로그래스바의 진행률을 받는 prop
     progress: {
       type: Number, // 숫자 타입
-      required: true // 필수 prop
-    }
-  }
-}
+      required: true, // 필수 prop
+    },
+  },
+};
 </script>
 
 <style scoped>
-@import "@/css/common.css";
+@import '@/css/common.css';
 
 .progress-bar {
   position: relative;
@@ -48,7 +46,9 @@ export default {
 .progress {
   position: absolute;
   height: 100%; /* // 높이 100% */
-  background-color: var(--mint-color); /* // 배경색을 민트색으로 설정 (common.css에 정의된 변수 사용) */
+  background-color: var(
+    --mint-color
+  ); /* // 배경색을 민트색으로 설정 (common.css에 정의된 변수 사용) */
   transition: width 0.5s ease; /* // 너비 변경 시 0.5초 동안 부드럽게 애니메이션 적용 */
   box-shadow: 2px 2px 3px #00000033;
   border-radius: 10px;
@@ -58,16 +58,16 @@ export default {
   position: absolute;
   left: 10px;
   color: black;
-  font-size:14px;
+  font-size: 14px;
   font-weight: bold;
   z-index: 1;
 }
 
 /* 숫자 스타일 */
 .number {
-  color: #333; 
+  color: #333;
   /* // 글자색 설정 */
-  font-weight: bold; 
+  font-weight: bold;
   /* // 글자 굵게 설정 */
 }
 /* 숫자 스타일 */

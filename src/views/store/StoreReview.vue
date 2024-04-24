@@ -35,21 +35,37 @@
     </div>
     <div class="section"></div>
     <div class="s-key">
-      <p class="s-key-title">리뷰 {{review}} (키워드검색)</p>
+      <p class="s-key-title">리뷰 {{ review }} (키워드검색)</p>
       <div>
         <div class="slide">
           <swiper ref="mySwiper" :options="swiperOptions">
-            <swiper-slide v-for="button in buttons" :key="button" style="width: auto">
-            <!-- <swiper-slide v-for="button in buttons" :key="button"> -->
+            <swiper-slide
+              v-for="button in buttons"
+              :key="button"
+              style="width: auto"
+            >
+              <!-- <swiper-slide v-for="button in buttons" :key="button"> -->
               <button class="d-button">{{ button }}</button>
             </swiper-slide>
           </swiper>
         </div>
         <div class="sort">
           <p>
-            <input type="radio" id="latest" value="latest" v-model="selectedSort" @change="changeSort">
+            <input
+              type="radio"
+              id="latest"
+              value="latest"
+              v-model="selectedSort"
+              @change="changeSort"
+            />
             <label for="latest"></label>최신순
-            <input type="radio" id="likes" value="likes" v-model="selectedSort" @change="changeSort">
+            <input
+              type="radio"
+              id="likes"
+              value="likes"
+              v-model="selectedSort"
+              @change="changeSort"
+            />
             <label for="likes"></label>좋아요 순
           </p>
         </div>
@@ -59,7 +75,7 @@
 </template>
 
 <script>
-import ProgressBar from "@/components/store/ProgressBar.vue";
+import ProgressBar from '@/components/store/ProgressBar.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 
@@ -69,10 +85,44 @@ export default {
       review: 1520,
       selectedSort: 'latest',
       phoneNumber: '010-1234-5678',
-      buttons: ['종류', '매장', '스타일', '재고', '품질', '품질', '품질', '품질2', '품질', '품질', '품질222', '품질222', '품222', '재고3', '품질', '품질', '품질', '품질4', '품질', '품질5', '품질2622', '품질222', '품222', '재고', '품질', '품질', '품질', '품질', '품질', '품질', '품질222', '품질222', '1111111'],
+      buttons: [
+        '종류',
+        '매장',
+        '스타일',
+        '재고',
+        '품질',
+        '품질',
+        '품질',
+        '품질2',
+        '품질',
+        '품질',
+        '품질222',
+        '품질222',
+        '품222',
+        '재고3',
+        '품질',
+        '품질',
+        '품질',
+        '품질4',
+        '품질',
+        '품질5',
+        '품질2622',
+        '품질222',
+        '품222',
+        '재고',
+        '품질',
+        '품질',
+        '품질',
+        '품질',
+        '품질',
+        '품질',
+        '품질222',
+        '품질222',
+        '1111111',
+      ],
       swiperOptions: {
-        slidesPerView: 'auto',
-        spaceBetween: 10,
+        slidesPerView: 'auto', // 기본 설정을 'auto'로 하여 슬라이드가 유연하게 표시되도록 합니다.
+        spaceBetween: 5,
       },
     };
   },
@@ -96,20 +146,23 @@ export default {
 </script>
 
 <style scoped>
+.contents {
+  overflow: hidden;
+}
 .slide {
+  width: 480px;
   position: relative;
   overflow: hidden;
-  
 }
 
 .swiper-container {
   width: 100%;
   height: 100%;
-  
 }
 
 .swiper-slide {
   text-align: center;
+  height: 60px;
   font-size: 18px;
   background: #fff;
   display: flex;
@@ -138,7 +191,7 @@ export default {
   margin: 16px;
 }
 
-input[type="radio"] {
+input[type='radio'] {
   display: none;
 }
 
@@ -153,7 +206,7 @@ label {
   margin-left: 5px;
 }
 
-input[type="radio"]:checked + label {
+input[type='radio']:checked + label {
   background-color: var(--navy-color);
 }
 
@@ -170,7 +223,7 @@ input[type="radio"]:checked + label {
 }
 
 .section::before {
-  content: "";
+  content: '';
   display: block;
   height: 10px;
   width: 100%;
@@ -224,4 +277,4 @@ input[type="radio"]:checked + label {
   width: 100%;
   height: 100%;
 }
-</style> 
+</style>
