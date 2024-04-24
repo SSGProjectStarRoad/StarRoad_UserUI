@@ -39,7 +39,7 @@
       <div>
         <div class="slide">
           <swiper ref="mySwiper" :options="swiperOptions">
-            <swiper-slide v-for="button in buttons" :key="button" style="width: auto;">
+            <swiper-slide v-for="button in buttons" :key="button" style="width: auto">
             <!-- <swiper-slide v-for="button in buttons" :key="button"> -->
               <button class="d-button">{{ button }}</button>
             </swiper-slide>
