@@ -1,9 +1,11 @@
 <template>
-  
+    <div class="center-item">
+      <p></p>
   <div class="search">
       <img class="searchimg" src="@/img/search.png" alt="" />
       <input class="search-input" type="text" placeholder="매장명 검색">
     </div>
+  </div>
 </template>
 
 <script>
@@ -15,28 +17,32 @@ export default {
 
 <style>
 @import '@/css/common.css';
+.center-item{
+  background-color: white;
+}
 
 
 .search {
   position: fixed;
   display: flex;
+  justify-content: center; 
   align-items: center;
   background-color: var(--gray-color);
-  border: 1px solid #ccc; /* 박스 테두리 */
-  border-radius: 20px; /* 박스 모서리 둥글기 */
-  padding: 5px 10px; /* 박스 내부 여백 */
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 5px 10px;
   box-shadow: 2px 2px 3px #00000033;
-  /* margin-bottom: 20px; */
 }
 .button{
   background-color: var(--navy-color);
   border-radius: 15px;
 }
 .search-input {
+ 
   width: 300px;
   height: 15px;
   padding: 3px 5px;
-  font-size: 16px;
+  font-size: 12px;
   background-color: var(--gray-color);
   border: none;
   box-sizing: border-box;
