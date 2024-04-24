@@ -1,10 +1,17 @@
 <template>
-  <div class="contents">
-    <!-- ... -->
-    <search/>
-    <p></p>
-    <h4 class="info">STORE INFO</h4>
-    <h4 class="info">매장안내</h4>
+  <div class="parent-with-scroll">
+  <div class="fix">
+    <div class="center-item">
+      <p></p>
+      <div class="search">
+        <img class="searchimg" src="@/img/search.png" alt="" />
+        <input class="search-input" type="text" placeholder="매장명 검색" />
+      </div>
+    </div>
+
+
+    <h3 class="info">STORE INFO</h3>
+    <h3 class="info">매장안내</h3>
     <div class="category">
       <button id="categoryButton" class="button">카테고리별</button>
       <div class="category-slide" ref="categorySlide">
@@ -25,32 +32,43 @@
         </div>
       </div>
     </div>
-    <h1>사진</h1>
-    <h1>층수</h1>
-    <h1>이름</h1>
-    <h1>데이터</h1>
- </div>
+  </div>
+</div>
+  <div class="contents">
+    <list />
+  </div>
 </template>
 <script>
-import search from '@/components/store/Search.vue';
-import Swiper from 'swiper';
-import 'swiper/css';
+import search from "@/components/store/Search.vue";
+import list from "@/components/store/list.vue";
+import Swiper from "swiper";
+import "swiper/css";
 export default {
   components: {
     search,
+    list,
   },
   data() {
     return {
-      categories: ['레스토랑&카페', '뷰티', '의류', '엔터테인먼트', '트레이더스', '홈퍼니싱', '라이프스타일', '키즈'],
-      floors: ['1층', '2층', '3층', '4층', 'B1', 'B2'],
+      categories: [
+        "레스토랑&카페",
+        "뷰티",
+        "의류",
+        "엔터테인먼트",
+        "트레이더스",
+        "홈퍼니싱",
+        "라이프스타일",
+        "키즈",
+      ],
+      floors: ["1층", "2층", "3층", "4층", "B1", "B2"],
       categorySwiper: null,
       floorSwiper: null,
     };
   },
   mounted() {
     this.$nextTick(() => {
-      this.checkSlideOverflow('category');
-      this.checkSlideOverflow('floor');
+      this.checkSlideOverflow("category");
+      this.checkSlideOverflow("floor");
     });
   },
   methods: {
@@ -63,18 +81,18 @@ export default {
       }
     },
     initializeSwiper(type) {
-      if (type === 'category') {
+      if (type === "category") {
         this.categorySwiper = new Swiper(this.$refs.categorySlide, {
-          slidesPerView: 'auto',
+          slidesPerView: "auto",
           spaceBetween: 10,
           freeMode: true,
           freeModeSticky: true,
           grabCursor: true,
           resistanceRatio: 0,
         });
-      } else if (type === 'floor') {
+      } else if (type === "floor") {
         this.floorSwiper = new Swiper(this.$refs.floorSlide, {
-          slidesPerView: 'auto',
+          slidesPerView: "auto",
           spaceBetween: 10,
           freeMode: true,
           freeModeSticky: true,
@@ -87,18 +105,71 @@ export default {
 };
 </script>
 <style scoped>
-@import '@/css/common.css';
-.d-button{
+@import "@/css/common.css";
+.parent-with-scroll {
+  height: 250px; /* 부모 요소의 높이를 설정하여 스크롤이 가능하도록 함 */
+  overflow-y: auto; /* 세로 스크롤이 필요한 경우 스크롤이 표시되도록 함 */
+}
+
+.fix {
+  padding: 0%;
+  display: flex;
+  flex-direction: column;
+  position: fixed; /* .fix 요소를 화면에 고정 */
+  top: 1; /* 화면의 상단에 고정 */
+  z-index: 1000; /* 다른 요소 위에 표시 */
+  background-color: white; /* 배경색 설정 */
+
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1), 0 -4px 0 rgba(0, 0, 0, 0); /* 아래 방향으로만 그림자 적용 */
+
+  width: 100%; /* 화면 너비에 맞게 설정 */
+  max-width: 480px; /* 최대 너비 설정 */
+  margin: 0 auto; /* 가운데 정렬 */
+  left: 0; /* 화면 왼쪽에 정렬 */
+  right: 0; /* 화면 오른쪽에 정렬 */
+}
+.center-item {
+  background-color: white;
+}
+
+.search {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--gray-color);
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 5px 10px;
+  box-shadow: 2px 2px 3px #00000033;
+}
+.search-input {
+  width: 300px;
+  height: 15px;
+  padding: 3px 5px;
+  font-size: 12px;
+  background-color: var(--gray-color);
+  border: none;
+  box-sizing: border-box;
+  vertical-align: middle; /* 추가 */
+}
+.searchimg {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  vertical-align: middle; /* 추가 */
+}
+.d-button {
   background-color: var(--gray-color);
   border-radius: 10px;
   color: white;
   box-shadow: 2px 2px 3px #00000033;
   border: none;
   transition: background-color 0.3s ease;
-  width:fit-content !important;
-  color:black;
+  width: fit-content !important;
+  color: black;
 }
-.d-button:hover{
+.d-button:hover {
   background-color: var(--mint-color);
 }
 .c-list,
@@ -112,14 +183,27 @@ export default {
 .info {
   margin: 0;
   margin-bottom: 5px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 .contents {
   margin: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+
   overflow: hidden;
 }
+.center-item {
+  display: flex;
+  background-color: white;
+  justify-content: center;
+  align-items: center;
+  position: sticky; /* 고정된 위치로 설정 */
+  top: 0; /* 상단에 고정 */
+  z-index: 1; /* 다른 요소 위에 보이도록 설정 */
+}
+
 .category {
   margin: 5px;
   display: flex;
