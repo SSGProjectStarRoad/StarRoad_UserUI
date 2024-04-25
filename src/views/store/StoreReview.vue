@@ -38,7 +38,17 @@
       <p class="s-key-title">리뷰 {{ review }} (키워드검색)</p>
       <div>
         <div class="slide">
-          <swiper ref="mySwiper" :options="swiperOptions">
+          <swiper
+            v-if="buttons.length > 0"
+            ref="mySwiper"
+            :options="swiperOptions"
+            :slidesPerView="'auto'"
+            :spaceBetween="10"
+            :freeMode="true"
+            :freeModeSticky="true"
+            :grabCursor="true"
+            :resistanceRatio="0.6"
+          >
             <swiper-slide
               v-for="button in buttons"
               :key="button"
@@ -69,60 +79,75 @@
             <label for="likes"></label>좋아요 순
           </p>
         </div>
+        <div class="review-Data">
+          <div class="user-header">
+            <div class="user-profile"></div>
+            <span class="user-name">Cate Blachett</span>
+
+            <span class="review-count">리뷰 420</span>
+          </div>
+          <div class="review-body"></div>
+          <div class="review-content">
+            <p>좋아요</p>
+            <p>내용wefwe</p>
+            <p class="review-date">20.20.20</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ProgressBar from '@/components/store/ProgressBar.vue';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import 'swiper/css';
+import ProgressBar from "@/components/store/ProgressBar.vue";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/css";
 
 export default {
   data() {
     return {
       review: 1520,
-      selectedSort: 'latest',
-      phoneNumber: '010-1234-5678',
+      selectedSort: "latest",
+      phoneNumber: "010-1234-5678",
       buttons: [
-        '종류',
-        '매장',
-        '스타일',
-        '재고',
-        '품질',
-        '품질',
-        '품질',
-        '품질2',
-        '품질',
-        '품질',
-        '품질222',
-        '품질222',
-        '품222',
-        '재고3',
-        '품질',
-        '품질',
-        '품질',
-        '품질4',
-        '품질',
-        '품질5',
-        '품질2622',
-        '품질222',
-        '품222',
-        '재고',
-        '품질',
-        '품질',
-        '품질',
-        '품질',
-        '품질',
-        '품질',
-        '품질222',
-        '품질222',
-        '1111111',
+        "종류",
+        "매장",
+        "스타일",
+        "재고",
+        "품질",
+        "품질",
+        "품질",
+        "품질2",
+        "품질",
+        "품질",
+        "품질222",
+        "품질222",
+        "품222",
+        "재고3",
+        "품질",
+        "품질",
+        "품질",
+        "품질4",
+        "품질",
+        "품질5",
+        "품질2622",
+        "품질222",
+        "품222",
+        "재고",
+        "품질",
+        "품질",
+        "품질",
+        "품질",
+        "품질",
+        "품질",
+        "품질222",
+        "품질222",
+        "1111111",
       ],
       swiperOptions: {
-        slidesPerView: 'auto', // 기본 설정을 'auto'로 하여 슬라이드가 유연하게 표시되도록 합니다.
+        slidesPerView: "auto", // 기본 설정을 'auto'로 하여 슬라이드가 유연하게 표시되도록 합니다.
         spaceBetween: 5,
+        loop: false,
       },
     };
   },
@@ -133,12 +158,12 @@ export default {
   },
   methods: {
     changeSort() {
-      if (this.selectedSort === 'latest') {
+      if (this.selectedSort === "latest") {
         // 최신순으로 정렬하는 로직
-        console.log('최신순으로 정렬');
-      } else if (this.selectedSort === 'likes') {
+        console.log("최신순으로 정렬");
+      } else if (this.selectedSort === "likes") {
         // 좋아요 순으로 정렬하는 로직
-        console.log('좋아요 순으로 정렬');
+        console.log("좋아요 순으로 정렬");
       }
     },
   },
@@ -146,8 +171,72 @@ export default {
 </script>
 
 <style scoped>
+@import "@/css/common.css";
+.review-body {
+  margin-top: 4%;
+  background-image: url("https://picsum.photos/600?random=0");
+  height: 450px;
+  background-position: center;
+  background-size: cover;
+}
+.review-content {
+  padding-left: 15px;
+  padding-right: 15px;
+  font-size: 14px;
+}
+.review-date {
+  font-size: 13px;
+  color: grey;
+  margin-top: -8px;
+}
+.user-header {
+  height: 30px;
+  padding: 10px;
+}
+.review-Data {
+  width: 100%;
+  height: 100%;
+  margin: 10px;
+  margin-top: 30px;
+  background-color: rgb(206, 184, 184);
+  margin-bottom: 1%;
+  margin-top: 1%;
+}
+.review-data::before {
+  background-color: var(--gray-color);
+}
+.review-content {
+}
+
+.user-profile {
+  background-image: url("https://picsum.photos/100?random=0");
+  width: 50px;
+  height: 50px;
+  background-size: 50%;
+  border-radius: 50%;
+  float: left;
+}
+.user-name {
+  display: block;
+  padding-left: 15%;
+  padding-top: 0px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.review-count {
+  padding-top: 0.7%;
+  padding-left: 15%;
+  display: block;
+  color: gray;
+  font-weight: 400;
+}
+
 .contents {
   overflow: hidden;
+  position: relative;
+  /* min-height: 100vh; */
+  margin-top: 40px;
 }
 .slide {
   width: 480px;
@@ -161,6 +250,7 @@ export default {
 }
 
 .swiper-slide {
+  width: 80px;
   text-align: center;
   height: 60px;
   font-size: 18px;
@@ -173,7 +263,7 @@ export default {
 .d-button {
   margin-right: 10px;
   background-color: var(--gray-color);
-  border-radius: 10px;
+  border-radius: 8px;
   color: white;
   box-shadow: 2px 2px 3px #00000033;
   border: none;
@@ -187,11 +277,7 @@ export default {
   background-color: var(--mint-color);
 }
 
-.sort {
-  margin: 16px;
-}
-
-input[type='radio'] {
+input[type="radio"] {
   display: none;
 }
 
@@ -206,7 +292,7 @@ label {
   margin-left: 5px;
 }
 
-input[type='radio']:checked + label {
+input[type="radio"]:checked + label {
   background-color: var(--navy-color);
 }
 
@@ -223,7 +309,7 @@ input[type='radio']:checked + label {
 }
 
 .section::before {
-  content: '';
+  content: "";
   display: block;
   height: 10px;
   width: 100%;
