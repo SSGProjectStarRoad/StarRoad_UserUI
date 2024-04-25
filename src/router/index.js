@@ -74,6 +74,10 @@ const routes = [
     path: '/mypage/myreview',
     component: () => import('@/views/mypage/MypageReview.vue'),
   },
+  {
+    path: '/mypage/follow',
+    component: () => import('@/views/mypage/MypageFollow.vue'),
+  },
 
   // 추가적인 라우트...
 ];
