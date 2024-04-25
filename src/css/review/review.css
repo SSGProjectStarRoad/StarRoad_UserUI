@@ -92,6 +92,7 @@ audio,
 video {
   margin: 0;
   border: 0;
+  padding: 0;
   font-size: 100%;
   vertical-align: baseline;
 }
@@ -362,6 +363,7 @@ button {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 16px 16px;
 }
 
 .timeline-post-content .__post-meta {
@@ -392,6 +394,7 @@ button {
   background-size: contain;
   content: "";
 }
+
 
 .timeline-post-content .restaurant-info {
   overflow: hidden;
@@ -527,6 +530,14 @@ ol, ul {
   background: #fff;
 }
 
+.back-button {
+  margin: auto;
+  display: block;
+  width: 10%;
+  height: 100%;
+  text-align: center;
+}
+
 .tab-menu ul li a {
   padding: 16px 4px;
   padding-top: 16px;
@@ -559,4 +570,103 @@ ol, ul {
 .tab-menu ul li.active a {
   color: #000;
   font-weight: 700;
+}
+
+.ERkm0 {
+  margin-top: 8px;
+  margin-bottom: -6px;
+}
+
+.ERkm0 .sIv5s {
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 4px 6px 0;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: #f1f2fa;
+  box-sizing: border-box;
+  font-size: 0.8rem;
+  color: #555558;
+  color: rgba(var(--gray30), 1);
+  line-height: 1.8rem;
+}
+
+.Me4yK {
+  vertical-align: top;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+} 
+
+.T00ux {
+  display: block;
+  position: relative;
+  padding: 0 11px;
+  border: 1px solid;
+  border-color: var(--dgray-color);
+  border-radius: 8px;
+  background: #fff;
+  box-sizing: border-box;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #555558;
+  line-height: 34px;
+
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  text-decoration-line: none;
+  text-decoration-thickness: initial;
+  text-decoration-style: initial;
+  text-decoration-color: initial;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, .1);
+}
+
+.survey-title {
+  font-size: 1.4rem;
+  text-align: center;
+  vertical-align: top;
+  margin-bottom: 10px;
+  color: var(--navy-color);
+  font-weight: 600;
+}
+
+.contents {
+  width: 400px;
+  margin: auto;
+}
+
+.text-review {
+  vertical-align: top;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+  width : 350px;
+  height: 200px;
+  border-radius: 8px;
+  
+}
+.survey{
+  position: relative;
+}
+.counter {
+  position: absolute;
+  margin-left: 20px;
+  margin-right: 20px;
+  right: 0px;
+}
+
+.register {
+  margin-top: 10px;
+  width: 4.25em;
+  min-width: 4.25em;
+  height: 32px;
+  margin-left: auto;
+  padding: 0;
+  background: #ff6632;
+  color: #fff;
+  border-color: #ff6632;
+  border-radius: 24px;
 }
