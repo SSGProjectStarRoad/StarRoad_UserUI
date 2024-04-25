@@ -15,6 +15,14 @@ const routes = [
     component: () => import('@/views/review/ReviewFollowing.vue'),
   },
   {
+    path: '/review/recommended',
+    component: () => import('@/views/review/ReviewRecommended.vue'),
+  },
+  {
+    path: '/review/write',
+    component: () => import('@/views/review/ReviewWrite.vue'),
+  },
+  {
     path: '/reward/main',
     component: () => import('@/views/reward/RewardMain.vue'),
   },
