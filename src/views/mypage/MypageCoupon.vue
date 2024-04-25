@@ -47,6 +47,7 @@ export default {};
 }
 .mycoupons {
   margin: 30px 60px;
+  /* overflow: hidden; */
 }
 .coupons-amount {
   margin-left: 10px;
@@ -54,9 +55,9 @@ export default {};
   color: var(--dgray-color);
 }
 .coupon {
-  overflow: hidden;
   position: relative;
   display: flex;
+  /* overflow: hidden; */
   width: 100%;
   height: 100px;
   margin-top: 10px;
@@ -95,7 +96,7 @@ export default {};
   position: absolute;
   top: 50%; /* 부모 컨테이너 대비 수직 중앙 */
   transform: translateY(-50%); /* 정확한 중앙 정렬 */
-  box-shadow: inset -3px 4px 4px -2px rgba(0, 0, 0, 0.3); /* 오른쪽으로만 그림자 */
+  box-shadow: inset -5px 0 5px -3px rgba(0, 0, 0, 0.4); /* 오른쪽으로만 그림자 */
   left: 0; /* 쿠폰의 왼쪽 끝에 배치 */
   margin-left: -15px; /* 원의 절반만 보이도록 */
 }
@@ -108,7 +109,7 @@ export default {};
   position: absolute;
   top: 50%; /* 부모 컨테이너 대비 수직 중앙 */
   transform: translateY(-50%); /* 정확한 중앙 정렬 */
-  box-shadow: inset 3px 4px 4px -2px rgba(0, 0, 0, 0.3); /* 왼쪽으로만 그림자 */
+  box-shadow: inset 5px 0 5px -3px rgba(0, 0, 0, 0.4); /* 왼쪽으로만 그림자 */
   right: 0; /* 쿠폰의 오른쪽 끝에 배치 */
   margin-right: -15px; /* 원의 절반만 보이도록 */
 }
