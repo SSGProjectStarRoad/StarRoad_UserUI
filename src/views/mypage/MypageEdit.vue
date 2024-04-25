@@ -7,7 +7,9 @@
         <div class="profileimg">
           <img src="@/img/spaceman_big.png" alt="이미지" />
         </div>
-        <div class="imgfix"><img src="@/img/pencil.png" alt="이미지" /></div>
+        <div class="imgfix" @click="goToEditimgPage">
+          <img src="@/img/pencil.png" alt="이미지" />
+        </div>
         <div class="nicknameinput">
           <input
             id="nickname"
@@ -51,7 +53,7 @@
         </div>
       </form>
     </div>
-    <div class="withdrawal">계정 탈퇴하기</div>
+    <div class="withdrawal" @click="goToWitdrwaPage">계정 탈퇴하기</div>
   </div>
 </template>
 
@@ -62,6 +64,14 @@ export default {
     return {
       passwordEye: passwordEye,
     };
+  },
+  methods: {
+    goToWitdrwaPage() {
+      this.$router.push('/mypage/withdraw'); // Vue Router를 사용하여 페이지 전환
+    },
+    goToEditimgPage() {
+      this.$router.push('/mypage/editimg'); // Vue Router를 사용하여 페이지 전환
+    },
   },
 };
 </script>
@@ -93,6 +103,7 @@ export default {
 }
 
 .imgfix {
+  cursor: pointer;
   position: absolute;
   top: 140px;
   right: 130px;
