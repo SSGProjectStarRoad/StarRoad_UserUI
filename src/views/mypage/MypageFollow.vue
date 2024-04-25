@@ -9,7 +9,7 @@
         }"
         @click="loadFollowers"
       >
-        Follower 100명
+        Follower {{ followers.length }}명
       </div>
       <div
         class="following"
@@ -19,7 +19,7 @@
         }"
         @click="loadFollowings"
       >
-        Following 70명
+        Following {{ followings.length }}명
       </div>
     </div>
     <div class="list">
@@ -47,12 +47,27 @@ export default {
       activeTab: 'followers', // Initial active tab
       persons: [],
       followers: [
-        { id: 1, name: 'Victory Am', followerNum: 1323, profileImgUrl: img },
+        {
+          id: 1,
+          name: 'Victory Am',
+          followerNum: 1323,
+          profileImgUrl: require('@/img/reward.png'),
+        },
         { id: 2, name: 'Linda Bell', followerNum: 1456, profileImgUrl: img },
       ],
       followings: [
         { id: 3, name: 'James Lee', followerNum: 998, profileImgUrl: img },
         { id: 4, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
+        { id: 5, name: 'James Lee', followerNum: 998, profileImgUrl: img },
+        { id: 6, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
+        { id: 7, name: 'James Lee', followerNum: 998, profileImgUrl: img },
+        { id: 8, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
+        { id: 9, name: 'James Lee', followerNum: 998, profileImgUrl: img },
+        { id: 10, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
+        { id: 11, name: 'James Lee', followerNum: 998, profileImgUrl: img },
+        { id: 12, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
+        { id: 13, name: 'James Lee', followerNum: 998, profileImgUrl: img },
+        { id: 14, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
       ],
     };
   },
@@ -69,6 +84,11 @@ export default {
       this.activeTab = 'followings';
     },
     deletePerson(id) {
+      if (this.activeTab === 'followers') {
+        this.followers = this.followers.filter(person => person.id !== id);
+      } else {
+        this.followings = this.followings.filter(person => person.id !== id);
+      }
       this.persons = this.persons.filter(person => person.id !== id);
     },
   },

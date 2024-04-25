@@ -4,24 +4,19 @@
     <div class="coupon-sub">나의 쿠폰함을 확인하세요</div>
 
     <div class="mycoupons">
-      <div class="coupons-amount">사용 가능 쿠폰 2장</div>
-      <div class="coupon">
-        <div class="circle1"></div>
-        <div class="coupon-img"><img src="@/img/reward.png" alt="" /></div>
-        <div class="line"></div>
-        <div class="info">
-          <div class="benefit">10%</div>
-          <div class="store">Starbucks</div>
-        </div>
-        <div class="circle2"></div>
+      <div class="coupons-amount">
+        사용 가능 쿠폰 <span class="coupon-count">{{ coupons.length }}</span
+        >장
       </div>
-      <div class="coupon">
+      <div class="coupon" v-for="coupon in coupons" :key="coupon.id">
         <div class="circle1"></div>
-        <div class="coupon-img"><img src="@/img/reward.png" alt="" /></div>
+        <div class="coupon-img">
+          <img :src="coupon.image" alt="Coupon image" />
+        </div>
         <div class="line"></div>
         <div class="info">
-          <div class="benefit">10%</div>
-          <div class="store">Starbucks</div>
+          <div class="benefit">{{ coupon.benefit }}%</div>
+          <div class="store">{{ coupon.store }}</div>
         </div>
         <div class="circle2"></div>
       </div>
@@ -30,7 +25,26 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      coupons: [
+        {
+          id: 1,
+          benefit: 10,
+          store: 'Starbucks',
+          image: require('@/img/reward.png'),
+        },
+        {
+          id: 2,
+          benefit: 15,
+          store: 'Amazon',
+          image: require('@/img/reward.png'),
+        },
+      ],
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -53,6 +67,11 @@ export default {};
   margin-left: 10px;
   font-size: 12px;
   color: var(--dgray-color);
+}
+.coupon-count {
+  color: var(--navy-color); /* 텍스트 색상 변경 */
+  font-weight: bold; /* 텍스트 굵기 변경 */
+  font-size: 16px;
 }
 .coupon {
   position: relative;
