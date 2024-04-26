@@ -136,7 +136,8 @@ button {
 }
 
 .timeline-post-item-feed {
-  border-bottom: 10px solid #ececec;
+  border-radius: 10px;
+  border: 1px solid #e8e8e8;
 }
 
 .timeline-post-item {
@@ -153,8 +154,9 @@ button {
 .timeline-recom-follow {
     overflow: hidden;
     padding: 20px;
-    margin-top: -10px;
-    background: #f1f1f1;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #e8e8e8;
 }
 
 .timeline-recom-follow .swiper {
@@ -500,17 +502,15 @@ button {
 }
 
 .timeline-post-item-feed {
+  margin-top: 10px;
   border-bottom: 10px solid #ececec;
+  
 }
 
 .tab-menu.sticky {
   position: sticky;
   top: 0;
   z-index: 10;
-}
-.tab-menu {
-  border-bottom: 2px solid #f1f1f1;
-  background: #fff;
 }
 
 .tab-menu ul {
@@ -526,7 +526,6 @@ ol, ul {
 }
 
 .tab-menu {
-  border-bottom: 2px solid #f1f1f1;
   background: #fff;
 }
 
@@ -669,4 +668,132 @@ a {
   color: #fff;
   border-color: #ff6632;
   border-radius: 24px;
+}
+
+.profile-info {
+  margin: 0 auto;
+  max-width: 480px;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #fff;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.header-left .btn-back {
+  background: url(../../img/back_arrow.svg) 50% 50% no-repeat;
+  width: 32px;
+  height: 32px;
+  display: block;
+  text-indent: -999em;
+  overflow: hidden;
+  margin-right: 6px;
+  flex: none;
+}
+
+.header-left button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+  background: transparent;
+  color: #000;
+  font-size: 14px;
+}
+
+.header-left .page-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-right: 2px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+}
+
+.mypage-profile {
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  align-items: flex-start;
+}
+
+.mypage-profile .profile-pic {
+  margin-right: 12px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.mypage-profile .profile-pic.__vip:after {
+  display: block;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  content: "";
+}
+
+.mypage-profile .mypage-profile-meta {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.mypage-profile .name {
+  display: flex;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.username .txt {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+  min-width: 0;
+  line-height: normal;
+}
+
+.mypage-profile .mypage-profile-meta .meta {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.mypage-profile .mypage-profile-meta .meta dl {
+  display: flex;
+  gap: 5px;
+}
+
+.mypage-profile .mypage-profile-meta .meta dl dt {
+  color: #666;
+  font-size: 12px;
+}
+
+.mypage-profile .mypage-profile-meta .meta dl dd {
+  font-weight: 700;
+  color: #000;
+  font-size: 14px;
 }
