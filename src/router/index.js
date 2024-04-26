@@ -23,6 +23,10 @@ const routes = [
     component: () => import('@/views/review/ReviewWrite.vue'),
   },
   {
+    path: '/review/user',
+    component: () => import('@/views/review/ReviewUser.vue'),
+  },
+  {
     path: '/reward/main',
     component: () => import('@/views/reward/RewardMain.vue'),
   },
