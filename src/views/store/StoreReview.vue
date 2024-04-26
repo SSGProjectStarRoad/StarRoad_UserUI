@@ -95,11 +95,13 @@
         </div>
       </div>
     </div>
+    <reviewbutton/>
   </div>
 </template>
 
 <script>
 import ProgressBar from "@/components/store/ProgressBar.vue";
+import reviewbutton from "@/components/review/ReviewButton.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 
@@ -155,6 +157,7 @@ export default {
     ProgressBar,
     Swiper,
     SwiperSlide,
+    reviewbutton,
   },
   methods: {
     changeSort() {
