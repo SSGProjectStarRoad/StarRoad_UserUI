@@ -70,6 +70,14 @@ const routes = [
     path: '/mypage/coupon',
     component: () => import('@/views/mypage/MypageCoupon.vue'),
   },
+  {
+    path: '/login/register',
+    component: () => import('@/views/login/RegisterUser.vue'),
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/login/LoginUser.vue'),
+  },
 
   // 추가적인 라우트...
 ];

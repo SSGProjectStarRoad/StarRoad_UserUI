@@ -1,0 +1,219 @@
+<template>
+  <div class="contents">
+    <div></div>
+
+    <div class="loginform">
+      <form @submit.prevent="submitForm">
+        <div class="welcome-message">
+          <img class="login-logo" :src="loginlogo" alt="Login Logo" />
+          <h2>Welcome to Star Road!</h2>
+        </div>
+
+        <div class="email-input">
+          <input
+            id="email"
+            type="text"
+            placeholder="이메일을 입력해주세요"
+            v-model="email"
+          />
+        </div>
+
+        <div class="password-input">
+          <input
+            id="password"
+            type="password"
+            placeholder="비밀번호를 입력해주세요"
+            v-model="email"
+          />
+          <img class="passwordeye" :src="passwordEye" alt="" />
+        </div>
+
+        <div class="forgot-password">Forgot Password?</div>
+
+        <div class="login-input">
+          <input id="loginclear" type="button" value="로그인" />
+        </div>
+
+        <div class="sns-login">Or Login with</div>
+        <div class="snsimg">
+          <div class="sns">
+            <img class="kakao" :src="kakao" alt="" />
+          </div>
+          <div class="sns">
+            <img class="google" :src="google" alt="" />
+          </div>
+          <div class="sns">
+            <img class="naver" :src="naver" alt="" />
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="registerback">
+      계정이 없으신가요?
+      <div class="register" @click="gotoRegister">회원가입</div>
+    </div>
+  </div>
+</template>
+
+<script>
+import loginlogo from '@/img/telescope_big.png';
+import passwordEye from '@/img/login/passwordeye.png';
+import kakao from '@/img/login/kakaologo.png';
+import google from '@/img/login/googlelogo.png';
+import naver from '@/img/login/naverlogo.png';
+
+export default {
+  data() {
+    return {
+      loginlogo: loginlogo,
+      passwordEye: passwordEye,
+      kakao: kakao,
+      google: google,
+      naver: naver,
+    };
+  },
+  methods: {
+    gotoRegister() {
+      this.$router.push('/login/register');
+    },
+  },
+};
+</script>
+
+<style>
+.contents {
+  display: flex; /* Flexbox 레이아웃 사용 */
+  flex-direction: column; /* 자식 요소들을 세로로 정렬 */
+  align-items: center; /* 수평 방향 중앙 정렬 */
+  height: 100vh; /* 뷰포트 높이를 전체 크기로 설정 */
+  padding-top: 60px;
+}
+.login-logo-container {
+  margin-bottom: 20px; /* 로고와 텍스트 사이의 간격을 조정합니다. */
+}
+.login-logo {
+  width: 130px; /* 로고의 크기를 조정합니다. */
+  height: auto; /* 높이는 자동으로 조정되도록 설정합니다. */
+}
+
+.welcome-message {
+  text-align: center;
+  margin-bottom: 15px; /* 텍스트와 로그인 폼 사이의 간격을 조정합니다. */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+}
+.loginform {
+  text-align: center;
+  position: relative;
+  width: 350px;
+  margin: 0 auto;
+}
+.email-input,
+.password-input,
+.login-input {
+  position: relative;
+  margin-bottom: 10px;
+}
+#email,
+#password {
+  box-sizing: border-box;
+  width: 100%;
+  height: 48px;
+  border-radius: 8px;
+  background-color: var(--gray-color);
+  border: 0;
+  padding-left: 10px;
+}
+.passwordeye {
+  position: absolute; /* 이미지를 절대 위치로 설정 */
+  top: 50%; /* 상위 요소의 정중앙에서 시작 */
+  right: 7px; /* 왼쪽으로부터 5px 떨어진 위치에 설정 */
+  transform: translateY(-50%); /* Y축으로 -50% 만큼 이동하여 수직 중앙 정렬 */
+  width: 13px;
+  height: 10px;
+  cursor: pointer;
+}
+.forgot-password {
+  position: absolute;
+  font-weight: bold;
+  font-size: 11px;
+  right: 7px;
+  cursor: pointer;
+  color: var(--navy-color);
+}
+#loginclear {
+  box-sizing: border-box;
+  width: 100%;
+  height: 48px;
+  border-radius: 8px;
+  background-color: var(--navy-color);
+  border: 0;
+  padding-left: 10px;
+  color: white;
+  font-size: 18px; /* 글씨 크기를 18px로 조정 */
+  font-weight: bold; /* 글씨 굵기를 bold로 설정 */
+  cursor: pointer; /* 버튼 위에 마우스를 올렸을 때 커서 모양을 손가락 모양으로 변경 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  margin-top: 45px;
+}
+.sns-login {
+  display: flex;
+  justify-content: center; /* 내용을 가운데 정렬 */
+  flex-basis: 100%;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.35);
+  font-size: 12px;
+  margin: 8px 0px;
+  position: relative; /* 가상 요소의 위치 기준 */
+  margin-bottom: 12px; /* 하단 공간 추가 */
+}
+.sns-login::before,
+.sns-login::after {
+  content: '';
+  flex-grow: 1;
+  background: rgba(0, 0, 0, 0.35);
+  height: 1px;
+  font-size: 0px;
+  line-height: 0px;
+  margin: 0px 16px;
+}
+.sns {
+  margin: 0 5px; /* 로고 사이의 간격을 조정합니다. */
+  width: 48px; /* 로고의 너비를 조정합니다. */
+  height: 48px; /* 로고의 높이를 조정합니다. */
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2); /* 테두리 대신 그림자를 추가합니다. */
+  border-radius: 50%; /* 로고를 원형으로 만듭니다. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.snsimg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* 이미지 사이의 간격을 조정 */
+}
+.sns img {
+  max-width: 30px; /* 로고 이미지의 최대 너비를 조정합니다. */
+  max-height: 30px; /* 로고 이미지의 최대 높이를 조정합니다. */
+  object-fit: contain;
+  cursor: pointer;
+}
+.registerback {
+  display: flex; /* Flexbox를 이용하여 자식 요소들을 플렉스 아이템으로 만듭니다. */
+  align-items: center; /* 수직 방향으로 중앙 정렬합니다. */
+  justify-content: space-between; /* 아이템들 사이에 공간을 동일하게 배분합니다. */
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 13px;
+}
+.register {
+  padding: 4px 8px;
+  color: var(--mint-color);
+  font-weight: bold;
+  cursor: pointer;
+}
+</style>
