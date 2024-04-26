@@ -14,7 +14,7 @@
       <div class="category">
         <button id="categoryButton" class="button">카테고리별</button>
         <div class="category-slide" ref="categorySlide">
-          <Swiper 
+          <Swiper
             :slidesPerView="'auto'"
             :spaceBetween="10"
             :freeMode="true"
@@ -52,10 +52,10 @@
   </div>
 </template>
 <script>
-import search from "@/components/store/Search.vue";
-import list from "@/components/store/list.vue";
+import search from '@/components/store/Search.vue';
+import list from '@/components/store/list.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import "swiper/css";
+import 'swiper/css';
 export default {
   components: {
     search,
@@ -66,25 +66,24 @@ export default {
   data() {
     return {
       categories: [
-        "레스토랑&카페",
-        "뷰티",
-        "의류",
-        "엔터테인먼트",
-        "트레이더스",
-        "홈퍼니싱",
-        "라이프스타일",
-        "키즈",
+        '레스토랑&카페',
+        '뷰티',
+        '의류',
+        '엔터테인먼트',
+        '트레이더스',
+        '홈퍼니싱',
+        '라이프스타일',
+        '키즈',
       ],
-      floors: ["1층", "2층", "3층", "4층", "B1", "B2"],
+      floors: ['1층', '2층', '3층', '4층', 'B1', 'B2'],
       categorySwiper: null,
       floorSwiper: null,
     };
   },
-
 };
 </script>
 <style scoped>
-@import "@/css/common.css";
+@import '@/css/common.css';
 .parent-with-scroll {
   height: 250px; /* 부모 요소의 높이를 설정하여 스크롤이 가능하도록 함 */
   overflow-y: auto; /* 세로 스크롤이 필요한 경우 스크롤이 표시되도록 함 */
@@ -174,7 +173,7 @@ export default {
   overflow: hidden;
 }
 .center-item {
-  margin-top : 5%;
+  margin-top: 5%;
   display: flex;
   background-color: white;
   justify-content: center;
@@ -216,8 +215,8 @@ export default {
 .floor-slide-item {
   width: auto !important;
 }
-.swiper-slide{
+.swiper-slide {
   margin-bottom: 10px;
-  width:auto;
+  width: auto;
 }
 </style>

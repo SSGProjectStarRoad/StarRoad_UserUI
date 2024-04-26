@@ -55,28 +55,28 @@ export default {
         },
         {
           title: '두번째 별',
-          image: '@/img/mystar1.png',
+          image: mystar1,
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
         },
         {
           title: '세번째 별',
-          image: '@/img/mystar1.png',
+          image: mystar1,
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
         },
         {
           title: '네번째 별',
-          image: '@/img/mystar1.png',
+          image: mystar1,
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
         },
         {
           title: '다섯번째 별',
-          image: '@/img/mystar1.png',
+          image: mystar1,
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
@@ -188,19 +188,20 @@ export default {
 
 .contents {
   overflow: hidden;
+  height: 100vh;
 }
 .swiper-slide {
   transition: transform 0.3s ease-in-out;
-  max-height: 280px;
+  max-height: 240px;
   margin: 10px;
 }
 .rewardcard .swiper-container {
   /* overflow: hidden; */
   /* width: 100%; 컨테이너를 부모의 전체 너비로 설정 */
-  max-width: 700px; /* 최대 너비를 제한하고 싶다면 여기서 설정 */
-  height: 320px;
+  max-width: 660px; /* 최대 너비를 제한하고 싶다면 여기서 설정 */
+  height: 280px;
   position: absolute;
-  top: 180px;
+  top: 140px;
   left: 50%; /* 중앙 정렬을 위해 사용 */
   transform: translateX(-57.5%); /* 정확히 중앙에 배치 */
 }

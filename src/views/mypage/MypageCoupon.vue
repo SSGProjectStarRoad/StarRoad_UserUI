@@ -4,33 +4,50 @@
     <div class="coupon-sub">나의 쿠폰함을 확인하세요</div>
 
     <div class="mycoupons">
-      <div class="coupons-amount">사용 가능 쿠폰 2장</div>
-      <div class="coupon">
-        <div class="circle1"></div>
-        <div class="coupon-img"><img src="@/img/reward.png" alt="" /></div>
-        <div class="line"></div>
-        <div class="info">
-          <div class="benefit">10%</div>
-          <div class="store">Starbucks</div>
-        </div>
-        <div class="circle2"></div>
+      <div class="coupons-amount">
+        사용 가능 쿠폰 <span class="coupon-count">{{ coupons.length }}</span
+        >장
       </div>
-      <div class="coupon">
-        <div class="circle1"></div>
-        <div class="coupon-img"><img src="@/img/reward.png" alt="" /></div>
-        <div class="line"></div>
-        <div class="info">
-          <div class="benefit">10%</div>
-          <div class="store">Starbucks</div>
+      <form action="">
+        <div class="coupon" v-for="coupon in coupons" :key="coupon.id">
+          <div class="circle1"></div>
+          <div class="coupon-img">
+            <img :src="coupon.image" alt="Coupon image" />
+          </div>
+          <div class="line"></div>
+          <div class="info">
+            <div class="benefit">{{ coupon.benefit }}%</div>
+            <div class="store">{{ coupon.store }}</div>
+          </div>
+          <button class="use-coupon">사용</button>
+          <div class="circle2"></div>
         </div>
-        <div class="circle2"></div>
-      </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      coupons: [
+        {
+          id: 1,
+          benefit: 10,
+          store: 'Starbucks',
+          image: require('@/img/reward.png'),
+        },
+        {
+          id: 2,
+          benefit: 15,
+          store: 'Amazon',
+          image: require('@/img/reward.png'),
+        },
+      ],
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -47,16 +64,22 @@ export default {};
 }
 .mycoupons {
   margin: 30px 60px;
+  /* overflow: hidden; */
 }
 .coupons-amount {
   margin-left: 10px;
   font-size: 12px;
   color: var(--dgray-color);
 }
+.coupon-count {
+  color: var(--navy-color); /* 텍스트 색상 변경 */
+  font-weight: bold; /* 텍스트 굵기 변경 */
+  font-size: 16px;
+}
 .coupon {
-  overflow: hidden;
   position: relative;
   display: flex;
+  /* overflow: hidden; */
   width: 100%;
   height: 100px;
   margin-top: 10px;
@@ -87,6 +110,18 @@ export default {};
   margin-top: 10px;
   margin-left: 10px;
 }
+.use-coupon {
+  position: absolute;
+  top: 30px;
+  width: 60px;
+  height: 40px;
+  right: 30px;
+  border-radius: 8px;
+  background-color: var(--navy-color);
+  color: white;
+  border: 0;
+  box-shadow: 0px 0px 7px 3px rgba(0, 0, 0, 0.2);
+}
 .circle1 {
   width: 30px;
   height: 30px;
@@ -95,7 +130,7 @@ export default {};
   position: absolute;
   top: 50%; /* 부모 컨테이너 대비 수직 중앙 */
   transform: translateY(-50%); /* 정확한 중앙 정렬 */
-  box-shadow: inset -3px 4px 4px -2px rgba(0, 0, 0, 0.3); /* 오른쪽으로만 그림자 */
+  box-shadow: inset -5px 0 5px -3px rgba(0, 0, 0, 0.4); /* 오른쪽으로만 그림자 */
   left: 0; /* 쿠폰의 왼쪽 끝에 배치 */
   margin-left: -15px; /* 원의 절반만 보이도록 */
 }
@@ -108,7 +143,7 @@ export default {};
   position: absolute;
   top: 50%; /* 부모 컨테이너 대비 수직 중앙 */
   transform: translateY(-50%); /* 정확한 중앙 정렬 */
-  box-shadow: inset 3px 4px 4px -2px rgba(0, 0, 0, 0.3); /* 왼쪽으로만 그림자 */
+  box-shadow: inset 5px 0 5px -3px rgba(0, 0, 0, 0.4); /* 왼쪽으로만 그림자 */
   right: 0; /* 쿠폰의 오른쪽 끝에 배치 */
   margin-right: -15px; /* 원의 절반만 보이도록 */
 }

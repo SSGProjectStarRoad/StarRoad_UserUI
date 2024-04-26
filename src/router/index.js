@@ -15,6 +15,18 @@ const routes = [
     component: () => import('@/views/review/ReviewFollowing.vue'),
   },
   {
+    path: '/review/recommended',
+    component: () => import('@/views/review/ReviewRecommended.vue'),
+  },
+  {
+    path: '/review/write',
+    component: () => import('@/views/review/ReviewWrite.vue'),
+  },
+  {
+    path: '/review/user',
+    component: () => import('@/views/review/ReviewUser.vue'),
+  },
+  {
     path: '/reward/main',
     component: () => import('@/views/reward/RewardMain.vue'),
   },
@@ -67,8 +79,32 @@ const routes = [
     component: () => import('@/views/mypage/MypageNotice.vue'),
   },
   {
-    path: '/mypage/coupon',
+    path: '/mypage/mycoupon',
     component: () => import('@/views/mypage/MypageCoupon.vue'),
+  },
+  {
+    path: '/mypage/myreview',
+    component: () => import('@/views/mypage/MypageReview.vue'),
+  },
+  {
+    path: '/mypage/follow',
+    component: () => import('@/views/mypage/MypageFollow.vue'),
+  },
+  {
+    path: '/mypage/check',
+    component: () => import('@/views/mypage/MypageCheck.vue'),
+  },
+  {
+    path: '/mypage/edit',
+    component: () => import('@/views/mypage/MypageEdit.vue'),
+  },
+  {
+    path: '/mypage/editimg',
+    component: () => import('@/views/mypage/MypageEditimg.vue'),
+  },
+  {
+    path: '/mypage/withdraw',
+    component: () => import('@/views/mypage/MypageWithdrawal.vue'),
   },
 
   // 추가적인 라우트...
