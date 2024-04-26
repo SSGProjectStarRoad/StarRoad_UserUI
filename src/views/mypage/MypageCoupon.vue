@@ -8,18 +8,21 @@
         사용 가능 쿠폰 <span class="coupon-count">{{ coupons.length }}</span
         >장
       </div>
-      <div class="coupon" v-for="coupon in coupons" :key="coupon.id">
-        <div class="circle1"></div>
-        <div class="coupon-img">
-          <img :src="coupon.image" alt="Coupon image" />
+      <form action="">
+        <div class="coupon" v-for="coupon in coupons" :key="coupon.id">
+          <div class="circle1"></div>
+          <div class="coupon-img">
+            <img :src="coupon.image" alt="Coupon image" />
+          </div>
+          <div class="line"></div>
+          <div class="info">
+            <div class="benefit">{{ coupon.benefit }}%</div>
+            <div class="store">{{ coupon.store }}</div>
+          </div>
+          <button class="use-coupon">사용</button>
+          <div class="circle2"></div>
         </div>
-        <div class="line"></div>
-        <div class="info">
-          <div class="benefit">{{ coupon.benefit }}%</div>
-          <div class="store">{{ coupon.store }}</div>
-        </div>
-        <div class="circle2"></div>
-      </div>
+      </form>
     </div>
   </div>
 </template>
@@ -106,6 +109,18 @@ export default {
 .info {
   margin-top: 10px;
   margin-left: 10px;
+}
+.use-coupon {
+  position: absolute;
+  top: 30px;
+  width: 60px;
+  height: 40px;
+  right: 30px;
+  border-radius: 8px;
+  background-color: var(--navy-color);
+  color: white;
+  border: 0;
+  box-shadow: 0px 0px 7px 3px rgba(0, 0, 0, 0.2);
 }
 .circle1 {
   width: 30px;

@@ -99,53 +99,53 @@
 </template>
 
 <script>
-import ProgressBar from "@/components/store/ProgressBar.vue";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import "swiper/css";
+import ProgressBar from '@/components/store/ProgressBar.vue';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
 
 export default {
   data() {
     return {
       review: 1520,
-      selectedSort: "latest",
-      phoneNumber: "010-1234-5678",
+      selectedSort: 'latest',
+      phoneNumber: '010-1234-5678',
       buttons: [
-        "종류",
-        "매장",
-        "스타일",
-        "재고",
-        "품질",
-        "품질",
-        "품질",
-        "품질2",
-        "품질",
-        "품질",
-        "품질222",
-        "품질222",
-        "품222",
-        "재고3",
-        "품질",
-        "품질",
-        "품질",
-        "품질4",
-        "품질",
-        "품질5",
-        "품질2622",
-        "품질222",
-        "품222",
-        "재고",
-        "품질",
-        "품질",
-        "품질",
-        "품질",
-        "품질",
-        "품질",
-        "품질222",
-        "품질222",
-        "1111111",
+        '종류',
+        '매장',
+        '스타일',
+        '재고',
+        '품질',
+        '품질',
+        '품질',
+        '품질2',
+        '품질',
+        '품질',
+        '품질222',
+        '품질222',
+        '품222',
+        '재고3',
+        '품질',
+        '품질',
+        '품질',
+        '품질4',
+        '품질',
+        '품질5',
+        '품질2622',
+        '품질222',
+        '품222',
+        '재고',
+        '품질',
+        '품질',
+        '품질',
+        '품질',
+        '품질',
+        '품질',
+        '품질222',
+        '품질222',
+        '1111111',
       ],
       swiperOptions: {
-        slidesPerView: "auto", // 기본 설정을 'auto'로 하여 슬라이드가 유연하게 표시되도록 합니다.
+        slidesPerView: 'auto', // 기본 설정을 'auto'로 하여 슬라이드가 유연하게 표시되도록 합니다.
         spaceBetween: 5,
         loop: false,
       },
@@ -158,12 +158,12 @@ export default {
   },
   methods: {
     changeSort() {
-      if (this.selectedSort === "latest") {
+      if (this.selectedSort === 'latest') {
         // 최신순으로 정렬하는 로직
-        console.log("최신순으로 정렬");
-      } else if (this.selectedSort === "likes") {
+        console.log('최신순으로 정렬');
+      } else if (this.selectedSort === 'likes') {
         // 좋아요 순으로 정렬하는 로직
-        console.log("좋아요 순으로 정렬");
+        console.log('좋아요 순으로 정렬');
       }
     },
   },
@@ -171,10 +171,10 @@ export default {
 </script>
 
 <style scoped>
-@import "@/css/common.css";
+@import '@/css/common.css';
 .review-body {
   margin-top: 4%;
-  background-image: url("https://picsum.photos/600?random=0");
+  background-image: url('https://picsum.photos/600?random=0');
   height: 450px;
   background-position: center;
   background-size: cover;
@@ -209,7 +209,7 @@ export default {
 }
 
 .user-profile {
-  background-image: url("https://picsum.photos/100?random=0");
+  background-image: url('https://picsum.photos/100?random=0');
   width: 50px;
   height: 50px;
   background-size: 50%;
@@ -277,7 +277,7 @@ export default {
   background-color: var(--mint-color);
 }
 
-input[type="radio"] {
+input[type='radio'] {
   display: none;
 }
 
@@ -292,7 +292,7 @@ label {
   margin-left: 5px;
 }
 
-input[type="radio"]:checked + label {
+input[type='radio']:checked + label {
   background-color: var(--navy-color);
 }
 
@@ -309,7 +309,7 @@ input[type="radio"]:checked + label {
 }
 
 .section::before {
-  content: "";
+  content: '';
   display: block;
   height: 10px;
   width: 100%;
