@@ -1,34 +1,37 @@
 <template>
-  
-  <div class="search">
+  <div class="center-item">
+    <p></p>
+    <div class="search">
       <img class="searchimg" src="@/img/search.png" alt="" />
-      <input class="search-input" type="text" placeholder="매장명 검색">
+      <input class="search-input" type="text" placeholder="매장명 검색" />
     </div>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'search'
-
-}
+  name: 'search',
+};
 </script>
 
 <style>
 @import '@/css/common.css';
-
+.center-item {
+  background-color: white;
+}
 
 .search {
   position: fixed;
   display: flex;
+  justify-content: center;
   align-items: center;
   background-color: var(--gray-color);
-  border: 1px solid #ccc; /* 박스 테두리 */
-  border-radius: 20px; /* 박스 모서리 둥글기 */
-  padding: 5px 10px; /* 박스 내부 여백 */
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 5px 10px;
   box-shadow: 2px 2px 3px #00000033;
-  /* margin-bottom: 20px; */
 }
-.button{
+.button {
   background-color: var(--navy-color);
   border-radius: 15px;
 }
@@ -36,12 +39,11 @@ export default {
   width: 300px;
   height: 15px;
   padding: 3px 5px;
-  font-size: 16px;
+  font-size: 12px;
   background-color: var(--gray-color);
   border: none;
   box-sizing: border-box;
   vertical-align: middle; /* 추가 */
-  
 }
 .searchimg {
   width: 16px;
@@ -50,7 +52,7 @@ export default {
   vertical-align: middle; /* 추가 */
 }
 .info {
-  margin: 0; 
-  margin-bottom: 5px;/* 위아래 마진 조정 */
+  margin: 0;
+  margin-bottom: 5px; /* 위아래 마진 조정 */
 }
 </style>
