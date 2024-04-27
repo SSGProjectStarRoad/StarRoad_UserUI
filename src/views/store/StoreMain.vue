@@ -138,6 +138,7 @@ export default {
   vertical-align: middle; /* 추가 */
 }
 .d-button {
+  padding: 1px 6px;
   background-color: var(--gray-color);
   border-radius: 8px;
   color: white;
@@ -159,6 +160,8 @@ export default {
   text-overflow: ellipsis;
 }
 .info {
+  height: 24px;
+  font-size: 20px;
   margin: 0;
   margin-bottom: 5px;
   align-items: center;
@@ -173,6 +176,7 @@ export default {
   overflow: hidden;
 }
 .center-item {
+  height: 32px;
   margin-top: 5%;
   display: flex;
   background-color: white;
