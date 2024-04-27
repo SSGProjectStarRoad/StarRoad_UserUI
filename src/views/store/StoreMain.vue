@@ -6,31 +6,6 @@
         <div class="search">
           <img class="searchimg" src="@/img/search.png" alt="" />
           <input class="search-input" type="text" placeholder="매장명 검색" />
-<<<<<<< HEAD
-        </div>
-      </div>
-
-      <h3 class="info">STORE INFO</h3>
-      <h3 class="info">매장안내</h3>
-      <div class="category">
-        <button id="categoryButton" class="button">카테고리별</button>
-        <div class="category-slide" ref="categorySlide">
-          <div class="category-slide-container" ref="categorySlideContainer">
-            <div v-for="(category, index) in categories" :key="index">
-              <button class="d-button">{{ category }}</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="category">
-        <button id="floorButton" class="button">층별</button>
-        <div class="floor-slide" ref="floorSlide">
-          <div class="floor-slide-container" ref="floorSlideContainer">
-            <div v-for="(floor, index) in floors" :key="index">
-              <button class="d-button">{{ floor }}</button>
-            </div>
-          </div>
-=======
         </div>
       </div>
 
@@ -68,7 +43,6 @@
               <button class="d-button">{{ floor }}</button>
             </SwiperSlide>
           </Swiper>
->>>>>>> 652c3c5ba062575effba4ace0609fd48c404617e
         </div>
       </div>
     </div>
@@ -80,11 +54,7 @@
 <script>
 import search from '@/components/store/Search.vue';
 import list from '@/components/store/list.vue';
-<<<<<<< HEAD
-import Swiper from 'swiper';
-=======
 import { Swiper, SwiperSlide } from 'swiper/vue';
->>>>>>> 652c3c5ba062575effba4ace0609fd48c404617e
 import 'swiper/css';
 export default {
   components: {
@@ -110,46 +80,6 @@ export default {
       floorSwiper: null,
     };
   },
-<<<<<<< HEAD
-  mounted() {
-    this.$nextTick(() => {
-      this.checkSlideOverflow('category');
-      this.checkSlideOverflow('floor');
-    });
-  },
-  methods: {
-    checkSlideOverflow(type) {
-      const slideContainer = this.$refs[`${type}SlideContainer`];
-      const slideContent = slideContainer.firstElementChild;
-      const isOverflown = slideContent.scrollWidth > slideContainer.clientWidth;
-      if (isOverflown) {
-        this.initializeSwiper(type);
-      }
-    },
-    initializeSwiper(type) {
-      if (type === 'category') {
-        this.categorySwiper = new Swiper(this.$refs.categorySlide, {
-          slidesPerView: 'auto',
-          spaceBetween: 10,
-          freeMode: true,
-          freeModeSticky: true,
-          grabCursor: true,
-          resistanceRatio: 0,
-        });
-      } else if (type === 'floor') {
-        this.floorSwiper = new Swiper(this.$refs.floorSlide, {
-          slidesPerView: 'auto',
-          spaceBetween: 10,
-          freeMode: true,
-          freeModeSticky: true,
-          grabCursor: true,
-          resistanceRatio: 0,
-        });
-      }
-    },
-  },
-=======
->>>>>>> 652c3c5ba062575effba4ace0609fd48c404617e
 };
 </script>
 <style scoped>
@@ -285,8 +215,6 @@ export default {
   border: none;
   transition: background-color 0.3s ease;
 }
-<<<<<<< HEAD
-=======
 .category-slide-item,
 .floor-slide-item {
   width: auto !important;
@@ -295,5 +223,4 @@ export default {
   margin-bottom: 10px;
   width: auto;
 }
->>>>>>> 652c3c5ba062575effba4ace0609fd48c404617e
 </style>

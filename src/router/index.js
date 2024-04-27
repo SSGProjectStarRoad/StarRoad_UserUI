@@ -83,7 +83,6 @@ const routes = [
     component: () => import('@/views/mypage/MypageCoupon.vue'),
   },
   {
-<<<<<<< HEAD
     path: '/login/register',
     component: () => import('@/views/login/RegisterUser.vue'),
   },
@@ -106,7 +105,7 @@ const routes = [
   {
     path: '/login/changepw',
     component: () => import('@/views/login/ChangePw.vue'),
-=======
+
     path: '/mypage/myreview',
     component: () => import('@/views/mypage/MypageReview.vue'),
   },
@@ -129,7 +128,6 @@ const routes = [
   {
     path: '/mypage/withdraw',
     component: () => import('@/views/mypage/MypageWithdrawal.vue'),
->>>>>>> 652c3c5ba062575effba4ace0609fd48c404617e
   },
 
   // 추가적인 라우트...
