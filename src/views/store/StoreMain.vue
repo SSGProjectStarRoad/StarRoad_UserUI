@@ -6,6 +6,7 @@
         <div class="search">
           <img class="searchimg" src="@/img/search.png" alt="" />
           <input class="search-input" type="text" placeholder="매장명 검색" />
+<<<<<<< HEAD
         </div>
       </div>
 
@@ -29,6 +30,45 @@
               <button class="d-button">{{ floor }}</button>
             </div>
           </div>
+=======
+        </div>
+      </div>
+
+      <h3 class="info">STORE INFO</h3>
+      <h3 class="info">매장안내</h3>
+      <div class="category">
+        <button id="categoryButton" class="button">카테고리별</button>
+        <div class="category-slide" ref="categorySlide">
+          <Swiper
+            :slidesPerView="'auto'"
+            :spaceBetween="10"
+            :freeMode="true"
+            :freeModeSticky="true"
+            :grabCursor="true"
+            :resistanceRatio="0.6"
+          >
+            <SwiperSlide v-for="(category, index) in categories" :key="index">
+              <button class="d-button">{{ category }}</button>
+            </SwiperSlide>
+          </Swiper>
+        </div>
+      </div>
+      <div class="category">
+        <button id="floorButton" class="button">층별</button>
+        <div class="floor-slide" ref="floorSlide">
+          <Swiper
+            :slidesPerView="'auto'"
+            :spaceBetween="10"
+            :freeMode="true"
+            :freeModeSticky="true"
+            :grabCursor="true"
+            :resistanceRatio="0"
+          >
+            <SwiperSlide v-for="(floor, index) in floors" :key="index">
+              <button class="d-button">{{ floor }}</button>
+            </SwiperSlide>
+          </Swiper>
+>>>>>>> 652c3c5ba062575effba4ace0609fd48c404617e
         </div>
       </div>
     </div>
@@ -40,12 +80,18 @@
 <script>
 import search from '@/components/store/Search.vue';
 import list from '@/components/store/list.vue';
+<<<<<<< HEAD
 import Swiper from 'swiper';
+=======
+import { Swiper, SwiperSlide } from 'swiper/vue';
+>>>>>>> 652c3c5ba062575effba4ace0609fd48c404617e
 import 'swiper/css';
 export default {
   components: {
     search,
     list,
+    Swiper,
+    SwiperSlide,
   },
   data() {
     return {
@@ -64,6 +110,7 @@ export default {
       floorSwiper: null,
     };
   },
+<<<<<<< HEAD
   mounted() {
     this.$nextTick(() => {
       this.checkSlideOverflow('category');
@@ -101,6 +148,8 @@ export default {
       }
     },
   },
+=======
+>>>>>>> 652c3c5ba062575effba4ace0609fd48c404617e
 };
 </script>
 <style scoped>
@@ -118,8 +167,8 @@ export default {
   top: 1; /* 화면의 상단에 고정 */
   z-index: 1000; /* 다른 요소 위에 표시 */
   background-color: white; /* 배경색 설정 */
-
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1), 0 -4px 0 rgba(0, 0, 0, 0); /* 아래 방향으로만 그림자 적용 */
+  /* border-bottom: solid 7px var(--gray-color); */
+  box-shadow: 0 4px rgba(0, 0, 0, 0.1); /* 아래 방향으로만 그림자 적용 */
 
   width: 100%; /* 화면 너비에 맞게 설정 */
   max-width: 480px; /* 최대 너비 설정 */
@@ -159,8 +208,9 @@ export default {
   vertical-align: middle; /* 추가 */
 }
 .d-button {
+  padding: 1px 6px;
   background-color: var(--gray-color);
-  border-radius: 10px;
+  border-radius: 8px;
   color: white;
   box-shadow: 2px 2px 3px #00000033;
   border: none;
@@ -180,6 +230,8 @@ export default {
   text-overflow: ellipsis;
 }
 .info {
+  height: 24px;
+  font-size: 20px;
   margin: 0;
   margin-bottom: 5px;
   align-items: center;
@@ -194,6 +246,8 @@ export default {
   overflow: hidden;
 }
 .center-item {
+  height: 32px;
+  margin-top: 5%;
   display: flex;
   background-color: white;
   justify-content: center;
@@ -210,14 +264,7 @@ export default {
   justify-content: flex-start !important;
   align-self: flex-start !important;
 }
-.category-slide-container,
-.floor-slide-container {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 3px;
-}
+
 .category-slide,
 .floor-slide {
   margin-left: 10px;
@@ -229,17 +276,24 @@ export default {
   height: 30px;
   font-size: 16px;
 }
-.category-slide-container > div,
-.floor-slide-container > div {
-  flex: 0 0 auto;
-  margin-right: 10px;
-}
+
 .button {
   background-color: var(--navy-color);
-  border-radius: 15px;
+  border-radius: 8px;
   color: white;
   box-shadow: 2px 2px 3px #00000033;
   border: none;
   transition: background-color 0.3s ease;
 }
+<<<<<<< HEAD
+=======
+.category-slide-item,
+.floor-slide-item {
+  width: auto !important;
+}
+.swiper-slide {
+  margin-bottom: 10px;
+  width: auto;
+}
+>>>>>>> 652c3c5ba062575effba4ace0609fd48c404617e
 </style>

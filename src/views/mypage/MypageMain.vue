@@ -1,6 +1,8 @@
 <template>
   <div class="contents">
-    <div class="setting"><img src="@/img/setting.png" alt="" /></div>
+    <div class="setting" @click="goToEditPage">
+      <img src="@/img/setting.png" alt="" />
+    </div>
     <div class="current-mall">
       <div class="mall-name">스타필드 하남</div>
       <div class="mall-time">(10:00~22:00)</div>
@@ -10,7 +12,7 @@
         <div class="myname">이수연 님</div>
         <div class="mylevel">Blue Level</div>
       </div>
-      <div class="review-follow">
+      <div class="review-follow" @click="goToFollowPage">
         <div class="follower">
           팔로워
           <div class="follower-num">100</div>
@@ -31,11 +33,11 @@
         </div>
       </div>
       <div class="myown">
-        <div class="mycoupon">
+        <div class="mycoupon" @click="goToCouponPage">
           <div class="ownimg"><img src="@/img/mycoupon.png" alt="" /></div>
           <div class="text">쿠폰</div>
         </div>
-        <div class="myreview">
+        <div class="myreview" @click="goToReviewPage">
           <div class="ownimg"><img src="@/img/myreview.png" alt="" /></div>
           <div class="text">리뷰</div>
         </div>
@@ -45,7 +47,7 @@
           <div class="ownimg"><img src="@/img/howto.png" alt="" /></div>
           <div class="text">오시는 길</div>
         </div>
-        <div class="announcement">
+        <div class="announcement" @click="goToNoticePage">
           <div class="ownimg"><img src="@/img/howto.png" alt="" /></div>
           <div class="text">공지사항</div>
         </div>
@@ -59,13 +61,32 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    goToEditPage() {
+      this.$router.push('/mypage/edit'); // Vue Router를 사용하여 페이지 전환
+    },
+    goToFollowPage() {
+      this.$router.push('/mypage/follow'); // Vue Router를 사용하여 페이지 전환
+    },
+    goToCouponPage() {
+      this.$router.push('/mypage/mycoupon'); // Vue Router를 사용하여 페이지 전환
+    },
+    goToReviewPage() {
+      this.$router.push('/mypage/myreview'); // Vue Router를 사용하여 페이지 전환
+    },
+    goToNoticePage() {
+      this.$router.push('/mypage/notice'); // Vue Router를 사용하여 페이지 전환
+    },
+  },
+};
 </script>
 
 <style scoped>
 .setting {
   position: relative;
   left: 90%;
+  cursor: pointer;
 }
 .setting img {
   width: 30px;
@@ -109,6 +130,8 @@ export default {};
 }
 
 .review-follow {
+  width: 200px;
+  cursor: pointer;
   position: relative;
   display: flex;
   top: 30px;
@@ -151,6 +174,13 @@ export default {};
 .announcement,
 .inquiry {
   text-align: center;
+}
+.mycoupon,
+.myreview,
+.howto,
+.announcement,
+.inquiry {
+  cursor: pointer;
 }
 .mypoint {
   padding: 30px;

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&display=swap');
 html,
 body {
 
@@ -9,7 +10,9 @@ body {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
-	font-family: 'Spoqa Han Sans', 'Sans-serif';
+}
+* {
+	font-family: "Jua", sans-serif;
 }
 :root {
   --navy-color: #407AFF;
@@ -80,8 +83,10 @@ body {
 
 .contents {
   position: relative;
-	min-height: 100vh;
+	min-height: 100%;
 	margin-top: 40px;
+	height: auto;
+	padding-bottom: 120px;
 	
 	/* background-color: gray; */
 }

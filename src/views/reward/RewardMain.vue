@@ -34,6 +34,9 @@ export default {
 </script>
 
 <style scoped>
+.contents {
+  height: 100vh;
+}
 .informicon {
   margin-top: 60px;
   margin-left: 30px;
