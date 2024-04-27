@@ -199,7 +199,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .contents {
   display: flex; /* Flexbox 레이아웃 사용 */
   flex-direction: column; /* 자식 요소들을 세로로 정렬 */
@@ -313,9 +313,9 @@ export default {
   padding-left: 10px;
   color: white;
   font-size: 18px; /* 글씨 크기를 18px로 조정 */
-  font-weight: bold; /* 글씨 굵기를 bold로 설정 */
   cursor: pointer; /* 버튼 위에 마우스를 올렸을 때 커서 모양을 손가락 모양으로 변경 */
   text-align: center; /* 텍스트 중앙 정렬 */
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2); /* 테두리 대신 그림자를 추가합니다. */
 }
 #nicknamechecking,
 #emailchecking,

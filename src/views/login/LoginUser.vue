@@ -5,7 +5,7 @@
     <div class="loginform">
       <form @submit.prevent="submitForm">
         <div class="welcome-message">
-          <img class="login-logo" :src="loginlogo" alt="Login Logo" />
+          <img class="login-logo" :src="loginlogo" alt="" />
           <h2>Welcome to Star Road!</h2>
         </div>
 
@@ -23,12 +23,14 @@
             id="password"
             type="password"
             placeholder="비밀번호를 입력해주세요"
-            v-model="email"
+            v-model="password"
           />
           <img class="passwordeye" :src="passwordEye" alt="" />
         </div>
 
-        <div class="forgot-password">Forgot Password?</div>
+        <div class="forgot-password" @click="gotoForgotPassword">
+          Forgot Password?
+        </div>
 
         <div class="login-input">
           <input id="loginclear" type="button" value="로그인" />
@@ -76,20 +78,20 @@ export default {
     gotoRegister() {
       this.$router.push('/login/register');
     },
+    gotoForgotPassword() {
+      this.$router.push('/login/forgotpw');
+    },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .contents {
   display: flex; /* Flexbox 레이아웃 사용 */
   flex-direction: column; /* 자식 요소들을 세로로 정렬 */
   align-items: center; /* 수평 방향 중앙 정렬 */
   height: 100vh; /* 뷰포트 높이를 전체 크기로 설정 */
   padding-top: 60px;
-}
-.login-logo-container {
-  margin-bottom: 20px; /* 로고와 텍스트 사이의 간격을 조정합니다. */
 }
 .login-logo {
   width: 130px; /* 로고의 크기를 조정합니다. */
@@ -99,7 +101,6 @@ export default {
 .welcome-message {
   text-align: center;
   margin-bottom: 15px; /* 텍스트와 로그인 폼 사이의 간격을 조정합니다. */
-  text-align: center;
   display: flex;
   flex-direction: column;
   /* align-items: center; */
@@ -142,6 +143,7 @@ export default {
   right: 7px;
   cursor: pointer;
   color: var(--navy-color);
+  z-index: 10;
 }
 #loginclear {
   box-sizing: border-box;
@@ -153,10 +155,10 @@ export default {
   padding-left: 10px;
   color: white;
   font-size: 18px; /* 글씨 크기를 18px로 조정 */
-  font-weight: bold; /* 글씨 굵기를 bold로 설정 */
   cursor: pointer; /* 버튼 위에 마우스를 올렸을 때 커서 모양을 손가락 모양으로 변경 */
   text-align: center; /* 텍스트 중앙 정렬 */
   margin-top: 45px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2); /* 테두리 대신 그림자를 추가합니다. */
 }
 .sns-login {
   display: flex;
