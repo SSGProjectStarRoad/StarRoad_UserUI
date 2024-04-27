@@ -303,6 +303,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @import '@/css/review/review.css';
+.contents {
+  width: 400px;
+  margin: auto;
+}
 </style>
