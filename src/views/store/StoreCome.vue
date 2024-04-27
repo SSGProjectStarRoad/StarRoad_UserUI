@@ -1,7 +1,19 @@
-<template>오시는길</template>
+<template>
+<div class="contents">
+
+  오시는길
+
+</div>
+
+
+
+
+</template>
 
 <script>
 export default {};
 </script>
 
-<style></style>
+<style scoped>
+@import '@/css/common.css';
+</style>

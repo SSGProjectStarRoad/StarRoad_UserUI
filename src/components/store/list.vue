@@ -1,8 +1,8 @@
 <template>
   <div class="list" v-for="(item, index) in 10" :key="index">
     <div class="store-header">
-      <img class="store-img" src="@/img/ZARA.png" alt="" />
-      <span class="store-name">자라</span>
+      <img class="store-img" src="@/img/ZARA.png" @click="goToStoreReview" alt="" />
+      <span class="store-name" @click="goToStoreReview">자라</span>
     </div>
     <div class="store-detail">
       <a :href="'tel:' + phoneNumber" class="store-phone">
@@ -20,6 +20,11 @@ export default {
     return {
       phoneNumber: '010-6573-2265', // 임의의 전화번호로 설정
     };
+  },
+  methods:{
+    goToStoreReview(){
+      this.$router.push('/store/review'); // Vue Router를 사용하여 페이지 전환
+    }
   },
 };
 </script>
@@ -53,12 +58,14 @@ export default {
   height: 40px;
   background-size: 100%;
   border-radius: 10px;
+  cursor : pointer;
 }
 
 .store-name {
   font-size: 16px;
   margin-left: 10px;
   font-weight: bold;
+  cursor : pointer;
 }
 
 .store-phone,
