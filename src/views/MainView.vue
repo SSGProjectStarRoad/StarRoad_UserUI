@@ -49,7 +49,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .contents {
   padding: 0 20px;
   margin-top: 20px;
