@@ -105,7 +105,8 @@ const routes = [
   {
     path: '/login/changepw',
     component: () => import('@/views/login/ChangePw.vue'),
-
+  },
+  {
     path: '/mypage/myreview',
     component: () => import('@/views/mypage/MypageReview.vue'),
   },
