@@ -633,8 +633,8 @@ a {
 }
 
 .contents {
-  width: 400px;
-  margin: auto;
+  /* width: 400px;
+  margin: auto; */
 }
 
 .text-review {
