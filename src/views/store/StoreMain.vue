@@ -161,7 +161,7 @@ export default {
 }
 .info {
   height: 24px;
-  
+  font-size: 24px;
   margin: 0;
   margin-bottom: 5px;
   align-items: center;
