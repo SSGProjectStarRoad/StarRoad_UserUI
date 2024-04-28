@@ -13,9 +13,9 @@ export default {
 <style scoped>
 .scroll-to-top-button {
   position: fixed;
-  left: calc(50% - 240px);
+  left: calc(50% - 25px);
   top: calc(100% - 120px);
-  background-color: var(--navy-color);
+  background-color: rgb(185, 176, 176);
   border-radius: 8px;
   display: flex;
   color: #fff;
@@ -34,12 +34,12 @@ export default {
 
 .scroll-to-top-button div {
   font-size: 15px;
-  width: 20px; /* 이미지 크기 조정 */
-  height: 20px; /* 이미지 크기 조정 */
+  width: 15px; /* 이미지 크기 조정 */
+  height: 15px; /* 이미지 크기 조정 */
 }
 .scroll-to-top-button img{
-  width : 20px;
-  heith: 20px;
+  width : 15px;
+  heith: 15px;
 }
 
 .scroll-to-top-button:active {
