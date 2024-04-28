@@ -41,7 +41,6 @@ export default {
   width : 15px;
   heith: 15px;
 }
-
 .scroll-to-top-button:active {
   box-shadow: none;
   color: var(--mint-color);
