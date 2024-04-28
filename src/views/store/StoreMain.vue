@@ -9,8 +9,8 @@
         </div>
       </div>
 
-      <h3 class="info">STORE INFO</h3>
-      <h3 class="info">매장안내</h3>
+      <h2 class="info">STORE INFO</h2>
+      <h2 class="info">매장안내</h2>
       <div class="category">
         <button id="categoryButton" class="button">카테고리별</button>
         <div class="category-slide" ref="categorySlide">
@@ -161,7 +161,7 @@ export default {
 }
 .info {
   height: 24px;
-  font-size: 20px;
+  
   margin: 0;
   margin-bottom: 5px;
   align-items: center;
