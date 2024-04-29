@@ -35,7 +35,7 @@ export default {
 
 <style scoped>
 .contents {
-  height: 100vh;
+  height: 100%;
 }
 .informicon {
   margin-top: 60px;

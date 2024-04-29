@@ -50,11 +50,6 @@ export default {
 </script>
 
 <style scoped>
-.contents {
-  padding: 0 20px;
-  margin-top: 20px;
-}
-
 .starroad_logo {
   position: relative;
 }

@@ -54,7 +54,6 @@ body {
 	max-width: 480px;
     margin: 0 auto;
     width: auto;
-    position: relative;
 	box-shadow: 0 0 20px #0000000d;
 }
 
@@ -66,11 +65,14 @@ body {
   justify-content: center;
   	top: 0;
 	font-size: 30px;
-	position: sticky;
+	position: fixed;
 	height: 48px;
   text-align: center;
-	z-index: 99;
+	z-index: 200;
+	width: 100%; /* header의 너비를 100%로 설정 */
+    max-width: 480px; /* 최대 너비 설정 */
 	background-color: white;
+	
 }
 
 .header img{
@@ -84,10 +86,10 @@ body {
 .contents {
   position: relative;
 	min-height: 100%;
-	margin-top: 40px;
+	top: 48px;
 	height: auto;
 	padding-bottom: 120px;
-	
+	padding: 0 20px;
 	/* background-color: gray; */
 }
 
