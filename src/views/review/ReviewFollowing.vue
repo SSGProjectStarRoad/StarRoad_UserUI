@@ -292,7 +292,7 @@
           </div>
         </div>
       </div>
-      <div style="height: 40px"></div>
+      <!-- <div style="height: 100px"></div> -->
     </article>
   </div>
 </template>
@@ -308,5 +308,6 @@ export default {
 .contents {
   width: 400px;
   margin: auto;
+  /* padding-bottom: 120px; */
 }
 </style>

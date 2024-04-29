@@ -104,6 +104,7 @@ export default {
 
 .event_space {
   margin: 10px 0;
+  padding-bottom: 60px;
 }
 
 .event_space > div:first-child {
@@ -122,7 +123,7 @@ export default {
 .event_list div {
   text-align: center;
   border-radius: 20px;
-  size: 100%;
+  height: 100%;
 }
 
 .event_list div img {
