@@ -96,12 +96,14 @@
       </div>
     </div>
     <reviewbutton/>
+    <scrollToTopButton v-show="showScrollToTopButton" @click="scrollToTop"/>
   </div>
 </template>
 
 <script>
 import ProgressBar from "@/components/store/ProgressBar.vue";
 import reviewbutton from "@/components/review/ReviewButton.vue";
+import scrollToTopButton from "@/components/store/ScrollToTopButton.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 
@@ -112,45 +114,18 @@ export default {
       selectedSort: "latest",
       phoneNumber: "010-1234-5678",
       buttons: [
-        "종류",
-        "매장",
-        "스타일",
-        "재고",
-        "품질",
-        "품질",
-        "품질",
-        "품질2",
-        "품질",
-        "품질",
-        "품질222",
-        "품질222",
-        "품222",
-        "재고3",
-        "품질",
-        "품질",
-        "품질",
-        "품질4",
-        "품질",
-        "품질5",
-        "품질2622",
-        "품질222",
-        "품222",
-        "재고",
-        "품질",
-        "품질",
-        "품질",
-        "품질",
-        "품질",
-        "품질",
-        "품질222",
-        "품질222",
-        "1111111",
+        "종류", "매장", "스타일", "재고", "품질", "품질", "품질", "품질2",
+        "품질", "품질", "품질222", "품질222", "품222", "재고3", "품질",
+        "품질", "품질", "품질4", "품질", "품질5", "품질2622", "품질222",
+        "품222", "재고", "품질", "품질", "품질", "품질", "품질", "품질",
+        "품질222", "품질222", "1111111",
       ],
       swiperOptions: {
-        slidesPerView: "auto", // 기본 설정을 'auto'로 하여 슬라이드가 유연하게 표시되도록 합니다.
+        slidesPerView: "auto",
         spaceBetween: 5,
         loop: false,
       },
+      showScrollToTopButton: false,
     };
   },
   components: {
@@ -158,23 +133,39 @@ export default {
     Swiper,
     SwiperSlide,
     reviewbutton,
+    scrollToTopButton,
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
     changeSort() {
       if (this.selectedSort === "latest") {
-        // 최신순으로 정렬하는 로직
         console.log("최신순으로 정렬");
       } else if (this.selectedSort === "likes") {
-        // 좋아요 순으로 정렬하는 로직
         console.log("좋아요 순으로 정렬");
       }
     },
-  },
+    handleScroll() {
+      const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+      this.showScrollToTopButton = scrollPosition > 100;
+    },
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  }
 };
 </script>
 
 <style scoped>
 @import "@/css/common.css";
+
 .review-body {
   margin-top: 4%;
   background-image: url("https://picsum.photos/600?random=0");
