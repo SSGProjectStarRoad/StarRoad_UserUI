@@ -94,8 +94,8 @@ export default {
   display: flex;
   flex-direction: column;
   position: fixed; /* .fix 요소를 화면에 고정 */
-  top: 1; /* 화면의 상단에 고정 */
-  z-index: 1000; /* 다른 요소 위에 표시 */
+  top: 48px; /* 화면의 상단에 고정 */
+  z-index: 100; /* 다른 요소 위에 표시 */
   background-color: white; /* 배경색 설정 */
   /* border-bottom: solid 7px var(--gray-color); */
   box-shadow: 0 4px rgba(0, 0, 0, 0.1); /* 아래 방향으로만 그림자 적용 */
@@ -172,7 +172,6 @@ export default {
   margin: 0;
   display: flex;
   flex-direction: column;
-
   overflow: hidden;
 }
 .center-item {
