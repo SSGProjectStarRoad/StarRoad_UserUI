@@ -308,6 +308,5 @@ export default {
 .contents {
   width: 400px;
   margin: auto;
-  /* padding-bottom: 120px; */
 }
 </style>

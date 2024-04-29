@@ -141,10 +141,10 @@ export default {
   margin-top: 20px;
 }
 .passwordeye {
-  position: absolute; /* 이미지를 절대 위치로 설정 */
-  top: 50%; /* 상위 요소의 정중앙에서 시작 */
-  right: 7px; /* 왼쪽으로부터 5px 떨어진 위치에 설정 */
-  transform: translateY(-50%); /* Y축으로 -50% 만큼 이동하여 수직 중앙 정렬 */
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  transform: translateY(-50%);
   width: 13px;
   height: 10px;
   cursor: pointer;
@@ -178,10 +178,10 @@ export default {
   border: 0;
   padding-left: 10px;
   color: white;
-  font-size: 18px; /* 글씨 크기를 18px로 조정 */
-  font-weight: bold; /* 글씨 굵기를 bold로 설정 */
-  cursor: pointer; /* 버튼 위에 마우스를 올렸을 때 커서 모양을 손가락 모양으로 변경 */
-  text-align: center; /* 텍스트 중앙 정렬 */
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
 }
 #nicknamechecking {
   border-radius: 8px;
@@ -193,18 +193,18 @@ export default {
 }
 .nicknameinput {
   margin-top: 20px;
-  display: flex; /* Flexbox 레이아웃 사용 */
-  justify-content: space-between; /* 항목들 사이에 여백을 균등하게 배분 */
-  align-items: center; /* 세로 방향 중앙 정렬 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .nicknameinput input[type='text'],
 .emailinput input[type='text'] {
-  flex: 1; /* Flexbox 아이템이 가능한 공간을 모두 채우도록 설정 */
-  margin-right: 8px; /* 버튼과의 간격 */
+  flex: 1;
+  margin-right: 8px;
 }
 .nicknamecheck input[type='button'],
 .emailcheck input[type='button'] {
-  flex: none; /* 버튼 크기가 자동으로 조정되지 않도록 설정 */
+  flex: none;
 }
 
 .withdrawal {

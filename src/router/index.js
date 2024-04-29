@@ -87,30 +87,6 @@ const routes = [
     component: () => import('@/views/mypage/MypageCoupon.vue'),
   },
   {
-    path: '/login/register',
-    component: () => import('@/views/login/RegisterUser.vue'),
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/login/LoginUser.vue'),
-  },
-  {
-    path: '/login/forgotpw',
-    component: () => import('@/views/login/ForgotPassword.vue'),
-  },
-  {
-    path: '/login/email',
-    component: () => import('@/views/login/EmailCode.vue'),
-  },
-  {
-    path: '/login/newpw',
-    component: () => import('@/views/login/CreatePw.vue'),
-  },
-  {
-    path: '/login/changepw',
-    component: () => import('@/views/login/ChangePw.vue'),
-  },
-  {
     path: '/mypage/myreview',
     component: () => import('@/views/mypage/MypageReview.vue'),
   },
@@ -133,6 +109,30 @@ const routes = [
   {
     path: '/mypage/withdraw',
     component: () => import('@/views/mypage/MypageWithdrawal.vue'),
+  },
+  {
+    path: '/login/register',
+    component: () => import('@/views/login/RegisterUser.vue'),
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/login/LoginUser.vue'),
+  },
+  {
+    path: '/login/forgotpw',
+    component: () => import('@/views/login/ForgotPassword.vue'),
+  },
+  {
+    path: '/login/email',
+    component: () => import('@/views/login/EmailCode.vue'),
+  },
+  {
+    path: '/login/newpw',
+    component: () => import('@/views/login/CreatePw.vue'),
+  },
+  {
+    path: '/login/changepw',
+    component: () => import('@/views/login/ChangePw.vue'),
   },
 
   // 추가적인 라우트...

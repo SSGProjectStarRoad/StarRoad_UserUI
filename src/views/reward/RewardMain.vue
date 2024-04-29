@@ -85,16 +85,19 @@ h3 {
   position: absolute;
   width: 120px;
   top: 410px;
-  left: 50%; /* 왼쪽으로부터 50%의 위치에 배치 */
-  transform: translate(-50%, -50%); /* 위치 보정을 위해 변환 사용 */
+  left: 50%;
+  transform: translate(-50%, -50%);
   margin: 0 auto;
   cursor: pointer;
+  border-radius: 15px;
 }
 .informicon:hover,
-.start:hover,
 .mystar:hover,
 .mycoupon:hover {
-  border: 4px solid var(--mint-color); /* 회색 테두리 추가 */
-  border-radius: 8px; /* 테두리 둥글게 처리 */
+  transform: scale(1.1);
+}
+.start:hover {
+  transform: scale(1.1) translate(-50%, -50%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 </style>

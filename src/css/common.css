@@ -85,6 +85,8 @@ body {
 
 .contents {
   position: relative;
+	margin: auto;
+	width: 400px;
 	min-height: 100%;
 	top: 48px;
 	height: auto;
