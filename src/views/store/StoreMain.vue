@@ -101,7 +101,7 @@ export default {
   box-shadow: 0 4px rgba(0, 0, 0, 0.1); /* 아래 방향으로만 그림자 적용 */
 
   width: 100%; /* 화면 너비에 맞게 설정 */
-  max-width: 480px; /* 최대 너비 설정 */
+  max-width: 400px; /* 최대 너비 설정 */
   margin: 0 auto; /* 가운데 정렬 */
   left: 0; /* 화면 왼쪽에 정렬 */
   right: 0; /* 화면 오른쪽에 정렬 */

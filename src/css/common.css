@@ -88,8 +88,7 @@ body {
 	min-height: 100%;
 	top: 48px;
 	height: auto;
-	padding-bottom: 120px;
-	padding: 0 20px;
+	padding: 0 20px 120px;
 	/* background-color: gray; */
 }
 
