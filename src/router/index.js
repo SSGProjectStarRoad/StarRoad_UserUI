@@ -27,6 +27,10 @@ const routes = [
     component: () => import('@/views/review/ReviewUser.vue'),
   },
   {
+    path: '/review/check',
+    component: () => import('@/views/review/ReviewCheck.vue'),
+  },
+  {
     path: '/reward/main',
     component: () => import('@/views/reward/RewardMain.vue'),
   },
