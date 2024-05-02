@@ -11,6 +11,9 @@
         <br />
       </div>
     </div>
+    <div class="store-introduce">
+      합리적인 가격과 트렌디한 디자인의 여성, 남성, 키즈 라인으로 구성된 스페인 SPA 브랜드입니다
+    </div>
     <p :style="{ margin: '0px', 'padding-left': '10px' }">1F / 10:00 ~ 20:00</p>
     <div class="store-review">
       <p class="keyword">이런점이 좋았어요!!</p>
@@ -165,6 +168,12 @@ export default {
 
 <style scoped>
 @import "@/css/common.css";
+.store-introduce{
+  padding-left:10px;
+  padding-right: 10px;
+  margin-bottom: 10px;
+  margin-top:10px;
+}
 
 .review-body {
   margin-top: 4%;
