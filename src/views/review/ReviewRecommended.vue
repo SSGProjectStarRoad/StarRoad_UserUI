@@ -6,7 +6,7 @@
           <img src="@/img/back_arrow.png" />
         </a>
         <li class="tab-menu">
-          <a><span>팔로잉</span></a>
+          <router-link to="/review/main"><span>팔로잉</span></router-link>
         </li>
         <li class="active">
           <a><span>추천</span></a>
@@ -162,13 +162,26 @@
       </div>
       <div style="height: 40px"></div>
     </article>
+    <ReviewButton/>
   </div>
 </template>
 
 <script>
-export default {};
+import ReviewButton from "@/components/review/ReviewButton.vue";
+
+export default {
+  components: {
+    ReviewButton,
+  },
+};
 </script>
 
 <style>
 @import '@/css/review/review.css';
+
+.contents {
+  width: 400px;
+  margin: auto;
+  /* padding-bottom: 120px; */
+}
 </style>

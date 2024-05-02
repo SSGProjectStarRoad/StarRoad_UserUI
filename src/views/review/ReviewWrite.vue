@@ -91,6 +91,12 @@ export default {
 <style scoped>
 @import "@/css/review/review.css";
 
+.contents {
+  width: 400px;
+  margin: auto;
+  /* padding-bottom: 120px; */
+}
+
 .write-arrow {
   transform: rotate(180deg);
 }
