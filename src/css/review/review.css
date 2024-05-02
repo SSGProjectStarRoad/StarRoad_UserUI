@@ -1,7 +1,5 @@
 :root {
   --swiper-navigation-size: 44px;
-}
-:root {
   --swiper-theme-color: #007aff;
 }
 
@@ -381,7 +379,7 @@ button {
   font-size: 14px;
 }
 
-.timeline-post-content .__post-meta .__date {
+.timeline-post-content .__post-meta .post-date {
   margin-left: auto;
   font-size: 12px;
   color: #666;
@@ -571,12 +569,12 @@ ol, ul {
   font-weight: 700;
 }
 
-.ERkm0 {
+.feedback-icons {
   margin-top: 8px;
   margin-bottom: -6px;
 }
 
-.ERkm0 .sIv5s {
+.feedback-icons .feedback {
   display: inline-block;
   vertical-align: top;
   margin: 0 4px 6px 0;
@@ -590,14 +588,14 @@ ol, ul {
   line-height: 1.8rem;
 }
 
-.Me4yK {
+.survey-item {
   vertical-align: top;
   margin-bottom: 10px;
   margin-left: 20px;
   margin-right: 20px;
 } 
 
-.T00ux {
+.survey-option-btn {
   display: block;
   position: relative;
   padding: 0 11px;
@@ -795,14 +793,14 @@ a {
   font-size: 14px;
 }
 
-.KMrlu_ ._1yZXaf {
+.date-info-wrapper .visit-date-message {
   font-size: 2.1rem;
   font-weight: 500;
   line-height: 2.7rem;
   text-align: center;
 }
 
-.KMrlu_ ._1yZXaf em {
+.date-info-wrapper .visit-date-message em {
   font-weight: 800;
 }
 
@@ -810,33 +808,22 @@ address, cite, dfn, em, i {
   font-style: normal;
 }
 
-.KMrlu_ ._1YJe0G {
+.date-info-wrapper .date-time-picker-container {
   display: flex;
   margin-top: 28px;
   padding: 0 10px;
 }
 
-.KMrlu_ ._1YJe0G ._3vAkIz {
+.date-info-wrapper .date-time-picker-container .date-time-container {
   flex: 1 1;
 }
 
-.KMrlu_ ._1YJe0G ._1dVAlO {
-  overflow: hidden;
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-  clip: rect(0, 0, 0, 0);
-}
-
-.KMrlu_ ._1YJe0G ._1GVeTV._2lr08j {
+.date-info-wrapper .date-time-picker-container .input-label.input-label-inner {
   border-color: rgba(var(--gray95), 1);
   background: rgba(var(--gray95), 1);
 }
 
-.KMrlu_ ._1YJe0G ._1GVeTV {
+.date-info-wrapper .date-time-picker-container .input-label {
   display: block;
   width: 100%;
   padding: 14px;
@@ -845,11 +832,11 @@ address, cite, dfn, em, i {
   box-sizing: border-box;
 }
 
-.KMrlu_ ._1YJe0G ._1GVeTV._2lr08j ._218HBp {
+.date-info-wrapper .date-time-picker-container .input-label.input-label-inner .date-time-display {
   color: rgba(var(--gray10), 1);
 }
 
-.KMrlu_ ._1YJe0G ._1GVeTV ._218HBp {
+.date-info-wrapper .date-time-picker-container .input-label .date-time-display {
   position: relative;
   font-size: 1.5rem;
   font-weight: 600;
@@ -866,7 +853,7 @@ address, cite, dfn, em, i {
   clip: rect(0, 0, 0, 0);
 }
 
-.KMrlu_ ._1YJe0G ._1GVeTV._2lr08j ._1ZmmJZ {
+.date-info-wrapper .date-time-picker-container .input-label.input-label-inner .edit-button-text {
   float: right;
   font-size: 1.3rem;
   font-weight: 500;
@@ -874,13 +861,13 @@ address, cite, dfn, em, i {
   color: rgba(var(--place-color-myplace-blue), 1);
 }
 
-.KMrlu_ ._1YJe0G ._1GVeTV:after {
+.date-info-wrapper .date-time-picker-container .input-label:after {
   display: block;
   clear: both;
   content: "";
 }
 
-.KMrlu_ ._1YJe0G ._1dVAlO {
+.date-info-wrapper .date-time-picker-container .input-field-style {
   overflow: hidden;
   position: absolute;
   width: 1px;
@@ -904,19 +891,19 @@ input[type="time" i] {
   overflow: hidden;
 }
 
-.KMrlu_ ._1YJe0G ._1GVeTV._2lr08j {
+.date-info-wrapper .date-time-picker-container .input-label.input-label-inner {
   border-color: #f7f7f9;
   border-color: rgba(var(--gray95), 1);
   background: #f7f7f9;
   background: rgba(var(--gray95), 1);
 }
 
-.KMrlu_ ._1YJe0G ._1GVeTV._2lr08j ._218HBp {
+.date-info-wrapper .date-time-picker-container .input-label.input-label-inner .date-time-display {
   color: #222225;
   color: rgba(var(--gray10), 1);
 }
 
-.KMrlu_ ._1YJe0G ._1GVeTV ._218HBp {
+.date-info-wrapper .date-time-picker-container .input-label .date-time-display {
   position: relative;
   font-size: 1.5rem;
   font-weight: 600;
@@ -924,13 +911,13 @@ input[type="time" i] {
   color: rgba(var(--place-color-myplace-blue), 1);
 }
 
-.KMrlu_ ._1YJe0G ._1GVeTV:after {
+.date-info-wrapper .date-time-picker-container .input-label:after {
   display: block;
   clear: both;
   content: "";
 }
 
-.KMrlu_ ._3CUr7k {
+.date-info-wrapper .confirmation-message {
   margin-top: 15px;
   font-size: 1.4rem;
   color: #287cff;
@@ -939,7 +926,7 @@ input[type="time" i] {
   text-align: center;
 }
 
-.KMrlu_ .TqODhl {
+.date-info-wrapper .location-info-section {
   margin-top: 30px;
   border: 1px solid rgba(0, 0, 0, .05);
   border-radius: 10px;
@@ -947,24 +934,19 @@ input[type="time" i] {
   background: rgba(var(--bgElevatedSurface), 1);
 }
 
-.KMrlu_ ._20-WtC .TzorUl {
+.date-info-wrapper .map-image-container .map-image {
   border-radius: 10px 10px 0 0;
 }
 
-._1fGAc5 {
-  -o-object-fit: cover;
-  object-fit: cover;
-}
-
-.KMrlu_ ._3UD8KO {
+.date-info-wrapper .check-info-container {
   padding: 18px 19px 20px;
 }
 
-.KMrlu_ ._3UD8KO .n0mNgg {
+.date-info-wrapper .check-info-container .check-name-category {
   line-height: 2.3rem;
 }
 
-.KMrlu_ ._3UD8KO .n0mNgg ._13qLkt {
+.date-info-wrapper .check-info-container .check-name-category .place-name {
   color: #222225;
   color: rgba(var(--gray10), 1);
   margin-right: 6px;
@@ -972,32 +954,25 @@ input[type="time" i] {
   font-weight: 600;
 }
 
-.KMrlu_ ._3UD8KO .n0mNgg .ax7rl9 {
+.date-info-wrapper .check-info-container .check-name-category .place-category {
   color: #939396;
   color: rgba(var(--gray50), 1);
   font-size: 1.4rem;
   font-weight: 400;
 }
 
-.KMrlu_ ._3UD8KO .F6M5e4 {
-  margin-top: 6px;
-  font-size: 1.5rem;
-  color: #555558;
-  color: rgba(var(--gray30), 1);
-}
-
-.KMrlu_ ._3UD8KO .F6M5e4._3sydYv {
+.date-info-wrapper .check-info-container .address-line.detailed-address {
   margin-top: 5px;
 }
 
-.KMrlu_ ._3UD8KO .F6M5e4 {
+.date-info-wrapper .check-info-container .address-line {
   margin-top: 6px;
   font-size: 1.5rem;
   color: #555558;
   color: rgba(var(--gray30), 1);
 }
 
-.KMrlu_ ._3UD8KO .F6M5e4._3sydYv ._19Jzok {
+.date-info-wrapper .check-info-container .address-line.detailed-address .address-label {
   display: inline-block;
   vertical-align: top;
   height: 18px;
@@ -1013,22 +988,22 @@ input[type="time" i] {
   line-height: 1.5rem;
 }
 
-.KMrlu_ .Cktyqc {
+.date-info-wrapper .image-gallery {
   display: flex;
   margin-top: 18px;
 }
 
-.KMrlu_ .Cktyqc .iUeBhZ {
+.date-info-wrapper .image-gallery .gallery-item-container {
   flex: 1 1;
   height: 97px;
 }
 
-.KMrlu_ .Cktyqc .iUeBhZ:first-child ._33SlL6 {
+.date-info-wrapper .image-gallery .gallery-item-container:first-child .gallery-image {
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
 }
 
-._1fGAc5 {
+.image-container {
   -o-object-fit: cover;
   object-fit: cover;
 }

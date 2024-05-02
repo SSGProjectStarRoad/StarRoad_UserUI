@@ -17,22 +17,22 @@
 
     <div class="survey">
       <div class="survey-title">어떤 점이 좋았나요 ? (필수)</div>
-      <div class="Me4yK">
-        <a href="#" target="_self" role="button" class="T00ux" aria-pressed="false">
+      <div class="survey-item">
+        <a href="#" target="_self" role="button" class="survey-option-btn" aria-pressed="false">
           <span>
             재방문하고 싶어요
           </span>
         </a>
       </div>
-      <div class="Me4yK">
-        <a href="#" target="_self" role="button" class="T00ux" aria-pressed="false">
+      <div class="survey-item">
+        <a href="#" target="_self" role="button" class="survey-option-btn" aria-pressed="false">
           <span>
             직원의 서비스가 마음에 들어요
           </span>
         </a>
       </div>
-      <div class="Me4yK">
-        <a href="#" target="_self" role="button" class="T00ux" aria-pressed="false">
+      <div class="survey-item">
+        <a href="#" target="_self" role="button" class="survey-option-btn" aria-pressed="false">
           <span>
             가격이 합리적이에요
           </span>
@@ -40,22 +40,22 @@
       </div>
 
       <div class="survey-title">어떤 점이 좋았나요 ? (선택)</div>
-      <div class="Me4yK">
-        <a href="#" target="_self" role="button" class="T00ux" aria-pressed="false">
+      <div class="survey-item">
+        <a href="#" target="_self" role="button" class="survey-option-btn" aria-pressed="false">
           <span>
             음식이 맛있어요
           </span>
         </a>
       </div>
-      <div class="Me4yK">
-        <a href="#" target="_self" role="button" class="T00ux" aria-pressed="false">
+      <div class="survey-item">
+        <a href="#" target="_self" role="button" class="survey-option-btn" aria-pressed="false">
           <span>
             음식이 빨리 나와요
           </span>
         </a>
       </div>
-      <div class="Me4yK">
-        <a href="#" target="_self" role="button" class="T00ux" aria-pressed="false">
+      <div class="survey-item">
+        <a href="#" target="_self" role="button" class="survey-option-btn" aria-pressed="false">
           <span>
             재료가 신선해요
           </span>
