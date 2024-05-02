@@ -1,15 +1,20 @@
 <template>
-   <button class="review_button">
-      <div><img src="@/img/review/pencil.png" alt="Pencil Logo" /></div>
-      <div>Write a Review</div>
-    </button>
+  <button class="review_button" @click="navigateToWritePage">
+    <div><img src="@/img/review/pencil.png" alt="Pencil Logo" /></div>
+    <div>Write a Review</div>
+  </button>
 </template>
 
 <script>
 export default {
+  methods: {
+    navigateToWritePage() {
+      console.log("button Click");
+      this.$router.push('/review/write');
+    },
+  },
 
-
-name:'revi ewbutton',
+  name: 'reviewbutton',
 }
 </script>
 
