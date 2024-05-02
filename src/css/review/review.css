@@ -1032,3 +1032,19 @@ input[type="time" i] {
   -o-object-fit: cover;
   object-fit: cover;
 }
+
+.review_button {
+  position: fixed;
+  right: calc(50% - 240px);
+  top: calc(100% - 120px);
+  background-color: var(--navy-color);
+  border-radius: 20px;
+  display: flex;
+  color: #fff;
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  box-shadow: 2px 2px 3px #00000033;
+  display: flex;
+  justify-content: center;
+}

@@ -16,6 +16,7 @@ const routes = [
   },
   {
     path: '/review/recommended',
+    name: 'ReviewRecommended',
     component: () => import('@/views/review/ReviewRecommended.vue'),
   },
   {
