@@ -15,6 +15,7 @@ name:'revi ewbutton',
 
 <style>
 .review_button {
+  z-index: 300;
   position: fixed;
   right: calc(50% - 240px);
   top: calc(100% - 120px);
