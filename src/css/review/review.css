@@ -808,75 +808,14 @@ address, cite, dfn, em, i {
   font-style: normal;
 }
 
-.date-info-wrapper .date-time-picker-container {
-  display: flex;
-  margin-top: 28px;
-  padding: 0 10px;
-}
 
-.date-info-wrapper .date-time-picker-container .date-time-container {
-  flex: 1 1;
-}
 
-.date-info-wrapper .date-time-picker-container .input-label.input-label-inner {
-  border-color: rgba(var(--gray95), 1);
-  background: rgba(var(--gray95), 1);
-}
 
-.date-info-wrapper .date-time-picker-container .input-label {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  border: 1px solid #287cff;
-  border-radius: 8px;
-  box-sizing: border-box;
-}
 
-.date-info-wrapper .date-time-picker-container .input-label.input-label-inner .date-time-display {
-  color: rgba(var(--gray10), 1);
-}
 
-.date-info-wrapper .date-time-picker-container .input-label .date-time-display {
-  position: relative;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
 
-.place_blind {
-  overflow: hidden;
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-  clip: rect(0, 0, 0, 0);
-}
 
-.date-info-wrapper .date-time-picker-container .input-label.input-label-inner .edit-button-text {
-  float: right;
-  font-size: 1.3rem;
-  font-weight: 500;
-  color: #287cff;
-  color: rgba(var(--place-color-myplace-blue), 1);
-}
 
-.date-info-wrapper .date-time-picker-container .input-label:after {
-  display: block;
-  clear: both;
-  content: "";
-}
-
-.date-info-wrapper .date-time-picker-container .input-field-style {
-  overflow: hidden;
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-  clip: rect(0, 0, 0, 0);
-}
 
 input[type="time" i] {
   align-items: center;
@@ -891,31 +830,9 @@ input[type="time" i] {
   overflow: hidden;
 }
 
-.date-info-wrapper .date-time-picker-container .input-label.input-label-inner {
-  border-color: #f7f7f9;
-  border-color: rgba(var(--gray95), 1);
-  background: #f7f7f9;
-  background: rgba(var(--gray95), 1);
-}
 
-.date-info-wrapper .date-time-picker-container .input-label.input-label-inner .date-time-display {
-  color: #222225;
-  color: rgba(var(--gray10), 1);
-}
 
-.date-info-wrapper .date-time-picker-container .input-label .date-time-display {
-  position: relative;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #287cff;
-  color: rgba(var(--place-color-myplace-blue), 1);
-}
 
-.date-info-wrapper .date-time-picker-container .input-label:after {
-  display: block;
-  clear: both;
-  content: "";
-}
 
 .date-info-wrapper .confirmation-message {
   margin-top: 15px;
@@ -1003,6 +920,11 @@ input[type="time" i] {
   border-bottom-left-radius: 6px;
 }
 
+.date-info-wrapper .image-gallery .gallery-item-container:last-child .gallery-image {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
 .image-container {
   -o-object-fit: cover;
   object-fit: cover;
@@ -1023,3 +945,155 @@ input[type="time" i] {
   display: flex;
   justify-content: center;
 }
+
+
+
+.place_blind {
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+}
+
+/* 부모 컨테이너 스타일 */
+.decision-buttons-container {
+  display: flex;
+  justify-content: center; /* 요소들을 가로축에서 중앙으로 정렬 */
+  gap: 10px; /* 버튼 사이의 간격 */
+}
+
+/* 모든 버튼에 공통으로 적용되는 기본 스타일 */
+.button-base {
+  padding: 10px 20px; /* 안쪽 여백 */
+  border: none; /* 테두리 없음 */
+  border-radius: 4px; /* 테두리 모서리 둥글게 */
+  cursor: pointer; /* 마우스 오버 시 커서 변경 */
+  font-size: 16px; /* 글꼴 크기 */
+  transition: background-color 0.3s; /* 배경색 변경시 애니메이션 효과 */
+}
+
+/* '이 장소가 아니에요' 버튼 스타일 */
+.button-secondary {
+  background-color: #f2f2f2; /* 배경색 */
+  color: #333; /* 글자색 */
+}
+
+/* '이 장소가 맞아요' 버튼 스타일 */
+.button-confirm {
+  background-color: #4CAF50; /* 배경색 */
+  color: white; /* 글자색 */
+}
+
+/* 버튼 호버 효과 */
+.button-base:hover {
+  filter: brightness(90%); /* 버튼 호버 시 밝기 감소 */
+}
+
+
+.date-time-picker-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  border: 1px solid #287cff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px; /* 가로 최대 크기 설정 */
+  margin: auto; /* 수평 중앙 정렬 */
+}
+
+.date-time-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.input-field-style {
+  padding: 10px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: calc(100% - 20px); /* padding을 고려한 너비 설정 */
+}
+
+.input-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f2f2f2;
+  border-radius: 4px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.input-label-inner {
+  font-size: 14px;
+  color: #333;
+}
+
+.date-time-display {
+  display: flex; /* Flexbox를 사용하여 항목을 정렬합니다 */
+  justify-content: center; /* 가로축 기준으로 중앙 정렬 */
+  width: 100%; /* 필요에 따라 조정 */
+}
+
+.date-time-display, .edit-button-text {
+  font-weight: 600;
+}
+
+.edit-button-text {
+  color: #287cff;
+  cursor: pointer;
+}
+
+/* 추가: 호버 효과 */
+.edit-button-text:hover {
+  text-decoration: underline;
+}
+
+
+
+.date-info-wrapper .date-time-picker-container .input-label.input-label-inner {
+  border-color: #f7f7f9;
+  background: #f7f7f9;
+}
+
+.date-info-wrapper .date-time-picker-container .input-label .date-time-display {
+  font-size: 1rem; /* 글씨 크기를 동일하게 조정 */
+  font-weight: normal; /* 글씨 두께를 표준으로 설정 */
+}
+
+.date-info-wrapper .date-time-picker-container {
+  display: flex; /* flex로 변경하여 요소들을 수평으로 정렬 */
+  flex-direction: row; /* 요소들이 수평으로 정렬되도록 설정 */
+  margin-top: 28px;
+  padding: 0 10px;
+  gap: 10px; /* 요소 사이의 간격을 10px로 설정 */
+}
+
+
+.date-info-wrapper .date-time-picker-container .input-label {
+  display: flex; /* label을 flex로 설정하여 내부 요소를 수평 정렬 */
+  align-items: center; /* 내부 요소를 중앙 정렬 */
+  width: auto; /* 너비를 자동으로 설정하여 내용에 맞게 조정 */
+  padding: 14px;
+  border: 1px solid #287cff;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 1rem; /* 글씨 크기를 동일하게 조정 */
+}
+
+.date-info-wrapper .date-time-picker-container .input-label.input-label-inner .edit-button-text {
+  font-size: 1rem; /* 글씨 크기를 동일하게 조정 */
+  align-items: center;
+}
+
+.date-info-wrapper .date-time-picker-container .date-time-container {
+  margin-right: 10px; /* 마지막 요소를 제외한 각 요소 사이에 10px 간격 */
+}
+
