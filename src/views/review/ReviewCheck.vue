@@ -126,4 +126,9 @@ export default {
 
 <style>
 @import '@/css/review/review.css';
+.contents {
+  width: 400px;
+  margin: auto;
+  /* padding-bottom: 120px; */
+}
 </style>
