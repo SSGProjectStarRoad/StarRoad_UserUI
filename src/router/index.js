@@ -32,6 +32,10 @@ const routes = [
     component: () => import('@/views/review/ReviewCheck.vue'),
   },
   {
+    path: '/review/ocr',
+    component: () => import('@/views/review/OCR.vue'),
+  },
+  {
     path: '/reward/main',
     component: () => import('@/views/reward/RewardMain.vue'),
   },
