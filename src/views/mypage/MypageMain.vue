@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="mallinfo">
-        <div class="howto">
+        <div class="howto" @click="goToMallMap">
           <div class="ownimg"><img src="@/img/howto.png" alt="" /></div>
           <div class="text">오시는 길</div>
         </div>
@@ -78,7 +78,11 @@ export default {
     goToNoticePage() {
       this.$router.push('/mypage/notice'); // Vue Router를 사용하여 페이지 전환
     },
+     goToMallMap(){
+    this.$router.push('/store/mallmap');
+  }
   },
+ 
 };
 </script>
 

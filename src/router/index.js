@@ -16,6 +16,7 @@ const routes = [
   },
   {
     path: '/review/recommended',
+    name: 'ReviewRecommended',
     component: () => import('@/views/review/ReviewRecommended.vue'),
   },
   {
@@ -29,6 +30,10 @@ const routes = [
   {
     path: '/review/check',
     component: () => import('@/views/review/ReviewCheck.vue'),
+  },
+  {
+    path: '/review/ocr',
+    component: () => import('@/views/review/OCR.vue'),
   },
   {
     path: '/reward/main',
