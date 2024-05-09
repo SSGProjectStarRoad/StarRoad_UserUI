@@ -17,16 +17,23 @@
 </template>
 
 <script>
+import { rewardStart } from '@/api/index';
 export default {
   methods: {
-    goToSelect() {
-      this.$router.push('/reward/select');
+    async goToSelect() {
+      try {
+        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await rewardStart(userId);
+        console.log('Response:', response.data);
+        this.$router.push('/reward/select');
+      } catch (error) {
+        console.error('Error:', error);
+      }
     },
     goToMyStar() {
       this.$router.push('/reward/mystar');
     },
     goToMyCoupons() {
-      // 'mycoupons' 경로가 있다고 가정하고, 없으면 실제 경로에 맞게 수정하세요.
       this.$router.push('/reward/mycoupons');
     },
   },

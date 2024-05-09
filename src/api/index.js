@@ -1,32 +1,33 @@
 import axios from 'axios';
 import { setInterceptors } from './common/interceptors';
 
-// // 액시오스 초기화 함수
-// function createInstance() {
-//   const instance = axios.create({
-//     baseURL: process.env.VUE_APP_API_URL,
-//   });
-//   return setInterceptors(instance);
-// }
-// const instance = createInstance();
+function createInstance() {
+  const instance = axios.create({
+    baseURL: process.env.VUE_APP_API_URL,
+  });
+  return setInterceptors(instance);
+}
+const instance = createInstance();
 
-// // 회원가입 API
-// function registerUser(userData) {
-//   return instance.post('signup', userData);
-// }
+function rewardStart(userId) {
+  console.log('Base URL:', process.env.VUE_APP_API_URL);
+  console.log('Request URL:', `/reward-process/${userId}/start`);
 
-// // 로그인 API
-// function loginUser(userData) {
-//   return instance.post('login', userData);
-// }
+  return instance.get(`/reward-process/${userId}/start`);
+}
+function issueCouponAPI(userId, couponId) {
+  console.log('Attempting to issue coupon:', { userId, couponId }); // 로그 추가
+  return instance.post(`/coupon/issue`, {
+    userId,
+    couponId,
+  });
+}
+function myCouponList(userId) {
+  return instance.get(`/coupon/${userId}/coupon/list`);
+}
 
-// // 학습 노트 데이터를 조회하는 API
-// function fetchPosts() {
-//   return instance.get('posts');
-// }
+function CouponUse(couponHistoryId) {
+  return instance.get(`/coupon-history/${couponHistoryId}/use`);
+}
 
-// function createPost(postData) {
-//   return instance.post('posts', postData);
-// }
-
-// export { registerUser, loginUser, fetchPosts, createPost };
+export { rewardStart, issueCouponAPI, myCouponList, CouponUse };

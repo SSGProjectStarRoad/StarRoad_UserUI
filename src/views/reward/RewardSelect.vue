@@ -40,6 +40,7 @@ import { onMounted } from 'vue';
 import Swiper from 'swiper';
 import 'swiper/swiper-bundle.css';
 import mystar1 from '@/img/mystar1.png';
+import { issueCouponAPI } from '@/api/index';
 export default {
   data() {
     return {
@@ -52,6 +53,7 @@ export default {
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
+          couponId: 1,
         },
         {
           title: '두번째 별',
@@ -59,6 +61,7 @@ export default {
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
+          couponId: 2,
         },
         {
           title: '세번째 별',
@@ -66,6 +69,7 @@ export default {
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
+          couponId: 3,
         },
         {
           title: '네번째 별',
@@ -73,6 +77,7 @@ export default {
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
+          couponId: 4,
         },
         {
           title: '다섯번째 별',
@@ -80,6 +85,7 @@ export default {
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
+          couponId: 5,
         },
       ],
     };
@@ -98,23 +104,32 @@ export default {
       }
     },
 
-    issueCoupon(index) {
-      // 메시지 초기화
-      this.cards[index].message = '';
-      // 변경 사항을 다음 틱에서 적용하여 Vue가 DOM 업데이트를 반영하도록 함
-      this.$nextTick(() => {
+    async issueCoupon(index) {
+      const card = this.cards[index];
+      const userId = 1; // 실제 사용자 ID로 대체해야 합니다.
+      if (!card.couponId) {
+        console.error('No coupon ID found for this card:', card);
+        return;
+      }
+      const couponId = card.couponId;
+
+      try {
+        const response = await issueCouponAPI(userId, couponId);
+        console.log('Coupon issued:', response.data);
         this.cards[index].message = '쿠폰이 발급되었습니다.';
-        this.cards[index].showButton = false; // 버튼을 숨깁니다.
-        // 클래스를 직접 할당
+        this.cards[index].showButton = false;
         this.cards[index].fadeClass = 'fade-in';
-        // 5초 후에 페이지 이동
         setTimeout(() => {
           this.redirectToSearch();
         }, 3000);
-      });
+      } catch (error) {
+        console.error('Error issuing coupon:', error);
+        this.cards[index].message = '쿠폰 발급에 실패하였습니다.';
+        this.cards[index].fadeClass = 'fade-in';
+      }
     },
     redirectToSearch() {
-      window.location.href = '/reward/search';
+      this.$router.push('/reward/search');
     },
   },
   mounted() {
