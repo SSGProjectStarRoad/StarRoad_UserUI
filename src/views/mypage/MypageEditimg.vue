@@ -42,31 +42,30 @@ export default {};
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  overflow: hidden; /* 이미지가 컨테이너 밖으로 나가지 않도록 */
-  margin: 0 auto; /* 자동 마진으로 가운데 정렬 */
+  overflow: hidden;
+  margin: 0 auto;
   border: 2px solid var(--mint-color);
 }
 
 .profileimg img {
-  max-width: 100%; /* 이미지가 컨테이너 너비를 초과하지 않도록 */
-  max-height: 100%; /* 이미지가 컨테이너 높이를 초과하지 않도록 */
+  max-width: 100%;
+  max-height: 100%;
 }
-
 .imgfix {
   position: absolute;
   top: 140px;
   right: 130px;
-  display: flex; /* Flexbox 레이아웃 적용 */
-  justify-content: center; /* 수평 중앙 정렬 */
-  align-items: center; /* 수직 중앙 정렬 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 20px;
   height: 20px;
   border-radius: 50%;
   background-color: var(--dgray-color);
 }
 .imgfix img {
-  width: 60%; /* 이미지의 크기를 .imgfix의 크기에 맞춤 */
-  height: auto; /* 비율 유지 */
+  width: 60%;
+  height: auto;
 }
 .registerform {
   display: flex;
@@ -97,10 +96,10 @@ export default {};
   border: 0;
   padding-left: 10px;
   color: white;
-  font-size: 18px; /* 글씨 크기를 18px로 조정 */
-  font-weight: bold; /* 글씨 굵기를 bold로 설정 */
-  cursor: pointer; /* 버튼 위에 마우스를 올렸을 때 커서 모양을 손가락 모양으로 변경 */
-  text-align: center; /* 텍스트 중앙 정렬 */
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
 }
 
 .delete {
