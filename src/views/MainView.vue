@@ -34,7 +34,7 @@
     </div>
     <button class="review_button">
       <div><img src="@/img/review/pencil.png" alt="Pencil Logo" /></div>
-      <div>Write a Review</div>
+      <div class="review_text">Write a Review</div>
     </button>
   </div>
 </template>
@@ -157,10 +157,6 @@ export default {
   justify-content: center;
 }
 
-.review_button div:first-child {
-  margin-right: 10px;
-}
-
 .review_button div {
   font-size: 15px;
 }
@@ -168,5 +164,15 @@ export default {
 .review_button:active {
   box-shadow: none;
   color: var(--mint-color);
+}
+
+.review_text {
+  display: none;
+  margin-left: 10px;
+  transition: all 0.5s;
+}
+
+.review_button:hover .review_text {
+  display: block;
 }
 </style>
