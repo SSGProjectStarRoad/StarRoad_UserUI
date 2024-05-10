@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-
+import { RewardProcessCheck, resetStatus, rewardFinish } from '@/api/index';
 const routes = [
   {
     path: '/',
@@ -38,6 +38,42 @@ const routes = [
   {
     path: '/reward/main',
     component: () => import('@/views/reward/RewardMain.vue'),
+    beforeEnter: async (to, from, next) => {
+      const userId = 1; // 사용자 ID 설정
+      try {
+        const response = await RewardProcessCheck(userId);
+        const {
+          couponCount,
+          reviewCount,
+          usageStatus,
+          issueStatus,
+          rewardStatus,
+        } = response.data;
+
+        if (couponCount === reviewCount) {
+          if (couponCount === 3) {
+            if (rewardStatus == true) {
+              next('/reward/completed');
+            }
+            await rewardFinish(userId);
+            // 리워드 지급 api 필요 (rewardFinish 하도록할것)
+            next('/reward/getstar');
+          } else {
+            if (usageStatus === false && issueStatus === true) {
+              next('/reward/search');
+            } else {
+              await resetStatus(userId);
+              next('/reward/select');
+            }
+          }
+        } else if (usageStatus === true && issueStatus === true) {
+          next({ path: '/reward/select', query: { modal: 'true' } });
+        }
+      } catch (error) {
+        console.error('Reward Process Check Error:', error);
+        next(); // 에러가 발생하면 이동 취소
+      }
+    },
   },
   {
     path: '/reward/select',

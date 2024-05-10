@@ -30,7 +30,7 @@ function rewardStart(userId) {
   return instance.get(`/reward-process/${userId}/start`);
 }
 
-// 특정 사용자에게 쿠폰을 발급하는 함수입니다.
+
 function issueCouponAPI(userId, couponId) {
   // 특정 사용자와 쿠폰 ID에 대한 쿠폰 발급 시도를 로깅합니다.
   console.log('Attempting to issue coupon:', { userId, couponId }); 
@@ -54,6 +54,24 @@ function CouponUse(couponHistoryId) {
   return instance.get(`/coupon-history/${couponHistoryId}/use`);
 }
 
+
+function RewardProcessCheck(userId) {
+  return instance.get(`/reward-process/${userId}/get`);
+}
+
+function ReviewCount(userId) {
+  return instance.patch(`/reward-process/${userId}/review`);
+}
+
+function resetStatus(userId) {
+  return instance.patch(`/reward-process/${userId}/new`);
+}
+function rewardFinish(userId) {
+  return instance.patch(`/reward-process/${userId}/completed`);
+}
+
+
+
 // 백엔드에서 보내는 매장 목록을 받아오는 fetchStoreList 함수를 추가합니다.
 async function fetchStoreList() {
   try {
@@ -63,6 +81,15 @@ async function fetchStoreList() {
     throw new Error('Error fetching store list: ' + error.message);
   }
 }
+export {
+  rewardStart,
+  issueCouponAPI,
+  myCouponList,
+  CouponUse,
+  RewardProcessCheck,
+  ReviewCount,
+  resetStatus,
+  rewardFinish,
+  fetchStoreList,
+};
 
-// 다른 모듈에서 접근할 수 있도록 함수들을 내보냅니다.
-export { rewardStart, issueCouponAPI, myCouponList, CouponUse, fetchStoreList  };
