@@ -74,6 +74,7 @@
 import data from './data.js';
 
 export default {
+  name :  'reviewcard',
   data() {
     const postData = data.timelinePost;
     console.log('postData:', postData); // 데이터를 콘솔에 출력합니다.
