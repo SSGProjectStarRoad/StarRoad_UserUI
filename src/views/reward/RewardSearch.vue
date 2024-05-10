@@ -3,7 +3,7 @@
     <img src="@/img/spaceman_big.png" alt="" />
     <h2>탐색 중</h2>
     <!-- 임시태그 -->
-    <button @click="confirmUse">쿠폰사용완료</button>
+    <!-- <button @click="confirmUse">쿠폰사용완료</button> -->
     <button @click="confirmgetstar">쿠폰사용완료(별자리획득)</button>
     <!-- 임시태그 -->
   </div>
@@ -12,9 +12,9 @@
 <script>
 export default {
   methods: {
-    confirmUse() {
-      this.$router.push('/reward/select?modal=true'); // 쿼리 파라미터로 모달 상태 전달
-    },
+    // confirmUse() {
+    //   this.$router.push('/reward/select?modal=true'); // 쿼리 파라미터로 모달 상태 전달
+    // },
     confirmgetstar() {
       this.$router.push('/reward/getstar'); // 쿼리 파라미터로 모달 상태 전달
     },

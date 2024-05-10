@@ -15,6 +15,7 @@ function rewardStart(userId) {
 
   return instance.get(`/reward-process/${userId}/start`);
 }
+
 function issueCouponAPI(userId, couponId) {
   console.log('Attempting to issue coupon:', { userId, couponId }); // 로그 추가
   return instance.post(`/coupon/issue`, {
@@ -30,4 +31,28 @@ function CouponUse(couponHistoryId) {
   return instance.get(`/coupon-history/${couponHistoryId}/use`);
 }
 
-export { rewardStart, issueCouponAPI, myCouponList, CouponUse };
+function RewardProcessCheck(userId) {
+  return instance.get(`/reward-process/${userId}/get`);
+}
+
+function ReviewCount(userId) {
+  return instance.patch(`/reward-process/${userId}/review`);
+}
+
+function resetStatus(userId) {
+  return instance.patch(`/reward-process/${userId}/new`);
+}
+function rewardFinish(userId) {
+  return instance.patch(`/reward-process/${userId}/completed`);
+}
+
+export {
+  rewardStart,
+  issueCouponAPI,
+  myCouponList,
+  CouponUse,
+  RewardProcessCheck,
+  ReviewCount,
+  resetStatus,
+  rewardFinish,
+};
