@@ -38,7 +38,7 @@
     </div>
     <div class="section"></div>
     <div class="s-key">
-      <p class="s-key-title">리뷰 {{ review }} (키워드검색)</p>
+      <p class="s-key-title">리뷰 {{ review }} (선택지 검색)</p>
       <div>
         <div class="slide">
           <swiper
@@ -82,7 +82,7 @@
             <label for="likes"></label>좋아요 순
           </p>
         </div>
-        <div class="review-Data">
+        <!-- <div class="review-Data">
           <div class="user-header">
             <div class="user-profile"></div>
             <span class="user-name">Cate Blachett</span>
@@ -95,7 +95,8 @@
             <p>내용wefwe</p>
             <p class="review-date">20.20.20</p>
           </div>
-        </div>
+        </div> -->
+        <reviewcard/>
       </div>
     </div>
     <reviewbutton/>
@@ -104,6 +105,8 @@
 </template>
 
 <script>
+import data from '@/components/review/data.js';
+import reviewcard from "@/components/store/ReviewCard.vue";
 import ProgressBar from "@/components/store/ProgressBar.vue";
 import reviewbutton from "@/components/review/ReviewButton.vue";
 import scrollToTopButton from "@/components/store/ScrollToTopButton.vue";
@@ -112,7 +115,10 @@ import "swiper/css";
 
 export default {
   data() {
+    const postData = data.timelinePost;
+    console.log('postData:', postData); // 데이터를 콘솔에 출력합니다.
     return {
+      postData,
       review: 1520,
       selectedSort: "latest",
       phoneNumber: "010-1234-5678",
@@ -132,6 +138,7 @@ export default {
     };
   },
   components: {
+    reviewcard,
     ProgressBar,
     Swiper,
     SwiperSlide,
