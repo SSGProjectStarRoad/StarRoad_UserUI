@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="event_space">
-      <div style="margin-left: 5px">EVENT</div>
+      <div class="event-info">EVENT</div>
       <div>
         <!-- 이벤트 페이지 -->
         <div class="event_list">
@@ -107,13 +107,24 @@ export default {
   padding-bottom: 60px;
 }
 
-.event_space > div:first-child {
-  width: fit-content;
+.event-info {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.35);
   font-size: 20px;
-  margin-bottom: 10px;
-  border: var(--navy-color) 2px solid;
-  border-radius: 20px;
-  padding: 8px 20px;
+  margin: 8px 0px;
+}
+
+.event-info::before,
+.event-info::after {
+  content: '';
+  flex-grow: 1;
+  background: rgba(0, 0, 0, 0.35);
+  height: 1px;
+  font-size: 0px;
+  line-height: 0px;
+  margin: 0px 16px;
 }
 
 .event_space div {
