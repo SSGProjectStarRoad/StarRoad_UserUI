@@ -19,7 +19,9 @@
             :key="index"
           >
             <h1>{{ card.title }}</h1>
-            <div class="couponimg"><img :src="card.image" alt="" /></div>
+            <div class="couponimg">
+              <img :src="getImagePath(index)" alt="" />
+            </div>
             <a
               href="javascript:void(0)"
               class="btn"
@@ -40,7 +42,6 @@
 import { onMounted } from 'vue';
 import Swiper from 'swiper';
 import 'swiper/swiper-bundle.css';
-import mystar1 from '@/img/mystar1.png';
 import { issueCouponAPI, ReviewCount } from '@/api/index';
 export default {
   data() {
@@ -50,7 +51,7 @@ export default {
       cards: [
         {
           title: '첫번째 별',
-          image: mystar1,
+
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
@@ -58,7 +59,7 @@ export default {
         },
         {
           title: '두번째 별',
-          image: mystar1,
+
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
@@ -66,7 +67,7 @@ export default {
         },
         {
           title: '세번째 별',
-          image: mystar1,
+
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
@@ -74,7 +75,6 @@ export default {
         },
         {
           title: '네번째 별',
-          image: mystar1,
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
@@ -82,7 +82,6 @@ export default {
         },
         {
           title: '다섯번째 별',
-          image: mystar1,
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
@@ -92,6 +91,9 @@ export default {
     };
   },
   methods: {
+    getImagePath(index) {
+      return require(`@/img/reward/mystar${index + 1}.png`); // 인덱스에 1을 더해 이미지 파일명 생성
+    },
     async closeModal() {
       try {
         const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
