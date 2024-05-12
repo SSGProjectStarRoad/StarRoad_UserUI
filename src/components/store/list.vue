@@ -1,7 +1,7 @@
 <template>
   <div class="list">
     <div class="store" v-for="(store, index) in filteredStores" :key="index">
-      <div class="store-header" @click="goToStoreReview(store.id)">
+      <div class="store-header" @click="$emit('store-click', store.id)">
         <img class="store-img" :src="store.imagePath" alt="" />
         <span class="store-name">{{ store.name }}</span>
         <div class="store-icons"> <!-- 추가 -->
@@ -84,9 +84,7 @@ export default {
         console.error(error); // 에러가 발생한 경우 콘솔에 에러를 출력합니다.
       }
     },
-    goToStoreReview(storeId) { // 매장 리뷰 페이지로 이동하는 함수입니다.
-      this.$router.push(`/store/${storeId}/review`); // 매장 리뷰 페이지로 라우팅합니다.
-    },
+   
   },
 };
 </script>

@@ -63,72 +63,71 @@
     <list :selected-category="selectedCategory" 
     :selected-floor="selectedFloor" 
     :search-keyword="searchKeyword" 
-    :stores="filteredStores" />
+    :stores="filteredStores"  @store-click="goToStoreReview"/>
+    <!-- <ReviewCard v-if="selectedStoreId" :store-id="selectedStoreId" /> -->
   </div>
 </template>
 <script>
-import search from '@/components/store/Search.vue'; // 검색 컴포넌트를 가져옵니다.
-import list from '@/components/store/list.vue'; // 리스트 컴포넌트를 가져옵니다.
-import { Swiper, SwiperSlide } from 'swiper/vue'; // Swiper 및 SwiperSlide 컴포넌트를 가져옵니다.
-import 'swiper/css'; // Swiper의 CSS를 가져옵니다.
+import search from '@/components/store/Search.vue';
+import list from '@/components/store/list.vue';
+import ReviewCard from '@/components/store/ReviewCard';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
 
 export default {
   components: {
-    search, // 검색 컴포넌트를 등록합니다.
-    list, // 리스트 컴포넌트를 등록합니다.
+    ReviewCard,
+    search,
+    list,
     Swiper,
     SwiperSlide,
   },
   data() {
     return {
-      searchKeyword: '', // 검색어를 저장하는 데이터입니다.
-      categories: ['식당&카페', '뷰티', '의류', '엔터테인먼트', '마트', '홈퍼니싱', '라이프스타일', '키즈'], // 카테고리 목록을 정의합니다.
-      floor: [-2,-1,1,2,3,4], // 층별 목록을 정의합니다.
-      selectedCategory: '', // 선택된 카테고리를 저장하는 데이터입니다.
-      selectedFloor: '', // 선택된 층을 저장하는 데이터입니다.
-      stores: [], // 매장 목록을 저장하는 데이터입니다.
+      searchKeyword: '',
+      categories: ['식당&카페', '뷰티', '의류', '엔터테인먼트', '마트', '홈퍼니싱', '라이프스타일', '키즈'],
+      floor: [-2, -1, 1, 2, 3, 4],
+      selectedCategory: '',
+      selectedFloor: '',
+      stores: [],
     };
   },
   computed: {
-    // 검색어에 따라 필터링된 매장 목록을 계산하는 계산된 속성입니다.
     filteredStores() {
       if (this.searchKeyword === '') {
-        return this.stores; // 검색어가 없으면 전체 매장 목록을 반환합니다.
+        return this.stores;
       } else {
         const keyword = this.searchKeyword.toLowerCase();
-        // 검색어를 포함하는 매장 목록만 반환합니다.
         return this.stores.filter(store => store.name.toLowerCase().includes(keyword));
       }
     },
   },
   methods: {
-    // 검색어를 입력할 때 호출되는 메서드입니다.
-    searchStore(event) {
-      this.searchKeyword = event.target.value; // 검색어를 업데이트합니다.
+    goToStoreReview(storeId) {
+      this.$router.push(`/store/${storeId}/reviews`);
     },
-    // 카테고리를 토글하는 메서드입니다.
+    searchStore(event) {
+      this.searchKeyword = event.target.value;
+    },
     toggleCategory(category) {
       if (this.selectedCategory === category) {
-        this.selectedCategory = ''; // 선택된 카테고리를 해제합니다.
+        this.selectedCategory = '';
       } else {
-        this.selectedCategory = category; // 선택된 카테고리를 설정합니다.
+        this.selectedCategory = category;
       }
-      this.fetchStores(); // 매장 목록을 업데이트합니다.
+      this.fetchStores();
     },
-    // 층을 토글하는 메서드입니다.
     toggleFloor(floor) {
       if (this.selectedFloor === floor) {
-        this.selectedFloor = ''; // 선택된 층을 해제합니다.
+        this.selectedFloor = '';
       } else {
-        this.selectedFloor = floor; // 선택된 층을 설정합니다.
+        this.selectedFloor = floor;
       }
-      this.fetchStores(); // 매장 목록을 업데이트합니다.
+      this.fetchStores();
     },
-    // 매장 목록을 가져오는 비동기 메서드입니다.
     async fetchStores() {
       try {
-        let url = '/api/stores'; // 매장 목록을 가져올 API 엔드포인트 URL입니다.
-        // 선택된 카테고리 및 층에 따라 URL을 동적으로 생성합니다.
+        let url = '/api/stores';
         if (this.selectedCategory && this.selectedFloor) {
           url += `?category=${this.selectedCategory}&floor=${this.selectedFloor}`;
         } else if (this.selectedCategory) {
@@ -136,17 +135,16 @@ export default {
         } else if (this.selectedFloor) {
           url += `?floor=${this.selectedFloor}`;
         }
-        // API를 호출하여 매장 목록을 가져옵니다.
         const response = await fetch(url);
         const data = await response.json();
-        this.stores = data; // 가져온 매장 목록을 저장합니다.
+        this.stores = data;
       } catch (error) {
-        console.error('Error fetching store data:', error); // 오류가 발생하면 콘솔에 오류를 기록합니다.
+        console.error('Error fetching store data:', error);
       }
     },
   },
   created() {
-    this.fetchStores(); // 컴포넌트가 생성될 때 매장 목록을 가져옵니다.
+    this.fetchStores();
   },
 };
 </script>
