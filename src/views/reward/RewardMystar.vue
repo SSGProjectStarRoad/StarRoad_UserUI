@@ -5,24 +5,48 @@
 
     <h2>나의 별자리</h2>
     <div class="mystars">
-      <div class="mystar">
+      <div class="mystar" v-for="(star, index) in stars" :key="index">
+        <!-- <img :src="star.rewardimg" alt="" /> -->
         <img src="@/img/mystar1.png" alt="" />
-      </div>
-      <div class="mystar">
-        <img src="@/img/mystar1.png" alt="" />
-      </div>
-      <div class="mystar">
-        <img src="@/img/mystar1.png" alt="" />
-      </div>
-      <div class="mystar">
-        <img src="@/img/mystar1.png" alt="" />
+        <!-- 선택적으로 보상 이름과 개수를 표시할 수 있습니다 -->
+        <p>
+          {{ star.rewardName }}
+          <span class="highlight">{{ star.rewardCount }}</span> 개
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { rewardList } from '@/api/index';
+export default {
+  data() {
+    return {
+      stars: [],
+    };
+  },
+  methods: {
+    async getRewardList() {
+      try {
+        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await rewardList(userId);
+        this.stars = response.data.map(item => ({
+          rewardName: item.reward_name, // API의 JSON 키와 일치하도록 수정
+          rewardCount: item.reward_count, // API의 JSON 키와 일치하도록 수정
+
+          // rewardimg: item.imageUrl, // 이미지 URL은 응답 데이터에 따라 조정
+        }));
+        console.log('Response:', this.stars);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+  },
+  mounted() {
+    this.getRewardList(); // 컴포넌트 마운트 시 보상 목록을 가져옴
+  },
+};
 </script>
 
 <style scoped>
@@ -49,9 +73,15 @@ h2 {
   max-width: 600px; /* 최대 너비를 지정할 수도 있음 */
 }
 .mystar {
-  flex: 1 1 33.333%; /* 세 개씩 배치하기 위해 베이스 너비를 33.333%로 설정 */
-  max-width: 33.333%; /* 최대 너비도 33.333%로 설정 */
+  flex: 1 1 50%; /* 세 개씩 배치하기 위해 베이스 너비를 33.333%로 설정 */
+  max-width: 50%; /* 최대 너비도 33.333%로 설정 */
   box-sizing: border-box; /* padding과 border가 너비에 포함되도록 설정 */
   padding: 5px; /* 필요에 따라 padding을 조정 */
+  text-align: center;
+  margin-bottom: 20px;
+}
+.highlight {
+  color: var(--mint-color);
+  font-weight: bold;
 }
 </style>

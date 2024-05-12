@@ -10,14 +10,15 @@ function createInstance() {
   const instance = axios.create({
     baseURL: process.env.VUE_APP_API_URL, // 인스턴스의 기본 URL을 설정합니다.
   });
-  
+
   // 인터셉터를 인스턴스에 적용합니다.
-  return setInterceptors(instance); 
+  return setInterceptors(instance);
 }
 
 // 인터셉터가 적용된 Axios 인스턴스를 생성합니다.
 const instance = createInstance();
 
+// Reward API
 // 특정 사용자의 보상 프로세스를 시작하는 함수입니다.
 function rewardStart(userId) {
   // 환경 변수에서 가져온 기본 URL을 로깅합니다.
@@ -30,10 +31,9 @@ function rewardStart(userId) {
   return instance.get(`/reward-process/${userId}/start`);
 }
 
-
 function issueCouponAPI(userId, couponId) {
   // 특정 사용자와 쿠폰 ID에 대한 쿠폰 발급 시도를 로깅합니다.
-  console.log('Attempting to issue coupon:', { userId, couponId }); 
+  console.log('Attempting to issue coupon:', { userId, couponId });
 
   // 사용자에게 쿠폰을 발급하기 위해 POST 요청을 보냅니다.
   return instance.post(`/coupon/issue`, {
@@ -54,7 +54,6 @@ function CouponUse(couponHistoryId) {
   return instance.get(`/coupon-history/${couponHistoryId}/use`);
 }
 
-
 function RewardProcessCheck(userId) {
   return instance.get(`/reward-process/${userId}/get`);
 }
@@ -69,8 +68,10 @@ function resetStatus(userId) {
 function rewardFinish(userId) {
   return instance.patch(`/reward-process/${userId}/completed`);
 }
-
-
+function rewardList(userId) {
+  return instance.get(`/reward-history/user/${userId}/list`);
+}
+// EOF REWARD
 
 // 백엔드에서 보내는 매장 목록을 받아오는 fetchStoreList 함수를 추가합니다.
 async function fetchStoreList() {
@@ -90,6 +91,6 @@ export {
   ReviewCount,
   resetStatus,
   rewardFinish,
+  rewardList,
   fetchStoreList,
 };
-

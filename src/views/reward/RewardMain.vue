@@ -12,7 +12,7 @@
       @click="goToSelect"
     />
     <h3 class="mystar textshadow" @click="goToMyStar">나의 별자리</h3>
-    <h3 class="mycoupon textshadow" @click="goToMyCoupons">나의 쿠폰 보기</h3>
+    <!-- <h3 class="mycoupon textshadow" @click="goToMyCoupons">나의 쿠폰 보기</h3> -->
   </div>
 </template>
 
