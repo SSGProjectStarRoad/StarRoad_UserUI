@@ -79,8 +79,7 @@ function rewardAdd(userId) {
     reward_id: today,
   });
 }
-// EOF REWARD
->>>>>>> 2131791ac74cd0bb5347a8a38e4338ace87b83d3
+
 
 // 백엔드에서 보내는 매장 목록을 받아오는 fetchStoreList 함수를 추가합니다.
 async function fetchStoreList() {
@@ -121,7 +120,7 @@ async function selectStore(storeid) {
  }
 
 // 다른 모듈에서 접근할 수 있도록 함수들을 내보냅니다.
-export { rewardStart, issueCouponAPI, myCouponList, CouponUse, fetchStoreList ,selectStore };
+
 
 export {
   rewardStart,
@@ -135,5 +134,6 @@ export {
   rewardList,
   rewardAdd,
   fetchStoreList,
+  selectStore
 };
 
