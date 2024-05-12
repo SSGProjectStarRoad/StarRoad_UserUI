@@ -1,19 +1,18 @@
 <template>
   <div class="contents">
     <div class="mystar">
-      <img :src="cardImageUrl" alt="카드 이미지" />
+      <img :src="getCurrentMonthImage()" alt="" />
     </div>
     <h2>별자리 획득</h2>
   </div>
 </template>
 
 <script>
-import mystar1 from '@/img/mystar1.png';
+import { rewardAdd } from '@/api/index';
 export default {
   data() {
     return {
-      // 이미지 URL을 데이터로 저장합니다. 실제 사용 시 이 값을 동적으로 업데이트하세요.
-      cardImageUrl: mystar1,
+      // cardImageUrl: mystar1,
     };
   },
   mounted() {
@@ -22,9 +21,26 @@ export default {
     }, 3000);
   },
   methods: {
+    getCurrentMonthImage() {
+      const month = new Date().getMonth() + 1; // 현재 월 가져오기
+      return require(`@/img/reward/mystar${month}.png`);
+    },
+    async getReward() {
+      const userId = 1;
+      try {
+        const response = await rewardAdd(userId);
+        console.log('Response:', this.stars);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+
     redirectToCompleted() {
       window.location.href = '/reward/completed';
     },
+  },
+  mounted() {
+    this.getReward(); // 페이지 로드 시 getReward 메서드 호출
   },
 };
 </script>

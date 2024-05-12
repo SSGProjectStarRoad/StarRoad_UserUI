@@ -71,6 +71,13 @@ function rewardFinish(userId) {
 function rewardList(userId) {
   return instance.get(`/reward-history/user/${userId}/list`);
 }
+function rewardAdd(userId) {
+  const today = new Date().getMonth() + 1;
+  return instance.post(`/rewards/obtain`, {
+    member_id: userId,
+    reward_id: today,
+  });
+}
 // EOF REWARD
 
 // 백엔드에서 보내는 매장 목록을 받아오는 fetchStoreList 함수를 추가합니다.
@@ -92,5 +99,6 @@ export {
   resetStatus,
   rewardFinish,
   rewardList,
+  rewardAdd,
   fetchStoreList,
 };
