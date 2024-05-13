@@ -63,6 +63,7 @@ import passwordEye from '@/img/login/passwordeye.png';
 import kakao from '@/img/login/kakaologo.png';
 import google from '@/img/login/googlelogo.png';
 import naver from '@/img/login/naverlogo.png';
+import axios from 'axios';
 
 export default {
   data() {
@@ -72,9 +73,14 @@ export default {
       kakao: kakao,
       google: google,
       naver: naver,
+      email : '',
+      password : ''.
     };
   },
   methods: {
+    submitForm() {
+      axios.post();
+    },
     gotoRegister() {
       this.$router.push('/login/register');
     },
