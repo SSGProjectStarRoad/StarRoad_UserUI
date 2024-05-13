@@ -7,7 +7,7 @@
     <div class="mystars">
       <div class="mystar" v-for="(star, index) in stars" :key="index">
         <!-- <img :src="star.rewardimg" alt="" /> -->
-        <img :src="getCurrentMonthImage()" alt="" />
+        <img :src="getCurrentMonthImage(index)" alt="" />
         <!-- 선택적으로 보상 이름과 개수를 표시할 수 있습니다 -->
         <p>
           {{ star.rewardName }}
@@ -27,8 +27,8 @@ export default {
     };
   },
   methods: {
-    getCurrentMonthImage() {
-      const month = new Date().getMonth() + 1; // 현재 월 가져오기
+    getCurrentMonthImage(index) {
+      const month = index + 1; // 현재 월 가져오기
       return require(`@/img/reward/mystar${month}.png`); // 동적으로 이미지 경로 생성
     },
     async getRewardList() {
@@ -66,23 +66,42 @@ h2 {
 }
 .mystars {
   display: flex;
-  flex-wrap: wrap; /* 요소들이 컨테이너 너비를 초과하면 다음 줄로 넘어감 */
-  justify-content: flex-start; /* 가로축에서 중앙 정렬 */
-  align-items: center; /* 세로축에서 중앙 정렬 */
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
   position: absolute;
-  left: 50%; /* 가로 중앙 정렬을 위한 설정 */
+  left: 50%;
   transform: translateX(-50%);
   top: 200px;
-  width: 80%; /* 또는 실제로 필요한 너비를 지정 */
-  max-width: 600px; /* 최대 너비를 지정할 수도 있음 */
+  width: 80%;
+  max-width: 600px;
+  padding-bottom: 100px;
 }
 .mystar {
-  flex: 1 1 50%; /* 세 개씩 배치하기 위해 베이스 너비를 33.333%로 설정 */
-  max-width: 50%; /* 최대 너비도 33.333%로 설정 */
-  box-sizing: border-box; /* padding과 border가 너비에 포함되도록 설정 */
-  padding: 5px; /* 필요에 따라 padding을 조정 */
+  flex: 1 1 50%;
+  max-width: 40%;
+  box-sizing: border-box;
+  padding: 10px;
   text-align: center;
+  margin: auto;
   margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.5s;
+}
+
+.mystar:hover {
+  transform: translateY(-5px); /* 호버 시 약간 위로 움직임 */
+}
+
+.mystar img {
+  max-width: 90%;
+  height: auto;
+  padding-top: 3px;
+  border: 3px solid var(--dgray-color);
+  border-radius: 50%;
+  box-sizing: border-box;
 }
 .highlight {
   color: var(--mint-color);

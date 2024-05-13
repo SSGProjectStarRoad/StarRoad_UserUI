@@ -24,6 +24,7 @@
           <div class="info">
             <div class="benefit">{{ coupon.coupon_discount_rate }}%</div>
             <div class="store">{{ coupon.coupon_store_type }}</div>
+            <div class="store">{{ coupon.coupon_expired_at }}</div>
           </div>
           <button
             class="use-coupon"
@@ -58,13 +59,16 @@ export default {
         const userId = 1; // 실제 사용자 ID로 대체
         const response = await myCouponList(userId);
         console.log('API response:', response);
-        this.coupons = response.data.map(coupon => ({
+        this.coupons = response.data.map((coupon, index) => ({
           ...coupon,
-          image: require('@/img/reward.png'), // 이미지 경로 조정
+          image: this.getImagePath(coupon.coupon_id - 1), // 이미지 경로 설정
         }));
       } catch (error) {
         console.error('Error fetching coupons:', error);
       }
+    },
+    getImagePath(index) {
+      return require(`@/img/reward/category/category${index + 1}.png`);
     },
     async myCouponUse(couponHistoryId) {
       try {
@@ -123,10 +127,15 @@ export default {
   border-radius: 8px;
 }
 .coupon-img {
-  width: 110px;
-  text-align: center;
+  width: 70px;
   align-content: center;
 }
+.coupon-img img {
+  padding-left: 20px;
+  width: 70%;
+  height: auto;
+}
+
 .line {
   width: 1px;
   margin: 10px;
