@@ -10,7 +10,7 @@
           </div>
           <div class="__info">
             <span class="name username">{{ review.userNickname }}</span>
-            <span class="userinfo">여기는 리뷰 작성 촛갯수 </span>
+            <span class="userinfo"> 리뷰 수 {{review.reviewcount}} </span>
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@
           <div class="rating-segment">
             <p class="ooezpq2 _1ltqxco1e" style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"></p>
           </div>
-          <div class="post-date">{{ review.createDate }}</div>
+          <div class="post-date">{{ formatRelativeDate(review.createDate) }}</div>
         </div>
         <!-- <h3 class="post-title">{{ review.summary }}</h3> -->
         <div class="post-content">
@@ -63,12 +63,19 @@
 
 
 <script>
+import moment from 'moment';
 export default {
   name: 'ReviewCard',
   props: {
     storeReview: {
       type: Object,
       default: () => ({})
+    }
+  }
+,
+  methods:{
+    formatRelativeDate(date) {
+      return moment(date).fromNow(); // 오늘 기준으로 몇 일 전인지 표시
     }
   }
 };
