@@ -108,7 +108,7 @@ const routes = [
     component: () => import('@/views/store/MallMap.vue'),
   },
   {
-    path: '/store/review',
+    path: '/store/:storeId/reviews',
     component: () => import('@/views/store/StoreReview.vue'),
   },
   {

@@ -54,6 +54,7 @@ function CouponUse(couponHistoryId) {
   return instance.get(`/coupon-history/${couponHistoryId}/use`);
 }
 
+
 function RewardProcessCheck(userId) {
   return instance.get(`/reward-process/${userId}/get`);
 }
@@ -78,7 +79,7 @@ function rewardAdd(userId) {
     reward_id: today,
   });
 }
-// EOF REWARD
+
 
 // 백엔드에서 보내는 매장 목록을 받아오는 fetchStoreList 함수를 추가합니다.
 async function fetchStoreList() {
@@ -89,6 +90,38 @@ async function fetchStoreList() {
     throw new Error('Error fetching store list: ' + error.message);
   }
 }
+
+
+async function selectStore(storeid) {
+  try {
+    // 주어진 storeid를 사용하여 API 엔드포인트로 GET 요청을 보냅니다.
+    const response = await instance.get(`/store/${storeid}/reviews`);
+ 
+    // 응답 상태가 200 (OK)인지 확인합니다.
+    if (response.status === 200) {
+      // 응답이 성공적이면 응답에서 데이터를 추출합니다.
+      const storeWithReviewData = response.data;
+ 
+      // 받은 데이터를 필요에 따라 처리합니다.
+      console.log(storeWithReviewData);
+      // 데이터를 사용하여 UI를 업데이트하거나 다른 작업을 수행할 수 있습니다.
+ 
+      // 필요한 경우 데이터를 반환합니다.
+      return storeWithReviewData;
+    } else {
+      // 응답 상태가 200이 아닌 경우 오류를 발생시킵니다.
+      throw new Error('리뷰가 있는 상점을 가져오는데 실패했습니다.');
+    }
+  } catch (error) {
+    // API 요청 중 발생한 오류를 처리합니다.
+    console.error('오류:', error);
+    // 사용자에게 오류 메시지를 표시하거나 오류를 적절하게 처리할 수 있습니다.
+  }
+ }
+
+// 다른 모듈에서 접근할 수 있도록 함수들을 내보냅니다.
+
+
 export {
   rewardStart,
   issueCouponAPI,
@@ -101,4 +134,6 @@ export {
   rewardList,
   rewardAdd,
   fetchStoreList,
+  selectStore
 };
+
