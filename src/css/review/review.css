@@ -1,3 +1,5 @@
+@import '@/css/common.css'; /* 공통 CSS 파일을 가져옵니다. */
+
 :root {
   --swiper-navigation-size: 44px;
   --swiper-theme-color: #007aff;
@@ -348,10 +350,10 @@ button {
 }
 
 .btn-rounded.btn-orange {
-  background: #ff6632;
-  border-radius: 24px;
+  background:var(--navy-color);
+  border-radius: 10px;
   color: #fff;
-  border-color: #ff6632;
+  border-color: var(--navy-color);
 }
 
 .btn-rounded.btn-orange .label {
@@ -654,15 +656,15 @@ a {
 
 .register {
   margin-top: 10px;
-  width: 4.25em;
+  width: 7em;
   min-width: 4.25em;
-  height: 32px;
+  height: 34px;
   margin-left: auto;
   padding: 0;
-  background: #ff6632;
+  background: var(--navy-color);
   color: #fff;
-  border-color: #ff6632;
-  border-radius: 24px;
+  border-color: var(--navy-color);
+  border-radius: 10px;
 }
 
 .profile-info {
