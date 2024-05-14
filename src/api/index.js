@@ -121,6 +121,29 @@ async function selectStore(storeid) {
 
 // 다른 모듈에서 접근할 수 있도록 함수들을 내보냅니다.
 
+async function storeguide(storeId, router) {
+  // 매장 ID를 서버에 전달하는 메소드입니다.
+  // 여기서 HTTP 요청을 보내고 서버에서 작업을 처리할 수 있습니다.
+  console.log('매장 ID:', storeId);
+
+  try {
+    // Axios를 사용하여 GET 요청을 보냅니다.
+    const response = await axios.get(`${process.env.VUE_APP_API_URL}store/${storeId}/guidemap`);
+
+    // 서버로부터 받은 응답을 처리합니다.
+    console.log('서버 응답:', response.data);
+
+    // 받은 데이터를 필요에 따라 처리합니다.
+    // 이 부분에는 받은 데이터를 저장하거나 다른 작업을 수행할 수 있습니다.
+
+    // Vue Router를 사용하여 페이지를 이동합니다.
+    router.push(`/store/${storeId}/guidemap`);
+  } catch (error) {
+    // 오류가 발생한 경우 처리합니다.
+    console.error('오류:', error);
+  }
+}
+
 
 export {
   rewardStart,
@@ -134,6 +157,7 @@ export {
   rewardList,
   rewardAdd,
   fetchStoreList,
-  selectStore
+  selectStore,
+  storeguide
 };
 

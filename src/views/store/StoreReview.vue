@@ -1,7 +1,7 @@
 <template>
   <div v-if="storeReview" class="contents">
     <!-- @@@@이 부분 로고 오는 데이터로 바꿔야함@@@@ -->
-    <img class="store-img" src="@/img/ZARA.png" alt="" /> 
+    <img class="store-img" :src="storeReview.imagePath" alt="" /> 
     <div class="store">
       <h1>{{storeReview.name}}</h1>
       <div class="store-detail">
@@ -22,7 +22,7 @@
       <p class="keyword">이런점이 좋았어요!!</p>
       <div class="c-key">
         <ProgressBar :progress="72">
-          <template v-slot:text>재벙문 하고 싶어요</template>
+          <template v-slot:text>재방문 하고 싶어요</template>
           <template v-slot:number>723</template>
         </ProgressBar>
         <ProgressBar :progress="42.3">
@@ -128,7 +128,7 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 
 export default {
- name: 'storereview',
+
  data() {
    const postData = data.timelinePost;
    console.log('postData:', postData); // 데이터를 콘솔에 출력합니다.
@@ -139,11 +139,9 @@ export default {
      selectedSort: "latest",
      phoneNumber: "010-1234-5678",
      buttons: [
-       "종류", "매장", "스타일", "재고", "품질", "품질", "품질", "품질2",
-       "품질", "품질", "품질222", "품질222", "품222", "재고3", "품질",
-       "품질", "품질", "품질4", "품질", "품질5", "품질2622", "품질222",
-       "품222", "재고", "품질", "품질", "품질", "품질", "품질", "품질",
-       "품질222", "품질222", "1111111",
+       "재방문 하고 싶어요","서비스가 마음에 들어요"
+       ,"가격이 합리적입니다"
+       ,"매장이 청결합니다"
      ],
      swiperOptions: {
        slidesPerView: "auto",
@@ -280,7 +278,7 @@ export default {
   margin-top: 40px;
 }
 .slide {
-  width: 480px;
+  width: auto;
   position: relative;
   overflow: hidden;
 }

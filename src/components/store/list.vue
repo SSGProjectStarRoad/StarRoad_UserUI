@@ -1,46 +1,51 @@
 <template>
   <div class="list">
     <div class="store" v-for="(store, index) in filteredStores" :key="index">
-      <div class="store-header" @click="$emit('store-click', store.id)">
-        <img class="store-img" :src="store.imagePath" alt="" />
-        <span class="store-name">{{ store.name }}</span>
+      <div class="store-header" >
+        <img class="store-img" :src="store.imagePath" alt=""  @click="$emit('store-click', store.id)"/>
+        <span class="store-name" @click="$emit('store-click', store.id)">{{ store.name }}</span>
         <div class="store-icons"> <!-- 추가 -->
           <a :href="'tel:' + store.contactNumber" class="store-phone">
             <img src="@/img/phone.png" alt="전화 걸기" />
           </a>
-          <img class="store-location" src="@/img/location.png" alt="위치" />
+          <img class="store-location" src="@/img/location.png" alt="위치" @click="storeguide(store.id)"/>
         </div> <!-- 추가 -->
+      
       </div>
     </div>
   </div>
+ 
 </template>
-
 <script>
+import axios from 'axios'; // axios 라이브러리를 가져옵니다.
+
 import { fetchStoreList } from '@/api/index.js'; // '@/api/index.js'에서 fetchStoreList 함수를 가져옵니다.
+import { storeguide } from '@/api/index.js'; // '@/api/index.js'에서 storeguide 함수를 가져옵니다.
 
 export default {
-  name: 'StoreList', // StoreList 컴포넌트를 정의합니다.
-  props: { // 부모 컴포넌트로부터 전달받는 props를 정의합니다.
-    selectedCategory: { // 선택된 카테고리를 나타내는 props입니다.
-      type: String, // 문자열 타입입니다.
-      default: '', // 기본값은 빈 문자열입니다.
+  components: {},
+  name: 'StoreList',
+  props: {
+    selectedCategory: {
+      type: String,
+      default: '',
     },
-    selectedFloor: { // 선택된 층을 나타내는 props입니다.
-      type: String, // 문자열 타입입니다.
-      default: '', // 기본값은 빈 문자열입니다.
+    selectedFloor: {
+      type: String,
+      default: '',
     },
-    searchKeyword: { // 검색 키워드를 나타내는 props입니다.
-      type: String, // 문자열 타입입니다.
-      default: '', // 기본값은 빈 문자열입니다.
+    searchKeyword: {
+      type: String,
+      default: '',
     },
   },
-  data() { // 컴포넌트의 데이터를 정의합니다.
+  data() {
     return {
       storeList: [], // 매장 목록을 저장하는 배열입니다.
     };
   },
-  computed: { // 계산된 속성을 정의합니다.
-    filteredStores() { // 필터링된 매장 목록을 반환하는 함수입니다.
+  computed: {
+    filteredStores() {
       let filtered = this.storeList; // 필터링된 결과를 저장할 변수를 초기화합니다.
 
       if (this.selectedCategory !== '') { // 선택된 카테고리가 있는 경우
@@ -59,24 +64,24 @@ export default {
       return filtered; // 필터링된 매장 목록을 반환합니다.
     },
   },
-  watch: { // 감시자(watch)를 정의합니다.
-    selectedCategory() { // selectedCategory의 변경을 감시합니다.
-      this.getStoreList(); // 매장 목록을 다시 가져오는 함수를 호출합니다.
+  watch: {
+    selectedCategory() {
+      this.getStoreList(); // selectedCategory의 변경을 감시하여 매장 목록을 다시 가져옵니다.
     },
-    selectedFloor() { // selectedFloor의 변경을 감시합니다.
-      this.getStoreList(); // 매장 목록을 다시 가져오는 함수를 호출합니다.
+    selectedFloor() {
+      this.getStoreList(); // selectedFloor의 변경을 감시하여 매장 목록을 다시 가져옵니다.
     },
-    searchKeyword() { // searchKeyword의 변경을 감시합니다.
-      // 검색어가 변경되었을 때 추가적인 동작을 수행할 수 있습니다.
+    searchKeyword() {
+      // 검색 키워드가 변경되었을 때 추가적인 동작을 수행할 수 있습니다.
       // 예를 들어, 검색 결과를 서버에서 다시 가져오는 등의 작업을 할 수 있습니다.
       // this.getStoreList();
     },
   },
-  created() { // 컴포넌트가 생성될 때 실행되는 라이프사이클 훅입니다.
-    this.getStoreList(); // 매장 목록을 가져오는 함수를 호출합니다.
+  created() {
+    this.getStoreList(); // 컴포넌트가 생성될 때 매장 목록을 가져오는 함수를 호출합니다.
   },
-  methods: { // 컴포넌트의 메서드를 정의합니다.
-    async getStoreList() { // 매장 목록을 가져오는 비동기 함수입니다.
+  methods: {
+    async getStoreList() {
       try {
         this.storeList = await fetchStoreList(); // 매장 목록을 가져와 storeList에 저장합니다.
         console.log(this.storeList); // 가져온 매장 목록을 콘솔에 출력합니다.
@@ -84,10 +89,20 @@ export default {
         console.error(error); // 에러가 발생한 경우 콘솔에 에러를 출력합니다.
       }
     },
-   
-  },
-};
+    async storeguide(storeId) {
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}store/${storeId}/guidemap`);
+        console.log('서버 응답:', response.data);
+        // 데이터 처리를 완료한 후 페이지를 이동합니다.
+        this.$router.push(`/store/${storeId}/guidemap`);
+      } catch (error) {
+        console.error('오류:', error);
+      }
+    }
+  }
+}
 </script>
+
 <style scoped>
 @import '@/css/common.css'; /* 공통 스타일 시트를 가져옵니다. */
 
@@ -110,7 +125,8 @@ export default {
 
 /* 매장 헤더 부분의 스타일입니다. */
 .store-header {
-  display: flex; /* 플렉스 박스로 배치 */
+  display: flex;
+  
   align-items: center; /* 요소들을 수직으로 정렬 */
   cursor: pointer; /* 포인터 커서 설정 */
   justify-content: space-between;
