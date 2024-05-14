@@ -4,13 +4,14 @@
     <img class="store-img" :src="storeReview.imagePath" alt="" /> 
     <div class="store">
       <h1>{{storeReview.name}}</h1>
+      
       <div class="store-detail">
         <a :href="'tel:' + storeReview.contactNumber" class="store-phone">
           <img src="@/img/phone.png" alt="전화 걸기" />
         </a>
 
       <!-- @@  로케이션 여기도 바꿔야함 @@ -->
-        <img class="store-location" src="@/img/location.png" alt="" />
+        <img class="store-location" src="@/img/location.png" alt="" @click="goToguide"/>
         <br />
       </div>
     </div>
@@ -179,6 +180,12 @@ export default {
    window.removeEventListener('scroll', this.handleScroll);
  },
  methods: {
+
+  goToguide(){
+    this.$router.push(`/store/${this.storeReview.id}/guidemap`);
+  }
+
+  ,
   changeSort() {
     if (this.selectedSort === "latest") {
       // 날짜별 최신순으로 정렬
