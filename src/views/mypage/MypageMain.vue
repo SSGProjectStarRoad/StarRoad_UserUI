@@ -9,23 +9,23 @@
     </div>
     <div class="myinfo">
       <div class="basic-info">
-        <div class="myname">이수연 님</div>
-        <div class="mylevel">Blue Level</div>
+        <div class="myname">{{ mydata.name }}님</div>
+        <div :class="levelClass">{{ levelText }}</div>
       </div>
       <div class="review-follow" @click="goToFollowPage">
         <div class="follower">
           팔로워
-          <div class="follower-num">100</div>
+          <div class="follower-num">{{ follow.followerCount }}</div>
         </div>
         <div class="following">
           팔로잉
-          <div class="following-num">70</div>
+          <div class="following-num">{{ follow.followingCount }}</div>
         </div>
       </div>
       <div class="point-info">
         <div class="point">
           <div class="starroadpoint">STARROAD POINT</div>
-          <div class="mypoint">23</div>
+          <div class="mypoint">{{ mydata.point }}</div>
         </div>
         <div class="charge">
           <div class="pointcharge">POINT CHARGE</div>
@@ -47,13 +47,9 @@
           <div class="ownimg"><img src="@/img/howto.png" alt="" /></div>
           <div class="text">오시는 길</div>
         </div>
-        <div class="announcement" @click="goToNoticePage">
-          <div class="ownimg"><img src="@/img/howto.png" alt="" /></div>
-          <div class="text">공지사항</div>
-        </div>
         <div class="inquiry">
-          <div class="ownimg"><img src="@/img/howto.png" alt="" /></div>
           <div class="text">문의하기</div>
+          <div class="text">ssg@gmail.com</div>
         </div>
       </div>
     </div>
@@ -61,8 +57,50 @@
 </template>
 
 <script>
+import { mypageData, followData } from '@/api/index';
 export default {
+  data() {
+    return {
+      mydata: [],
+      follow: [],
+    };
+  },
+  computed: {
+    levelText() {
+      const reviewExp = this.mydata.reviewExp;
+      if (reviewExp >= 300) return 'Green Level';
+      if (reviewExp >= 100) return 'Yellow Level';
+      return 'Blue Level';
+    },
+    levelClass() {
+      const reviewExp = this.mydata.reviewExp;
+      if (reviewExp >= 300) return 'green-level mylevel';
+      if (reviewExp >= 100) return 'yellow-level mylevel';
+      return 'blue-level mylevel';
+    },
+  },
   methods: {
+    async getMyFollowCount() {
+      try {
+        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await followData(userId);
+        console.log('Response:', response.data);
+        this.follow = response.data;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+    async getMydata() {
+      try {
+        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await mypageData(userId);
+        console.log('Response:', response.data);
+        this.mydata = response.data;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+
     goToEditPage() {
       this.$router.push('/mypage/edit'); // Vue Router를 사용하여 페이지 전환
     },
@@ -75,14 +113,14 @@ export default {
     goToReviewPage() {
       this.$router.push('/mypage/myreview'); // Vue Router를 사용하여 페이지 전환
     },
-    goToNoticePage() {
-      this.$router.push('/mypage/notice'); // Vue Router를 사용하여 페이지 전환
+    goToMallMap() {
+      this.$router.push('/store/mallmap');
     },
-     goToMallMap(){
-    this.$router.push('/store/mallmap');
-  }
   },
- 
+  mounted() {
+    this.getMydata();
+    this.getMyFollowCount();
+  },
 };
 </script>
 
@@ -126,7 +164,6 @@ export default {
   width: 90px;
   text-align: center;
   align-content: center;
-  background-color: var(--navy-color);
   color: white;
   border-radius: 8px;
   font-size: 14px;
@@ -193,5 +230,16 @@ export default {
 }
 .qr {
   padding: 30px;
+}
+.blue-level {
+  background-color: var(--navy-color);
+}
+
+.yellow-level {
+  background-color: rgb(235, 235, 0);
+}
+
+.green-level {
+  background-color: var(--mint-color);
 }
 </style>
