@@ -150,7 +150,9 @@ async function storeguide(storeId, router) {
 
   try {
     // Axios를 사용하여 GET 요청을 보냅니다.
-    const response = await axios.get(`${process.env.VUE_APP_API_URL}store/${storeId}/guidemap`);
+    const response = await axios.get(
+      `${process.env.VUE_APP_API_URL}store/${storeId}/guidemap`,
+    );
 
     // 서버로부터 받은 응답을 처리합니다.
     console.log('서버 응답:', response.data);
@@ -185,6 +187,15 @@ function deletemyfollowingData(userId, id) {
 function deletemyfollowerData(userId, id) {
   return instance.delete(`/follow/${id}/deleteto/${userId}`);
 }
+function uploadProfileimg(userId, formData, config) {
+  return instance.post(`/user/profile/upload/img/${userId}`, formData, config);
+}
+function readProfileimg(userId) {
+  return instance.get(`/user/profile/get/img/${userId}`);
+}
+function deleteProfileimg(userId) {
+  return instance.delete(`/user/profile/delete/img/${userId}`);
+}
 
 export {
   rewardStart,
@@ -209,6 +220,4 @@ export {
   uploadProfileimg,
   readProfileimg,
   deleteProfileimg,
-  imageUpload,
-  getAllReview,
 };
