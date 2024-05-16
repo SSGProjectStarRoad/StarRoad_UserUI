@@ -125,7 +125,9 @@ async function storeguide(storeId, router) {
 
   try {
     // Axios를 사용하여 GET 요청을 보냅니다.
-    const response = await axios.get(`${process.env.VUE_APP_API_URL}store/${storeId}/guidemap`);
+    const response = await axios.get(
+      `${process.env.VUE_APP_API_URL}store/${storeId}/guidemap`,
+    );
 
     // 서버로부터 받은 응답을 처리합니다.
     console.log('서버 응답:', response.data);
@@ -170,7 +172,6 @@ function deleteProfileimg(userId) {
   return instance.delete(`/user/profile/delete/img/${userId}`);
 }
 
-
 export {
   rewardStart,
   issueCouponAPI,
@@ -194,5 +195,4 @@ export {
   uploadProfileimg,
   readProfileimg,
   deleteProfileimg,
-
 };

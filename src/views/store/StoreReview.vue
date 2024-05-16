@@ -2,18 +2,22 @@
   <div v-if="storeReview" class="contents">
     <!-- @@@@이 부분 로고 오는 데이터로 바꿔야함@@@@ -->
 
-    <img class="store-img" :src="storeReview.imagePath" alt="" /> 
+    <img class="store-img" :src="storeReview.imagePath" alt="" />
     <div class="store">
-      <h1>{{storeReview.name}}</h1>
+      <h1>{{ storeReview.name }}</h1>
 
       <div class="store-detail">
         <a :href="'tel:' + storeReview.contactNumber" class="store-phone">
           <img src="@/img/phone.png" alt="전화 걸기" />
         </a>
 
-
-      <!-- @@  로케이션 여기도 바꿔야함 @@ -->
-        <img class="store-location" src="@/img/location.png" alt="" @click="goToguide"/>
+        <!-- @@  로케이션 여기도 바꿔야함 @@ -->
+        <img
+          class="store-location"
+          src="@/img/location.png"
+          alt=""
+          @click="goToguide"
+        />
 
         <br />
       </div>
@@ -132,70 +136,39 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 
 export default {
-
- data() {
-   const postData = data.timelinePost;
-   console.log('postData:', postData); // 데이터를 콘솔에 출력합니다.
-   return {
-     storeReview: null,
-     postData,
-     review: 1520,
-     selectedSort: "latest",
-     phoneNumber: "010-1234-5678",
-     buttons: [
-       "재방문 하고 싶어요","서비스가 마음에 들어요"
-       ,"가격이 합리적입니다"
-       ,"매장이 청결합니다"
-     ],
-     swiperOptions: {
-       slidesPerView: "auto",
-       spaceBetween: 5,
-       loop: false,
-     },
-     showScrollToTopButton: false,
-   };
- },
- computed: {
-   storeId() {
-     return this.$route.params.storeId;
-   }
- },
- async created() {
-   try {
-     this.storeReview = await selectStore(this.storeId);
-     
-   } catch (error) {
-     console.error('Error fetching store review:', error);
-   }
- },
- components: {
-   reviewcard,
-   ProgressBar,
-   Swiper,
-   SwiperSlide,
-   reviewbutton,
-   scrollToTopButton,
- },
- mounted() {
-   window.addEventListener('scroll', this.handleScroll);
- },
- beforeUnmount() {
-   window.removeEventListener('scroll', this.handleScroll);
- },
- methods: {
-
-  goToguide(){
-    this.$router.push(`/store/${this.storeReview.id}/guidemap`);
-  }
-
-  ,
-  changeSort() {
-    if (this.selectedSort === "latest") {
-      // 날짜별 최신순으로 정렬
-      this.storeReview.reviews.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
-    } else if (this.selectedSort === "likes") {
-      // 좋아요순으로 정렬
-      this.storeReview.reviews.sort((a, b) => b.likeCount - a.likeCount);
+  data() {
+    const postData = data.timelinePost;
+    console.log('postData:', postData); // 데이터를 콘솔에 출력합니다.
+    return {
+      storeReview: null,
+      postData,
+      review: 1520,
+      selectedSort: 'latest',
+      phoneNumber: '010-1234-5678',
+      buttons: [
+        '재방문 하고 싶어요',
+        '서비스가 마음에 들어요',
+        '가격이 합리적입니다',
+        '매장이 청결합니다',
+      ],
+      swiperOptions: {
+        slidesPerView: 'auto',
+        spaceBetween: 5,
+        loop: false,
+      },
+      showScrollToTopButton: false,
+    };
+  },
+  computed: {
+    storeId() {
+      return this.$route.params.storeId;
+    },
+  },
+  async created() {
+    try {
+      this.storeReview = await selectStore(this.storeId);
+    } catch (error) {
+      console.error('Error fetching store review:', error);
     }
   },
   components: {
@@ -213,6 +186,10 @@ export default {
     window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
+    goToguide() {
+      this.$router.push(`/store/${this.storeReview.id}/guidemap`);
+    },
+
     changeSort() {
       if (this.selectedSort === 'latest') {
         // 날짜별 최신순으로 정렬
@@ -224,16 +201,43 @@ export default {
         this.storeReview.reviews.sort((a, b) => b.likeCount - a.likeCount);
       }
     },
-    handleScroll() {
-      const scrollPosition =
-        window.pageYOffset || document.documentElement.scrollTop;
-      this.showScrollToTopButton = scrollPosition > 100;
+    components: {
+      reviewcard,
+      ProgressBar,
+      Swiper,
+      SwiperSlide,
+      reviewbutton,
+      scrollToTopButton,
     },
-    scrollToTop() {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
+    mounted() {
+      window.addEventListener('scroll', this.handleScroll);
+    },
+    beforeUnmount() {
+      window.removeEventListener('scroll', this.handleScroll);
+    },
+    methods: {
+      changeSort() {
+        if (this.selectedSort === 'latest') {
+          // 날짜별 최신순으로 정렬
+          this.storeReview.reviews.sort(
+            (a, b) => new Date(b.createDate) - new Date(a.createDate),
+          );
+        } else if (this.selectedSort === 'likes') {
+          // 좋아요순으로 정렬
+          this.storeReview.reviews.sort((a, b) => b.likeCount - a.likeCount);
+        }
+      },
+      handleScroll() {
+        const scrollPosition =
+          window.pageYOffset || document.documentElement.scrollTop;
+        this.showScrollToTopButton = scrollPosition > 100;
+      },
+      scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      },
     },
   },
 };
