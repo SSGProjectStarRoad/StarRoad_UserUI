@@ -5,7 +5,7 @@
     <div class="registerform">
       <form action="">
         <div class="profileimg">
-          <img src="@/img/spaceman_big.png" alt="이미지" />
+          <img :src="profileImage" alt="이미지" />
         </div>
         <div class="imgfix" @click="goToEditimgPage">
           <img src="@/img/pencil.png" alt="이미지" />
@@ -59,10 +59,13 @@
 
 <script>
 import passwordEye from '@/img/login/passwordeye.png';
+import basicprofile from '@/img/spaceman_big.png';
+import { readProfileimg } from '@/api/index';
 export default {
   data() {
     return {
       passwordEye: passwordEye,
+      profileImage: basicprofile,
     };
   },
   methods: {
@@ -72,6 +75,24 @@ export default {
     goToEditimgPage() {
       this.$router.push('/mypage/editimg'); // Vue Router를 사용하여 페이지 전환
     },
+    async loadImage() {
+      try {
+        const userid = 1;
+        const response = await readProfileimg(userid);
+        this.profileImage = response.data;
+        console.log('Loaded Image URL:', this.profileImage);
+        if (this.profileImage == '') {
+          this.profileImage = basicprofile;
+        }
+      } catch (error) {
+        console.error('이미지 불러오기 실패:', error);
+        this.profileImage = basicprofile;
+        // alert('이미지 불러오기 실패.');
+      }
+    },
+  },
+  mounted() {
+    this.loadImage();
   },
 };
 </script>

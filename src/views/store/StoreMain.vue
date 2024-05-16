@@ -86,7 +86,7 @@ export default {
     return {
       searchKeyword: '',
       categories: ['식당&카페', '뷰티', '의류', '엔터테인먼트', '마트', '홈퍼니싱', '라이프스타일', '키즈'],
-      floor: [-2, -1, 1, 2, 3, 4],
+      floor: ['B2', 'B1', '1', '2', '3', '4'],
       selectedCategory: '',
       selectedFloor: '',
       stores: [],

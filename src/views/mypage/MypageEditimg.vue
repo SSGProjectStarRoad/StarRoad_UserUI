@@ -4,26 +4,118 @@
 
     <div class="registerform">
       <div class="profileimg">
-        <img src="@/img/spaceman_big.png" alt="이미지" />
+        <img :src="profileImage" alt="이미지" />
       </div>
-      <form action="">
+      <form @submit.prevent="uploadImage">
         <div class="imginput">
-          <input id="imginput" type="button" value="이미지 선택" />
+          <input
+            ref="fileInput"
+            type="file"
+            @change="handleFileChange"
+            hidden
+          />
+          <input
+            id="imginput"
+            type="button"
+            value="이미지 선택"
+            @click="triggerFileInput"
+          />
         </div>
       </form>
-      <form action="">
+      <form @submit.prevent="saveImage">
         <div class="imgsave">
-          <input id="imgsave" type="button" value="이미지 저장하기" />
+          <input id="imgsave" type="submit" value="이미지 저장하기" />
         </div>
       </form>
     </div>
-    <div class="delete">이미지 삭제하기</div>
+    <div class="delete" @click="deleteImage">이미지 삭제하기</div>
   </div>
 </template>
 
 <script>
-import passwordEye from '@/img/login/passwordeye.png';
-export default {};
+import basicprofile from '@/img/spaceman_big.png';
+import {
+  uploadProfileimg,
+  readProfileimg,
+  deleteProfileimg,
+} from '@/api/index';
+export default {
+  data() {
+    return {
+      selectedFile: null,
+      profileImage: basicprofile, // 기본 이미지 경로
+    };
+  },
+  methods: {
+    triggerFileInput() {
+      this.$refs.fileInput.click();
+    },
+    handleFileChange(event) {
+      const file = event.target.files[0];
+      this.selectedFile = file;
+
+      // 파일을 읽어서 미리보기 이미지로 설정
+      const reader = new FileReader();
+      reader.onload = e => {
+        this.profileImage = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+    async saveImage() {
+      if (!this.selectedFile) {
+        alert('이미지를 선택해주세요.');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', this.selectedFile);
+
+      try {
+        const userid = 1;
+        const response = await uploadProfileimg(userid, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        alert('이미지가 성공적으로 저장되었습니다.');
+        // 프로필 이미지를 서버에서 받은 URL로 갱신할 수 있음
+        this.profileImage = response.data.imageUrl;
+      } catch (error) {
+        console.error('이미지 업로드 실패:', error);
+        alert('이미지 업로드 실패.');
+      }
+    },
+    async deleteImage() {
+      try {
+        const userid = 1;
+        await deleteProfileimg(userid);
+        alert('이미지가 성공적으로 삭제되었습니다.');
+        this.profileImage = basicprofile; // 기본 이미지로 리셋
+      } catch (error) {
+        console.error('이미지 삭제 실패:', error);
+        alert('이미지 삭제 실패.');
+      }
+    },
+    async loadImage() {
+      try {
+        const userid = 1;
+        const response = await readProfileimg(userid);
+        this.profileImage = response.data;
+        console.log('Loaded Image URL:', this.profileImage);
+        if (this.profileImage == '') {
+          this.profileImage = basicprofile;
+        }
+      } catch (error) {
+        console.error('이미지 불러오기 실패:', error);
+        this.profileImage = basicprofile;
+        // alert('이미지 불러오기 실패.');
+      }
+    },
+  },
+  mounted() {
+    this.loadImage(); // 컴포넌트가 마운트될 때 이미지를 로드
+  },
+};
 </script>
 
 <style scoped>
