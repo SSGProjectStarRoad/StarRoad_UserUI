@@ -1,7 +1,6 @@
 <template>
   <div class="contents">
-    <!-- 필요에 따라 back.png 살릴것 -->
-    <!-- <img class="backimg" src="@/img/back.png" alt="" /> -->
+    <BackButton />
 
     <h2>나의 별자리</h2>
     <div class="mystars">
