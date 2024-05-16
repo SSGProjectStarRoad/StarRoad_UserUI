@@ -28,10 +28,10 @@
           <img :src="person.profileImgUrl" alt="Profile image" />
         </div>
         <div class="data">
-          <div class="profile-name">{{ person.name }}</div>
-          <div class="follower-num">{{ person.followerNum }}</div>
+          <div class="profile-name">{{ person.nickname }}</div>
+          <div class="follower-num">#{{ person.id }}</div>
         </div>
-        <div class="delete">
+        <div class="delete" v-if="activeTab !== 'followers'">
           <button @click="deletePerson(person.id)">삭제</button>
         </div>
       </div>
@@ -40,41 +40,62 @@
 </template>
 
 <script>
-import img from '@/img/spaceman_big.png';
+// import img from '@/img/spaceman_big.png';
+import {
+  myfollowerData,
+  myfollowingData,
+  deletemyfollowingData,
+  deletemyfollowerData,
+} from '@/api/index';
 export default {
   data() {
     return {
       activeTab: 'followers', // Initial active tab
       persons: [],
-      followers: [
-        {
-          id: 1,
-          name: 'Victory Am',
-          followerNum: 1323,
-          profileImgUrl: require('@/img/reward.png'),
-        },
-        { id: 2, name: 'Linda Bell', followerNum: 1456, profileImgUrl: img },
-      ],
-      followings: [
-        { id: 3, name: 'James Lee', followerNum: 998, profileImgUrl: img },
-        { id: 4, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
-        { id: 5, name: 'James Lee', followerNum: 998, profileImgUrl: img },
-        { id: 6, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
-        { id: 7, name: 'James Lee', followerNum: 998, profileImgUrl: img },
-        { id: 8, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
-        { id: 9, name: 'James Lee', followerNum: 998, profileImgUrl: img },
-        { id: 10, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
-        { id: 11, name: 'James Lee', followerNum: 998, profileImgUrl: img },
-        { id: 12, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
-        { id: 13, name: 'James Lee', followerNum: 998, profileImgUrl: img },
-        { id: 14, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
-      ],
+      followers: [],
+      followings: [],
+      // followers: [
+      //   {
+      //     id: 1,
+      //     name: 'Victory Am',
+      //     followerNum: 1323,
+      //     profileImgUrl: require('@/img/reward.png'),
+      //   },
+      //   { id: 2, name: 'Linda Bell', followerNum: 1456, profileImgUrl: img },
+      // ],
+      // followings: [
+      //   { id: 3, name: 'James Lee', followerNum: 998, profileImgUrl: img },
+      //   { id: 4, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
+      //   { id: 5, name: 'James Lee', followerNum: 998, profileImgUrl: img },
+      //   { id: 6, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
+      //   { id: 7, name: 'James Lee', followerNum: 998, profileImgUrl: img },
+      //   { id: 8, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
+      //   { id: 9, name: 'James Lee', followerNum: 998, profileImgUrl: img },
+      //   { id: 10, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
+      //   { id: 11, name: 'James Lee', followerNum: 998, profileImgUrl: img },
+      //   { id: 12, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
+      //   { id: 13, name: 'James Lee', followerNum: 998, profileImgUrl: img },
+      //   { id: 14, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
+      // ],
     };
   },
   mounted() {
-    this.loadFollowers(); // 페이지 로드 시 팔로워 데이터 로드
+    // this.loadFollowers(); // 페이지 로드 시 팔로워 데이터 로드
+    this.loadFollowSummary(); // 페이지 로드 시 요약 데이터 로드
   },
   methods: {
+    async loadFollowSummary() {
+      try {
+        const userId = 1;
+        const responseFollowing = await myfollowingData(userId);
+        const responseFollower = await myfollowerData(userId);
+        this.followers = responseFollower.data;
+        this.followings = responseFollowing.data;
+        this.loadFollowers(); // 초기 로드 시 팔로워 데이터를 기본으로 로드
+      } catch (error) {
+        console.error('Failed to load follow summary:', error);
+      }
+    },
     loadFollowers() {
       this.persons = this.followers;
       this.activeTab = 'followers';
@@ -83,13 +104,19 @@ export default {
       this.persons = this.followings;
       this.activeTab = 'followings';
     },
-    deletePerson(id) {
-      if (this.activeTab === 'followers') {
-        this.followers = this.followers.filter(person => person.id !== id);
-      } else {
-        this.followings = this.followings.filter(person => person.id !== id);
+    async deletePerson(id) {
+      if (confirm('정말로 삭제하시겠습니까?')) {
+        const userId = 1;
+        if (this.activeTab === 'followers') {
+          // await deletemyfollowerData(id);
+          this.followers = this.followers.filter(person => person.id !== id);
+        } else {
+          await deletemyfollowingData(userId, id);
+
+          this.followings = this.followings.filter(person => person.id !== id);
+        }
+        this.persons = this.persons.filter(person => person.id !== id);
       }
-      this.persons = this.persons.filter(person => person.id !== id);
     },
   },
 };
