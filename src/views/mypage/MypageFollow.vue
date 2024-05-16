@@ -25,7 +25,10 @@
     <div class="list">
       <div class="person" v-for="person in persons" :key="person.id">
         <div class="profile-img">
-          <img :src="person.profileImgUrl" alt="Profile image" />
+          <img
+            :src="getProfileImage(person.profileImgUrl)"
+            alt="프로필 이미지"
+          />
         </div>
         <div class="data">
           <div class="profile-name">{{ person.nickname }}</div>
@@ -40,7 +43,7 @@
 </template>
 
 <script>
-// import img from '@/img/spaceman_big.png';
+import basicprofile from '@/img/spaceman_big.png';
 import {
   myfollowerData,
   myfollowingData,
@@ -54,36 +57,15 @@ export default {
       persons: [],
       followers: [],
       followings: [],
-      // followers: [
-      //   {
-      //     id: 1,
-      //     name: 'Victory Am',
-      //     followerNum: 1323,
-      //     profileImgUrl: require('@/img/reward.png'),
-      //   },
-      //   { id: 2, name: 'Linda Bell', followerNum: 1456, profileImgUrl: img },
-      // ],
-      // followings: [
-      //   { id: 3, name: 'James Lee', followerNum: 998, profileImgUrl: img },
-      //   { id: 4, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
-      //   { id: 5, name: 'James Lee', followerNum: 998, profileImgUrl: img },
-      //   { id: 6, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
-      //   { id: 7, name: 'James Lee', followerNum: 998, profileImgUrl: img },
-      //   { id: 8, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
-      //   { id: 9, name: 'James Lee', followerNum: 998, profileImgUrl: img },
-      //   { id: 10, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
-      //   { id: 11, name: 'James Lee', followerNum: 998, profileImgUrl: img },
-      //   { id: 12, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
-      //   { id: 13, name: 'James Lee', followerNum: 998, profileImgUrl: img },
-      //   { id: 14, name: 'Chris Ray', followerNum: 1120, profileImgUrl: img },
-      // ],
     };
   },
   mounted() {
-    // this.loadFollowers(); // 페이지 로드 시 팔로워 데이터 로드
     this.loadFollowSummary(); // 페이지 로드 시 요약 데이터 로드
   },
   methods: {
+    getProfileImage(profileImgUrl) {
+      return profileImgUrl ? profileImgUrl : basicprofile;
+    },
     async loadFollowSummary() {
       try {
         const userId = 1;
