@@ -27,6 +27,8 @@ function rewardStart(userId) {
   // 특정 사용자의 보상 프로세스를 시작하는 요청 URL을 로깅합니다.
   console.log('Request URL:', `/reward-process/${userId}/start`);
 
+
+
   // 사용자의 보상 프로세스를 시작하기 위해 GET 요청을 보냅니다.
   return instance.get(`/reward-process/${userId}/start`);
 }
@@ -135,6 +137,10 @@ async function imageUpload(imageFile) { // confirmUpload 메소드를 async 함�
   }
 }
 
+function getAllReview() {
+  return instance.get(`/reviews`);
+}
+
 // 다른 모듈에서 접근할 수 있도록 함수들을 내보냅니다.
 
 //Mypage
@@ -177,4 +183,5 @@ export {
   deletemyfollowingData,
   deletemyfollowerData,
   imageUpload,
+  getAllReview,
 };
