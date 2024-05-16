@@ -220,4 +220,5 @@ export {
   uploadProfileimg,
   readProfileimg,
   deleteProfileimg,
+  getAllReview,
 };
