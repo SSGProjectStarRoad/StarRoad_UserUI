@@ -27,6 +27,8 @@ function rewardStart(userId) {
   // 특정 사용자의 보상 프로세스를 시작하는 요청 URL을 로깅합니다.
   console.log('Request URL:', `/reward-process/${userId}/start`);
 
+
+
   // 사용자의 보상 프로세스를 시작하기 위해 GET 요청을 보냅니다.
   return instance.get(`/reward-process/${userId}/start`);
 }
@@ -116,6 +118,29 @@ async function selectStore(storeid) {
   }
 }
 
+async function imageUpload(imageFile) { // confirmUpload 메소드를 async 함수로 변경합니다.
+  try {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    // axios.post 호출을 await 키워드를 사용하여 비동기 호출합니다.
+    const response = await instance.post('/reviews/upload-and-ocr', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log('업로드 성공:', response);
+    alert('이미지 업로드 성공!');
+  } catch (error) { // try 블록 내에서 발생하는 예외를 캐치합니다.
+    console.error('업로드 실패:', error);
+    alert('이미지 업로드 실패');
+  }
+}
+
+function getAllReview() {
+  return instance.get(`/reviews`);
+}
+
 // 다른 모듈에서 접근할 수 있도록 함수들을 내보냅니다.
 
 async function storeguide(storeId, router) {
@@ -195,4 +220,5 @@ export {
   uploadProfileimg,
   readProfileimg,
   deleteProfileimg,
+  getAllReview,
 };

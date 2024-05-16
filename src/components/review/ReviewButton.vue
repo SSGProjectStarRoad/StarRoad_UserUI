@@ -10,7 +10,7 @@ export default {
   methods: {
     navigateToWritePage() {
       console.log("button Click");
-      this.$router.push('/review/write');
+      this.$router.push('/review/ocr');
     },
   },
 
