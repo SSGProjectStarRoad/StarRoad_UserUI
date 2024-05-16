@@ -7,7 +7,7 @@
     <div class="mystars">
       <div class="mystar" v-for="(star, index) in stars" :key="index">
         <!-- <img :src="star.rewardimg" alt="" /> -->
-        <img :src="getCurrentMonthImage(index)" alt="" />
+        <img :src="getImageUrl(star.rewardId)" alt="보상 이미지" />
         <!-- 선택적으로 보상 이름과 개수를 표시할 수 있습니다 -->
         <p>
           {{ star.rewardName }}
@@ -27,15 +27,17 @@ export default {
     };
   },
   methods: {
-    getCurrentMonthImage(index) {
-      const month = index + 1; // 현재 월 가져오기
-      return require(`@/img/reward/mystar${month}.png`); // 동적으로 이미지 경로 생성
+    getImageUrl(rewardId) {
+      // rewardName을 기반으로 이미지 경로를 동적으로 생성
+      const imageName = rewardId; // 공백 제거 및 소문자로 변환
+      return require(`@/img/reward/mystar${imageName}.png`);
     },
     async getRewardList() {
       try {
         const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
         const response = await rewardList(userId);
         this.stars = response.data.map(item => ({
+          rewardId: item.reward_id,
           rewardName: item.reward_name, // API의 JSON 키와 일치하도록 수정
           rewardCount: item.reward_count, // API의 JSON 키와 일치하도록 수정
 

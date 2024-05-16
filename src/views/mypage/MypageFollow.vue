@@ -28,6 +28,7 @@
           <img
             :src="getProfileImage(person.profileImgUrl)"
             alt="프로필 이미지"
+            @error="handleImageError"
           />
         </div>
         <div class="data">
@@ -57,14 +58,18 @@ export default {
       persons: [],
       followers: [],
       followings: [],
+      basicprofile,
     };
   },
   mounted() {
     this.loadFollowSummary(); // 페이지 로드 시 요약 데이터 로드
   },
   methods: {
+    handleImageError(event) {
+      event.target.src = this.basicprofile;
+    },
     getProfileImage(profileImgUrl) {
-      return profileImgUrl ? profileImgUrl : basicprofile;
+      return profileImgUrl ? profileImgUrl : this.basicprofile;
     },
     async loadFollowSummary() {
       try {
