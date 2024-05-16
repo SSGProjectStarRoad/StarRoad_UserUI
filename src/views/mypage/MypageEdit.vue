@@ -5,7 +5,14 @@
     <div class="registerform">
       <form action="">
         <div class="profileimg">
-          <img :src="profileImage" alt="이미지" />
+          <div v-if="isLoading" class="spinner"></div>
+          <img
+            v-else
+            :src="profileImage"
+            alt="이미지"
+            @load="handleImageLoad"
+            @error="handleImageError"
+          />
         </div>
         <div class="imgfix" @click="goToEditimgPage">
           <img src="@/img/pencil.png" alt="이미지" />
@@ -61,14 +68,23 @@
 import passwordEye from '@/img/login/passwordeye.png';
 import basicprofile from '@/img/spaceman_big.png';
 import { readProfileimg } from '@/api/index';
+
 export default {
   data() {
     return {
       passwordEye: passwordEye,
       profileImage: basicprofile,
+      isLoading: true,
     };
   },
   methods: {
+    handleImageLoad() {
+      this.isLoading = false;
+    },
+    handleImageError(event) {
+      event.target.src = this.basicprofile;
+      this.isLoading = false;
+    },
     goToWitdrwaPage() {
       this.$router.push('/mypage/withdraw'); // Vue Router를 사용하여 페이지 전환
     },
@@ -79,15 +95,13 @@ export default {
       try {
         const userid = 1;
         const response = await readProfileimg(userid);
-        this.profileImage = response.data;
+        this.profileImage = response.data || basicprofile;
         console.log('Loaded Image URL:', this.profileImage);
-        if (this.profileImage == '') {
-          this.profileImage = basicprofile;
-        }
+        this.isLoading = false;
       } catch (error) {
         console.error('이미지 불러오기 실패:', error);
         this.profileImage = basicprofile;
-        // alert('이미지 불러오기 실패.');
+        this.isLoading = false;
       }
     },
   },
@@ -116,6 +130,7 @@ export default {
   overflow: hidden; /* 이미지가 컨테이너 밖으로 나가지 않도록 */
   margin: 0 auto; /* 자동 마진으로 가운데 정렬 */
   border: 2px solid var(--mint-color);
+  position: relative;
 }
 
 .profileimg img {
@@ -217,6 +232,26 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.spinner {
+  width: 100px;
+  height: 100px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-top: 5px solid var(--mint-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 .nicknameinput input[type='text'],
 .emailinput input[type='text'] {

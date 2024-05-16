@@ -4,7 +4,14 @@
 
     <div class="registerform">
       <div class="profileimg">
-        <img :src="profileImage" alt="이미지" />
+        <div v-if="isLoading" class="spinner"></div>
+        <img
+          v-else
+          :src="profileImage"
+          alt="이미지"
+          @load="handleImageLoad"
+          @error="handleImageError"
+        />
       </div>
       <form @submit.prevent="uploadImage">
         <div class="imginput">
@@ -43,10 +50,19 @@ export default {
   data() {
     return {
       selectedFile: null,
-      profileImage: basicprofile, // 기본 이미지 경로
+      profileImage: '',
+      isLoading: true,
+      basicprofile,
     };
   },
   methods: {
+    handleImageLoad() {
+      this.isLoading = false;
+    },
+    handleImageError(event) {
+      event.target.src = this.basicprofile;
+      this.isLoading = false;
+    },
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
@@ -58,6 +74,7 @@ export default {
       const reader = new FileReader();
       reader.onload = e => {
         this.profileImage = e.target.result;
+        this.isLoading = false; // 이미지가 로드되었으므로 로딩 상태를 해제
       };
       reader.readAsDataURL(file);
     },
@@ -80,6 +97,7 @@ export default {
         alert('이미지가 성공적으로 저장되었습니다.');
         // 프로필 이미지를 서버에서 받은 URL로 갱신할 수 있음
         this.profileImage = response.data.imageUrl;
+        this.isLoading = false; // 이미지가 로드되었으므로 로딩 상태를 해제
       } catch (error) {
         console.error('이미지 업로드 실패:', error);
         alert('이미지 업로드 실패.');
@@ -90,7 +108,7 @@ export default {
         const userid = 1;
         await deleteProfileimg(userid);
         alert('이미지가 성공적으로 삭제되었습니다.');
-        this.profileImage = basicprofile; // 기본 이미지로 리셋
+        this.profileImage = this.basicprofile; // 기본 이미지로 리셋
       } catch (error) {
         console.error('이미지 삭제 실패:', error);
         alert('이미지 삭제 실패.');
@@ -98,17 +116,16 @@ export default {
     },
     async loadImage() {
       try {
+        this.isLoading = true; // 이미지 로드 시작 시 로딩 상태 설정
         const userid = 1;
         const response = await readProfileimg(userid);
-        this.profileImage = response.data;
+        this.profileImage = response.data || this.basicprofile;
         console.log('Loaded Image URL:', this.profileImage);
-        if (this.profileImage == '') {
-          this.profileImage = basicprofile;
-        }
+        this.isLoading = false; // 이미지가 로드되었으므로 로딩 상태를 해제
       } catch (error) {
         console.error('이미지 불러오기 실패:', error);
-        this.profileImage = basicprofile;
-        // alert('이미지 불러오기 실패.');
+        this.profileImage = this.basicprofile;
+        this.isLoading = false; // 로딩 중 오류가 발생해도 로딩 상태 해제
       }
     },
   },
@@ -137,12 +154,35 @@ export default {
   overflow: hidden;
   margin: 0 auto;
   border: 2px solid var(--mint-color);
+  position: relative;
 }
 
 .profileimg img {
   max-width: 100%;
   max-height: 100%;
 }
+
+.spinner {
+  width: 100px;
+  height: 100px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-top: 5px solid var(--mint-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .imgfix {
   position: absolute;
   top: 140px;
