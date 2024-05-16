@@ -1,24 +1,29 @@
 <template>
   <div v-if="storeReview" class="contents">
     <!-- @@@@이 부분 로고 오는 데이터로 바꿔야함@@@@ -->
+
     <img class="store-img" :src="storeReview.imagePath" alt="" /> 
     <div class="store">
       <h1>{{storeReview.name}}</h1>
-      
+
       <div class="store-detail">
         <a :href="'tel:' + storeReview.contactNumber" class="store-phone">
           <img src="@/img/phone.png" alt="전화 걸기" />
         </a>
 
+
       <!-- @@  로케이션 여기도 바꿔야함 @@ -->
         <img class="store-location" src="@/img/location.png" alt="" @click="goToguide"/>
+
         <br />
       </div>
     </div>
     <div class="store-introduce">
-      {{storeReview.contents}}
+      {{ storeReview.contents }}
     </div>
-    <p :style="{ margin: '0px', 'padding-left': '10px' }">{{storeReview.floor}} 층 / 영업시간 : {{storeReview.operatingTime}}</p>
+    <p :style="{ margin: '0px', 'padding-left': '10px' }">
+      {{ storeReview.floor }} 층 / 영업시간 : {{ storeReview.operatingTime }}
+    </p>
     <div class="store-review">
       <p class="keyword">이런점이 좋았어요!!</p>
       <div class="c-key">
@@ -38,7 +43,7 @@
           <template v-slot:text>매장이 청결합니다</template>
           <template v-slot:number>5</template>
         </ProgressBar>
-        {{storeReview.Array}}
+        {{ storeReview.Array }}
       </div>
     </div>
     <div class="section"></div>
@@ -66,7 +71,6 @@
               <button class="d-button">{{ button }}</button>
             </swiper-slide>
           </swiper>
-          
         </div>
         <div class="slide">
           <swiper
@@ -89,7 +93,6 @@
               <button class="d-button">{{ button }}</button>
             </swiper-slide>
           </swiper>
-          
         </div>
         <div class="sort">
           <p>
@@ -114,19 +117,19 @@
         <reviewcard :storeReview="storeReview" />
       </div>
     </div>
-    <reviewbutton/>
-    <scrollToTopButton v-show="showScrollToTopButton" @click="scrollToTop"/>
+    <reviewbutton />
+    <scrollToTopButton v-show="showScrollToTopButton" @click="scrollToTop" />
   </div>
 </template>
 <script>
 import { selectStore } from '@/api/index.js';
 import data from '@/components/review/data.js';
-import reviewcard from "@/components/store/ReviewCard.vue";
-import ProgressBar from "@/components/store/ProgressBar.vue";
-import reviewbutton from "@/components/review/ReviewButton.vue";
-import scrollToTopButton from "@/components/store/ScrollToTopButton.vue";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import "swiper/css";
+import reviewcard from '@/components/store/ReviewCard.vue';
+import ProgressBar from '@/components/store/ProgressBar.vue';
+import reviewbutton from '@/components/review/ReviewButton.vue';
+import scrollToTopButton from '@/components/store/ScrollToTopButton.vue';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
 
 export default {
 
@@ -195,32 +198,59 @@ export default {
       this.storeReview.reviews.sort((a, b) => b.likeCount - a.likeCount);
     }
   },
-   handleScroll() {
-     const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-     this.showScrollToTopButton = scrollPosition > 100;
-   },
-   scrollToTop() {
-     window.scrollTo({
-       top: 0,
-       behavior: 'smooth'
-     });
-   }
- }
+  components: {
+    reviewcard,
+    ProgressBar,
+    Swiper,
+    SwiperSlide,
+    reviewbutton,
+    scrollToTopButton,
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
+  methods: {
+    changeSort() {
+      if (this.selectedSort === 'latest') {
+        // 날짜별 최신순으로 정렬
+        this.storeReview.reviews.sort(
+          (a, b) => new Date(b.createDate) - new Date(a.createDate),
+        );
+      } else if (this.selectedSort === 'likes') {
+        // 좋아요순으로 정렬
+        this.storeReview.reviews.sort((a, b) => b.likeCount - a.likeCount);
+      }
+    },
+    handleScroll() {
+      const scrollPosition =
+        window.pageYOffset || document.documentElement.scrollTop;
+      this.showScrollToTopButton = scrollPosition > 100;
+    },
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    },
+  },
 };
 </script>
 
 <style scoped>
-@import "@/css/common.css";
-.store-introduce{
-  padding-left:10px;
+@import '@/css/common.css';
+.store-introduce {
+  padding-left: 10px;
   padding-right: 10px;
   margin-bottom: 10px;
-  margin-top:10px;
+  margin-top: 10px;
 }
 
 .review-body {
   margin-top: 4%;
-  background-image: url("https://picsum.photos/600?random=0");
+  background-image: url('https://picsum.photos/600?random=0');
   height: 450px;
   background-position: center;
   background-size: cover;
@@ -255,7 +285,7 @@ export default {
 }
 
 .user-profile {
-  background-image: url("https://picsum.photos/100?random=0");
+  background-image: url('https://picsum.photos/100?random=0');
   width: 50px;
   height: 50px;
   background-size: 50%;
@@ -323,7 +353,7 @@ export default {
   background-color: var(--mint-color);
 }
 
-input[type="radio"] {
+input[type='radio'] {
   display: none;
 }
 
@@ -338,7 +368,7 @@ label {
   margin-left: 5px;
 }
 
-input[type="radio"]:checked + label {
+input[type='radio']:checked + label {
   background-color: var(--navy-color);
 }
 
@@ -355,7 +385,7 @@ input[type="radio"]:checked + label {
 }
 
 .section::before {
-  content: "";
+  content: '';
   display: block;
   height: 10px;
   width: 100%;

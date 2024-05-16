@@ -9,9 +9,11 @@
     <div class="user_level">
       <div>My Review</div>
       <div class="review_gage">
-        <div class="user_rank">Blue Level</div>
+        <div class="user_rank">{{ levelText }}</div>
         <div class="user_exp">
-          <ProgressBar class="user_progressbar" :progress="72" />
+          <ProgressBar class="user_progressbar" :progress="reviewProgress">
+            <!-- <template #number>{{ reviewExp }} / 300</template> -->
+          </ProgressBar>
         </div>
       </div>
     </div>
@@ -41,8 +43,49 @@
 
 <script>
 import ProgressBar from '@/components/store/ProgressBar.vue';
+import { mypageData } from '@/api/index';
 
 export default {
+  data() {
+    return {
+      mydata: [],
+    };
+  },
+  methods: {
+    async getMydata() {
+      try {
+        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await mypageData(userId);
+        console.log('Response:', response.data);
+        this.mydata = response.data;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+  },
+  computed: {
+    reviewExp() {
+      return this.mydata.reviewExp || 0;
+    },
+    reviewProgress() {
+      return (this.reviewExp / 300) * 100;
+    },
+    levelText() {
+      const reviewExp = this.mydata.reviewExp;
+      if (reviewExp >= 300) return 'Green Level';
+      if (reviewExp >= 100) return 'Yellow Level';
+      return 'Blue Level';
+    },
+    levelClass() {
+      const reviewExp = this.mydata.reviewExp;
+      if (reviewExp >= 300) return 'green-level user_rank';
+      if (reviewExp >= 100) return 'yellow-level user_rank';
+      return 'blue-level user_rank';
+    },
+  },
+  mounted() {
+    this.getMydata();
+  },
   components: {
     ProgressBar,
   },
@@ -174,5 +217,23 @@ export default {
 
 .review_button:hover .review_text {
   display: block;
+}
+.blue-level {
+  background-color: var(--navy-color);
+}
+
+.yellow-level {
+  background-color: rgb(235, 235, 0);
+}
+
+.green-level {
+  background-color: var(--mint-color);
+}
+.number {
+  color: #333;
+  font-weight: bold;
+  margin-left: auto;
+  margin-right: 10px;
+  z-index: 1000; /* z-index를 높게 설정 */
 }
 </style>

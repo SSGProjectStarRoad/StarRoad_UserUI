@@ -2,10 +2,6 @@
   <div class="contents">
     <img src="@/img/spaceman_big.png" alt="" />
     <h2>탐색 중</h2>
-    <!-- 임시태그 -->
-    <!-- <button @click="confirmUse">쿠폰사용완료</button> -->
-    <button @click="confirmgetstar">쿠폰사용완료(별자리획득)</button>
-    <!-- 임시태그 -->
   </div>
 </template>
 
