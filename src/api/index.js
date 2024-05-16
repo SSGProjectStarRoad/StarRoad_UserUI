@@ -137,6 +137,15 @@ function deletemyfollowingData(userId, id) {
 function deletemyfollowerData(userId, id) {
   return instance.delete(`/follow/${id}/deleteto/${userId}`);
 }
+function uploadProfileimg(userId, formData, config) {
+  return instance.post(`/user/profile/upload/img/${userId}`, formData, config);
+}
+function readProfileimg(userId) {
+  return instance.get(`/user/profile/get/img/${userId}`);
+}
+function deleteProfileimg(userId) {
+  return instance.delete(`/user/profile/delete/img/${userId}`);
+}
 
 export {
   rewardStart,
@@ -157,4 +166,7 @@ export {
   myfollowerData,
   deletemyfollowingData,
   deletemyfollowerData,
+  uploadProfileimg,
+  readProfileimg,
+  deleteProfileimg,
 };
