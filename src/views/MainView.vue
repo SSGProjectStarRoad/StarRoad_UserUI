@@ -189,7 +189,7 @@ export default {
 
 .review_button {
   position: fixed;
-  right: calc(50% - 240px);
+  right: calc(55% - 240px);
   top: calc(100% - 120px);
   background-color: var(--navy-color);
   border-radius: 20px;
@@ -201,12 +201,16 @@ export default {
   box-shadow: 2px 2px 3px #00000033;
   display: flex;
   justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .review_button div {
   font-size: 15px;
 }
-
+.review_button div:first-child {
+  margin-right: 0px;
+}
 .review_button:active {
   box-shadow: none;
   color: var(--mint-color);

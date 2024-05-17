@@ -44,8 +44,8 @@ h3 {
   top: 450px;
   right: 40px;
   cursor: pointer;
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 8px;
-  box-shadow: 1px 3px 5px var(--dgray-color);
+  box-shadow: 1px 1px 5px var(--dgray-color);
 }
 </style>
