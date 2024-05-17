@@ -1,63 +1,63 @@
 <template>
   <div class="contents">
-<div class="timeline-post-item">
-  <div class="timeline-post-content">
-    <div class="restaurant-info">
-      <img class="write-arrow" src="../../img/review/arrow_left_black.svg" alt="" style="
+    <div class="timeline-post-item">
+      <div class="timeline-post-content">
+        <div class="restaurant-info">
+          <img class="write-arrow" src="../../img/review/arrow_left_black.svg" alt="" style="
             background: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')
               center center no-repeat transparent;" />
-      <div class="__info">
-        <h4 class="__name"><span>톤쇼우 광안점</span></h4>
-        <div class="__meta"> 2024. 04. 25. (목) </div>
+          <div class="__info">
+            <h4 class="__name"><span>{{ shopName }}</span></h4>
+            <div class="__meta"> {{ purchaseDate }} </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<div class="survey">
-  <div class="survey-title">어떤 점이 좋았나요 ? (필수)</div>
-  <div v-for="(item, index) in surveyEssential" :key="index" class="survey-item">
-    <button class="survey-option-btn" :class="{ selected: item.selected }" @click="toggleItemEs(index)">
-      {{ item.text }}
-    </button>
-  </div>
-
-  <div class="survey-title">어떤 점이 좋았나요 ? (선택)</div>
-  <div v-for="(item, index) in surveyOptions" :key="index" class="survey-item">
-    <button class="survey-option-btn" :class="{ selected: item.selected }" @click="toggleItemOp(index)">
-      {{ item.text }}
-    </button>
-  </div>
-
-  <div>
-    <label for="upload" class="btn counter register">사진 등록하기</label>
-    <input id="upload" type="file" multiple @change="uploadPictures" style="display: none;">
-    <br/>
-    <br/>
-    <br/>
-    <div class="newPicture">
-      <div v-for="(image, index) in uploadedImages.slice(0, 3)" :key="index" class="uploaded-image">
-        <img :src="image.preview" class="uploaded-image-preview" alt="Uploaded Image">
+    <div class="survey">
+      <div class="survey-title">어떤 점이 좋았나요 ? (필수)</div>
+      <div v-for="(item, index) in surveyEssential" :key="index" class="survey-item">
+        <button class="survey-option-btn" :class="{ selected: item.selected }" @click="toggleItemEs(index)">
+          {{ item.text }}
+        </button>
       </div>
+
+      <div class="survey-title">어떤 점이 좋았나요 ? (선택)</div>
+      <div v-for="(item, index) in surveyOptions" :key="index" class="survey-item">
+        <button class="survey-option-btn" :class="{ selected: item.selected }" @click="toggleItemOp(index)">
+          {{ item.text }}
+        </button>
+      </div>
+
+      <div>
+        <label for="upload" class="btn counter register">사진 등록하기</label>
+        <input id="upload" type="file" multiple @change="uploadPictures" style="display: none;">
+        <br />
+        <br />
+        <br />
+        <div class="newPicture">
+          <div v-for="(image, index) in uploadedImages.slice(0, 3)" :key="index" class="uploaded-image">
+            <img :src="image.preview" class="uploaded-image-preview" alt="Uploaded Image">
+          </div>
+        </div>
+      </div>
+
+      <br />
+      <br />
+      <br />
+      <textarea class="text-review" placeholder="200자 이내로 기재해주세요." v-model="reviewText" @input="limitText"></textarea>
+      <br />
+      <div>
+        <span style="color:#aaa;" class="counter">({{ currentLength }} / 최대 200자)</span>
+      </div>
+      <br />
+      <div>
+        <button type="button" class="btn counter register">
+          <span class="">등록하기</span>
+        </button>
+      </div>
+
     </div>
-  </div>
-
-  <br />
-  <br />
-  <br />
-  <textarea class="text-review" placeholder="200자 이내로 기재해주세요." v-model="reviewText" @input="limitText"></textarea>
-  <br />
-  <div>
-    <span style="color:#aaa;" class="counter">({{ currentLength }} / 최대 200자)</span>
-  </div>
-  <br />
-  <div>
-    <button type="button" class="btn counter register">
-      <span class="">등록하기</span>
-    </button>
-  </div>
-
-</div>
   </div>
 </template>
 
@@ -76,8 +76,25 @@ export default {
         { text: "음식이 빨리 나와요", selected: false },
         { text: "재료가 신선해요", selected: false },
       ],
-      reviewText: ''
+      reviewText: '',
+      shopName: '',
+      paymentType: '',
+      approvalNumber: '',
+      purchaseDate: '',
+      selectedTime: '',
     };
+  },
+  created() {
+    this.shopName = this.$route.query.shopName || '';
+    this.paymentType = this.$route.query.paymentType || '';
+    this.approvalNumber = this.$route.query.approvalNumber || '';
+    this.purchaseDate = this.$route.query.purchaseDate || '';
+    this.shopName = this.$route.query.shopName || '';
+    this.paymentType = this.$route.query.paymentType || '';
+    // approvalNumber가 필요하다면, confirmReceipt에서 이를 보내는 로직 추가 필요
+    // this.approvalNumber = this.$route.query.approvalNumber || ''; 
+    this.purchaseDate = this.$route.query.selectedDate || '';
+    this.selectedTime = this.$route.query.selectedTime || '';
   },
   computed: {
     currentLength() {
@@ -88,13 +105,13 @@ export default {
     uploadPictures(event) {
       const files = event.target.files;
       const maxFiles = 3;
-      
+
       if (files.length > maxFiles) {
         alert(`최대 ${maxFiles}개까지 선택할 수 있습니다.`);
         event.target.value = '';
         return;
       }
-      
+
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const reader = new FileReader();
@@ -104,7 +121,7 @@ export default {
           img.src = reader.result;
           img.onload = () => {
 
-              // 이미지를 서버로 전송하는 대체 코드
+            // 이미지를 서버로 전송하는 대체 코드
             // axios.post('/uploadImage', { image: reader.result })
             //   .then(response => {
             //     console.log('이미지가 성공적으로 서버로 전송되었습니다:', response);
@@ -112,7 +129,7 @@ export default {
             //   .catch(error => {
             //     console.error('이미지 전송에 실패했습니다:', error);
             //   });
-            
+
             // 여기서는 이미지를 로컬로 저장하도록 임시로 설정
             const resizedImage = this.resizeImage(img);
             this.uploadedImages.push({ preview: resizedImage });
@@ -128,7 +145,7 @@ export default {
     },
     limitText() {
       if (this.reviewText.length > 200) {
-        this.reviewText = this.reviewText.slice(0,200);
+        this.reviewText = this.reviewText.slice(0, 200);
       }
     },
     resizeImage(img) {
@@ -162,14 +179,16 @@ export default {
 <style scoped>
 @import "@/css/review/review.css";
 
-.newPicture{
-  margin:5px;
-  margin-left:20px;
+.newPicture {
+  margin: 5px;
+  margin-left: 20px;
 }
+
 .contents {
   width: 400px;
   margin: auto;
 }
+
 .btn.counter.register:hover {
   cursor: pointer;
 }
@@ -192,7 +211,8 @@ export default {
   object-fit: contain;
   border-radius: 10px !important;
 }
-.uploaded-image-preview{
+
+.uploaded-image-preview {
   border-radius: 10px;
 }
 </style>

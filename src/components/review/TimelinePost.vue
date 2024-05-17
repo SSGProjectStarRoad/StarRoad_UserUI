@@ -31,7 +31,6 @@ export default {
       reviews: [],
     };
   },
-
   created() {
     this.getAllReview(); // 컴포넌트가 생성되었을 때 리뷰 데이터를 가져옵니다.
   },
@@ -42,12 +41,10 @@ export default {
     }
   },
   methods: {
-
     async getAllReview() {
       try {
-
         this.reviews = await getAllReview();
-        console.error('리뷰 로드 성공:', this.reviews);
+        console.log('리뷰 로드 성공:', this.reviews);
       } catch (error) { // try 블록 내에서 발생하는 예외를 캐치합니다.
         console.error('리뷰 로드 실패:', error);
       }

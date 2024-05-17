@@ -4,7 +4,7 @@
             <div class="date-info-wrapper">
                 <div class="visit-info-container">
                     <div class="visit-date-message">
-                        <em>4월 26일 금요일</em>에<br><em>24시 굿케어동물의료센터</em>에 다녀오셨네요!
+                        <em>{{ selectedDate }} 금요일</em>에<br><em>{{ shopName }}</em>에 다녀오셨네요!
                     </div>
                     <div class="date-time-picker-container">
                         <div class="date-time-container">
@@ -48,8 +48,7 @@
                         </div>
                         <div class="check-info-container">
                             <div class="check-name-category">
-                                <span class="place-name">24시 굿케어동물의료센터</span>
-                                <span class="place-category">동물병원</span>
+                                <span class="place-name">{{ shopName }}</span>
                             </div>
                             <div class="address-line">서울특별시 관악구 남부순환로 1861 1층 103호</div>
                             <div class="address-line detailed-address">
@@ -80,7 +79,7 @@
                     <button class="button-base button-secondary" type="button">
                         이 장소가 아니에요
                     </button>
-                    <button class="button-base button-secondary button-confirm" type="button">
+                    <button class="button-base button-secondary button-confirm" type="button" @click="confirmReceipt">
                         이 장소가 맞아요
                     </button>
                 </div>
@@ -103,11 +102,35 @@ export default {
         return {
             showDateModal: false,
             showTimeModal: false,
+            shopName: '',
+            paymentType: '',
+            dateTimeStr: '',
             selectedDate: '', // 날짜를 저장할 데이터
-            selectedTime: ''  // 시간을 저장할 데이터
+            selectedTime: '',  // 시간을 저장할 데이터
+            queryData: '',
         };
     },
+    created() {
+        this.loadQueryData();
+    },
     methods: {
+        loadQueryData() {
+            const query = this.$route.query;
+            console.log("query.shopName : " + query.shopName);
+            console.log("query.purchaseDate : " + query.purchaseDate);
+            console.log("query.approvalNumber : " + query.approvalNumber);
+            this.shopName = query.shopName;
+            this.dateTimeStr = query.purchaseDate;
+            this.queryData = query;
+            this.parseDateTime();
+        },
+        parseDateTime() {
+            const dateTime = new Date(this.dateTimeStr);
+            this.selectedDate = `${dateTime.getFullYear()}-${String(dateTime.getMonth() + 1).padStart(2, '0')}-${String(dateTime.getDate()).padStart(2, '0')}`;
+            this.selectedTime = `${String(dateTime.getHours()).padStart(2, '0')}:${String(dateTime.getMinutes()).padStart(2, '0')}:${String(dateTime.getSeconds()).padStart(2, '0')}`;
+            console.log("selectedDate : " + this.selectedDate);
+            console.log("selectedTime : " + this.selectedTime);
+        },
         handleDateSelected(date) {
             this.selectedDate = date;
             this.showDateModal = false; // 모달 창 닫기
@@ -120,15 +143,27 @@ export default {
             console.log("선택된 시간:", this.selectedTime);
             // 필요한 추가 동작을 여기에 구현
         },
+        confirmReceipt() {
+            this.$router.push({
+                path: '/review/write',
+                query: {
+                    shopName: this.shopName,
+                    paymentType: this.paymentType,
+                    selectedDate: this.selectedDate,
+                    selectedTime: this.selectedTime
+                }
+            });
+        },
     }
 }
 </script>
 
 <style>
 @import '@/css/review/review.css';
+
 .contents {
-  width: 400px;
-  margin: auto;
-  /* padding-bottom: 120px; */
+    width: 400px;
+    margin: auto;
+    /* padding-bottom: 120px; */
 }
 </style>

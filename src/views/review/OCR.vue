@@ -30,16 +30,22 @@ export default {
         this.imagePreview = URL.createObjectURL(file);
       }
     },
-    async confirmUpload() { // confirmUpload 메소드를 async 함수로 변경합니다.
+    async confirmUpload() {
       try {
-        // rewardAdd 대신 imageUpload를 호출하게 변경합니다.
-        await imageUpload(this.imageFile);
+        const response = await imageUpload(this.imageFile);
+        console.log("OCR response date : " + response.data);
         alert('이미지 업로드가 성공적으로 완료되었습니다.');
-      } catch (error) { // try 블록 내에서 발생하는 예외를 캐치합니다.
+
+        // 스프레드 연산자를 사용하여 response.data의 모든 데이터를 query로 전달하고 페이지 이동
+        this.$router.push({
+          path: '/review/check',
+          query: { ...response.data }
+        });
+      } catch (error) {
         console.error('이미지 업로드 실패:', error);
         alert('이미지 업로드에 실패하였습니다. 다시 시도해주세요.');
       }
-    }
+    },
   },
 };
 </script>
