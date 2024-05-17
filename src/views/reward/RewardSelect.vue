@@ -5,9 +5,9 @@
 
     <!-- 모달 컨텐츠 -->
     <div class="modal" v-if="isModalVisible">
-      <h3>쿠폰 사용이 확인되었습니다!</h3>
-      <p>리뷰를 작성해주세요</p>
-      <a href="/reward/main" @click="closeModal">리뷰쓰기</a>
+      <h3>별 탐색 완료!</h3>
+      <p>나의 기록을 별에 새겨보세요</p>
+      <a href="/reward/main" @click="closeModal">리뷰 작성하기</a>
       <!-- 리뷰쓰기로 나중에 바꿀것 -->
     </div>
     <div class="rewardcard">
@@ -217,25 +217,33 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 480px;
+  left: 50%;
+  transform: translate(-50%);
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 반투명 회색 배경 */
+  background-color: rgba(0, 0, 0, 0.4); /* 반투명 회색 배경 */
   z-index: 1000;
   /* 모달을 다른 요소들 위에 표시 */
 }
 
 .modal {
   position: fixed;
-  top: 180px;
+  top: 200px;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1001; /* 배경보다 앞에 표시 */
   background-color: white;
   text-align: center;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 30px;
   border: 8px solid var(--mint-color);
   /* 스타일링은 원하는 대로 조정 */
+}
+.modal h3 {
+  color: var(--navy-color);
+}
+.modal a {
+  color: var(--dgray-color);
 }
 
 .contents {
@@ -282,5 +290,9 @@ export default {
 
 .card p.fade-in {
   opacity: 1; /* 메시지가 변경되면 투명도를 1로 설정 */
+}
+
+.btn {
+  color: var(--mint-color);
 }
 </style>
