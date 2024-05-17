@@ -118,7 +118,7 @@ async function selectStore(storeid) {
   }
 }
 
-async function imageUpload(imageFile) { // confirmUpload 메소드를 async 함수로 변경합니다.
+async function imageUpload(imageFile) {
   try {
     const formData = new FormData();
     formData.append('image', imageFile);
@@ -131,6 +131,7 @@ async function imageUpload(imageFile) { // confirmUpload 메소드를 async 함�
     });
     console.log('업로드 성공:', response);
     alert('이미지 업로드 성공!');
+    return response;
   } catch (error) { // try 블록 내에서 발생하는 예외를 캐치합니다.
     console.error('업로드 실패:', error);
     alert('이미지 업로드 실패');
@@ -221,4 +222,5 @@ export {
   readProfileimg,
   deleteProfileimg,
   getAllReview,
+  imageUpload,
 };
