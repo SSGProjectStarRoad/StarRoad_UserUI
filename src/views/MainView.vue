@@ -1,13 +1,11 @@
 <template>
   <div class="contents">
-    <!-- 필요에 따라 back.png 살릴것 -->
-    <!-- <img class="backimg" src="@/img/back.png" alt="" /> -->
-    <div class="starroad_logo">
+    <!-- <div class="starroad_logo">
       <div class="starroad_logo_img"><img src="@/img/telescope_big.png" /></div>
       <div class="starroad_logo_text">Welcome to Star Road</div>
-    </div>
+    </div> -->
     <div class="user_level">
-      <div>My Review</div>
+      <div>My Review Level</div>
       <div class="review_gage">
         <div class="user_rank">{{ levelText }}</div>
         <div class="user_exp">
@@ -23,7 +21,9 @@
         <!-- 이벤트 페이지 -->
         <div class="event_list">
           <div>
-            <a href="#"><img src="@/img/event_test.png" /></a>
+            <a href="#">
+              <img src="@/img/event_test.png" />
+            </a>
           </div>
           <div>
             <a href="#"><img src="@/img/event_test.png" /></a>
@@ -72,9 +72,9 @@ export default {
     },
     levelText() {
       const reviewExp = this.mydata.reviewExp;
-      if (reviewExp >= 300) return 'Green Level';
-      if (reviewExp >= 100) return 'Yellow Level';
-      return 'Blue Level';
+      if (reviewExp >= 300) return 'Green';
+      if (reviewExp >= 100) return 'Yellow';
+      return 'Blue';
     },
     levelClass() {
       const reviewExp = this.mydata.reviewExp;
@@ -114,6 +114,7 @@ export default {
   padding: 25px;
   border-radius: 20px;
   color: #fff;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
 
 .user_level > div:first-child {
@@ -131,7 +132,7 @@ export default {
 
 .user_rank {
   font-size: 24px;
-  width: 35%;
+  width: 30%;
   margin-right: 20px;
   font-weight: bold;
 }
@@ -156,7 +157,7 @@ export default {
   align-items: center;
   color: rgba(0, 0, 0, 0.35);
   font-size: 20px;
-  margin: 8px 0px;
+  margin: 20px 0px;
 }
 
 .event-info::before,
@@ -171,13 +172,15 @@ export default {
 }
 
 .event_space div {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .event_list div {
   text-align: center;
   border-radius: 20px;
   height: 100%;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  background-color: var(--navy-color);
 }
 
 .event_list div img {
