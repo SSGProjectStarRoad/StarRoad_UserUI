@@ -160,7 +160,7 @@ export default {
 }
 .myname {
   font-size: 23px;
-  color: var(--navy-color);
+  /* color: var(--navy-color); */
   font-weight: 900;
 }
 .mylevel {
