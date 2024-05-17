@@ -5,7 +5,13 @@
         <p></p>
         <div class="search">
           <img class="searchimg" src="@/img/search.png" alt="" />
-          <input class="search-input" type="text" placeholder="매장명 검색" @input="searchStore" @keyup.enter="searchStore"/>
+          <input
+            class="search-input"
+            type="text"
+            placeholder="매장명 검색"
+            @input="searchStore"
+            @keyup.enter="searchStore"
+          />
         </div>
       </div>
 
@@ -60,10 +66,13 @@
     </div>
   </div>
   <div class="contents">
-    <list :selected-category="selectedCategory" 
-    :selected-floor="selectedFloor" 
-    :search-keyword="searchKeyword" 
-    :stores="filteredStores"  @store-click="goToStoreReview"/>
+    <list
+      :selected-category="selectedCategory"
+      :selected-floor="selectedFloor"
+      :search-keyword="searchKeyword"
+      :stores="filteredStores"
+      @store-click="goToStoreReview"
+    />
     <!-- <ReviewCard v-if="selectedStoreId" :store-id="selectedStoreId" /> -->
   </div>
 </template>
@@ -85,7 +94,16 @@ export default {
   data() {
     return {
       searchKeyword: '',
-      categories: ['식당&카페', '뷰티', '의류', '엔터테인먼트', '마트', '홈퍼니싱', '라이프스타일', '키즈'],
+      categories: [
+        '식당&카페',
+        '뷰티',
+        '의류',
+        '엔터테인먼트',
+        '마트',
+        '홈퍼니싱',
+        '라이프스타일',
+        '키즈',
+      ],
       floor: ['B2', 'B1', '1', '2', '3', '4'],
       selectedCategory: '',
       selectedFloor: '',
@@ -98,7 +116,9 @@ export default {
         return this.stores;
       } else {
         const keyword = this.searchKeyword.toLowerCase();
-        return this.stores.filter(store => store.name.toLowerCase().includes(keyword));
+        return this.stores.filter(store =>
+          store.name.toLowerCase().includes(keyword),
+        );
       }
     },
   },
@@ -219,7 +239,7 @@ export default {
 }
 
 .d-button.active {
-  background-color: var(--mint-color); /* 활성 상태일 때 배경색을 변수로 설정합니다. */
+  background-color: var(--mint-color);
 }
 
 .c-list,
@@ -243,6 +263,7 @@ export default {
 
 .contents {
   margin: 0; /* 바깥쪽 여백을 초기화합니다. */
+  top: 10px;
   display: flex; /* 플렉스 박스를 사용하여 자식 요소를 수직으로 정렬합니다. */
   flex-direction: column; /* 수직 방향으로 컬럼 정렬합니다. */
   overflow: hidden; /* 내용이 넘칠 때 숨깁니다. */
@@ -273,6 +294,11 @@ export default {
   margin-left: 10px; /* 왼쪽 여백을 설정합니다. */
   width: calc(100% - 110px); /* 너비를 계산하여 설정합니다. */
   overflow: hidden; /* 내용이 넘칠 때 숨깁니다. */
+}
+
+.floor-slide .swiper-slide .d-button {
+  width: 30px !important; /* 고정된 버튼 너비를 설정합니다. 원하는 너비로 조정하세요. */
+  height: 30px !important; /* 고정된 버튼 높이를 설정합니다. 원하는 높이로 조정하세요. */
 }
 
 .category button {
