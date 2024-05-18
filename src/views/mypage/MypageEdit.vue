@@ -1,6 +1,5 @@
 <template>
   <div class="contents">
-    <BackButton class="back-button" />
     <div class="title">프로필 수정</div>
 
     <div class="registerform">
@@ -113,11 +112,6 @@ export default {
 </script>
 
 <style scoped>
-.back-button {
-  position: absolute;
-  left: 30px;
-}
-
 .contents {
   display: flex; /* Flexbox 레이아웃 사용 */
   flex-direction: column; /* 자식 요소들을 세로로 정렬 */

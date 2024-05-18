@@ -1,7 +1,6 @@
 <template>
   <div v-if="storeReview" class="contents">
     <!-- @@@@이 부분 로고 오는 데이터로 바꿔야함@@@@ -->
-
     <img class="store-img" :src="storeReview.imagePath" alt="" />
     <div class="store">
       <h1>{{ storeReview.name }}</h1>
@@ -245,6 +244,7 @@ export default {
 
 <style scoped>
 @import '@/css/common.css';
+
 .store-introduce {
   padding-left: 10px;
   padding-right: 10px;

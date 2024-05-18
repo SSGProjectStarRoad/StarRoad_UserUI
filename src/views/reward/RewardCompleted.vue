@@ -2,7 +2,7 @@
   <div class="contents">
     <img src="@/img/telescope_big.png" alt="" />
     <h2>탐색 완료</h2>
-    <h3 class="mystar textshadow" @click="goToMyStar">나의 별자리</h3>
+    <h3 class="mystar" @click="goToMyStar">나의 별자리</h3>
   </div>
 </template>
 
@@ -33,10 +33,6 @@ h2 {
   margin: 0 auto;
 }
 
-.mystar:hover {
-  transform: scale(1.03);
-  transition: 0.5s;
-}
 h3 {
   color: var(--navy-color);
   font-weight: 900;
@@ -46,6 +42,6 @@ h3 {
   cursor: pointer;
   border-radius: 10px;
   padding: 8px;
-  box-shadow: 1px 1px 5px var(--dgray-color);
+  box-shadow: 0px 0px 2px var(--dgray-color);
 }
 </style>
