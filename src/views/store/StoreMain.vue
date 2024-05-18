@@ -1,6 +1,8 @@
 <template>
   <div class="parent-with-scroll">
     <div class="fix">
+      <h2 class="info">STORE INFO</h2>
+      <h2 class="info">매장안내</h2>
       <div class="center-item">
         <p></p>
         <div class="search">
@@ -15,24 +17,22 @@
         </div>
       </div>
 
-      <h2 class="info">STORE INFO</h2>
-      <h2 class="info">매장안내</h2>
       <div class="category">
         <button id="categoryButton" class="button">카테고리별</button>
         <div class="category-slide" ref="categorySlide">
           <Swiper
+            ref="categorySwiper"
             :slidesPerView="'auto'"
             :spaceBetween="10"
             :freeMode="true"
-            :freeModeSticky="true"
+            :loop="false"
             :grabCursor="true"
-            :resistanceRatio="0.6"
           >
             <SwiperSlide v-for="(category, index) in categories" :key="index">
               <button
                 class="d-button"
                 :class="{ active: selectedCategory === category }"
-                @click="toggleCategory(category)"
+                @click="handleClick(category, 'category')"
               >
                 {{ category }}
               </button>
@@ -44,18 +44,25 @@
         <button id="floorButton" class="button">층별</button>
         <div class="floor-slide" ref="floorSlide">
           <Swiper
+            ref="floorSwiper"
             :slidesPerView="'auto'"
             :spaceBetween="10"
             :freeMode="true"
-            :freeModeSticky="true"
+            :loop="false"
             :grabCursor="true"
-            :resistanceRatio="0"
+            @touchStart="onTouchStart"
+            @touchMove="onTouchMove"
+            @touchEnd="onTouchEnd"
+            @transitionEnd="onTransitionEnd"
           >
             <SwiperSlide v-for="(floor, index) in floor" :key="index">
               <button
                 class="d-button"
                 :class="{ active: selectedFloor === floor }"
-                @click="toggleFloor(floor)"
+                @click="handleClick(floor, 'floor')"
+                @mousedown="onMouseDown"
+                @mousemove="onMouseMove"
+                @mouseup="onMouseUp"
               >
                 {{ floor }}
               </button>
@@ -76,6 +83,7 @@
     <!-- <ReviewCard v-if="selectedStoreId" :store-id="selectedStoreId" /> -->
   </div>
 </template>
+
 <script>
 import search from '@/components/store/Search.vue';
 import list from '@/components/store/list.vue';
@@ -108,6 +116,8 @@ export default {
       selectedCategory: '',
       selectedFloor: '',
       stores: [],
+      isDragging: false,
+      mouseDown: false,
     };
   },
   computed: {
@@ -123,11 +133,14 @@ export default {
     },
   },
   methods: {
-    goToStoreReview(storeId) {
-      this.$router.push(`/store/${storeId}/reviews`);
-    },
-    searchStore(event) {
-      this.searchKeyword = event.target.value;
+    handleClick(item, type) {
+      if (!this.isDragging) {
+        if (type === 'category') {
+          this.toggleCategory(item);
+        } else if (type === 'floor') {
+          this.toggleFloor(item);
+        }
+      }
     },
     toggleCategory(category) {
       if (this.selectedCategory === category) {
@@ -144,6 +157,12 @@ export default {
         this.selectedFloor = floor;
       }
       this.fetchStores();
+    },
+    goToStoreReview(storeId) {
+      this.$router.push(`/store/${storeId}/reviews`);
+    },
+    searchStore(event) {
+      this.searchKeyword = event.target.value;
     },
     async fetchStores() {
       try {
@@ -168,6 +187,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 @import '@/css/common.css'; /* 공통 CSS 파일을 가져옵니다. */
 
@@ -272,6 +292,7 @@ export default {
 .center-item {
   height: 32px; /* 높이를 설정합니다. */
   margin-top: 5%; /* 위쪽 여백을 설정합니다. */
+  margin-bottom: 20px;
   display: flex; /* 플렉스 박스를 사용하여 자식 요소를 정렬합니다. */
   background-color: white; /* 배경색을 흰색으로 설정합니다. */
   justify-content: center; /* 가로 방향 가운데 정렬합니다. */
