@@ -1,7 +1,5 @@
 <template>
   <div class="contents">
-    <BackButton />
-
     <h2>나의 별자리</h2>
     <div class="mystars">
       <div class="mystar" v-for="(star, index) in stars" :key="index">

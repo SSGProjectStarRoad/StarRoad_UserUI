@@ -128,11 +128,15 @@ export default {
   padding: 10px 20px;
 }
 .active {
-  color: black;
+  color: var(--navy-color);
   font-weight: bold;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px var(--navy-color);
 }
 .inactive {
-  color: gray;
+  color: var(--dgray-color);
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px var(--dgray-color);
 }
 
 .list {
@@ -141,11 +145,10 @@ export default {
   margin-left: 50px;
 }
 .person {
-  width: 360px;
+  width: 65%;
   position: relative;
   display: flex;
-  padding-bottom: 20px;
-  padding-top: 20px;
+  padding: 20px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 .profile-img {
@@ -169,9 +172,10 @@ export default {
 }
 .follower-num {
   margin-top: 3px;
+  padding-top: 3px;
   text-align: center;
   border-radius: 4px;
-  background-color: var(--mint-color);
+  background-color: var(--navy-color);
   font-size: 10px;
   color: white;
   max-width: 30px;

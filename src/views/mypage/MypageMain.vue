@@ -4,12 +4,13 @@
       <img src="@/img/setting.png" alt="" />
     </div>
     <div class="current-mall">
-      <div class="mall-name">스타필드 하남</div>
+      <div class="mall-name">스타로드 뱅뱅</div>
       <div class="mall-time">(10:00~22:00)</div>
     </div>
     <div class="myinfo">
       <div class="basic-info">
-        <div class="myname">{{ mydata.name }}님</div>
+        <div class="myname">{{ mydata.name }}</div>
+        &nbsp님
         <div :class="levelClass">{{ levelText }}</div>
       </div>
       <div class="review-follow" @click="goToFollowPage">
@@ -29,17 +30,17 @@
         </div>
         <div class="charge">
           <div class="pointcharge">POINT CHARGE</div>
-          <div class="qr">QR 넣기?</div>
+          <!-- <div class="qr">QR 넣기?</div> -->
         </div>
       </div>
       <div class="myown">
         <div class="mycoupon" @click="goToCouponPage">
           <div class="ownimg"><img src="@/img/mycoupon.png" alt="" /></div>
-          <div class="text">쿠폰</div>
+          <div class="text">내 쿠폰 보기</div>
         </div>
         <div class="myreview" @click="goToReviewPage">
           <div class="ownimg"><img src="@/img/myreview.png" alt="" /></div>
-          <div class="text">리뷰</div>
+          <div class="text">내 리뷰 보기</div>
         </div>
       </div>
       <div class="mallinfo">
@@ -48,7 +49,7 @@
           <div class="text">오시는 길</div>
         </div>
         <div class="inquiry">
-          <div class="text">문의하기</div>
+          <div class="title">문의하기</div>
           <div class="text">ssg@gmail.com</div>
         </div>
       </div>
@@ -145,7 +146,7 @@ export default {
 .mall-time {
   position: relative;
   color: var(--dgray-color);
-  left: 15px;
+  /* left: 15px; */
 }
 .myinfo {
   position: relative;
@@ -154,10 +155,12 @@ export default {
 .basic-info {
   position: relative;
   display: flex;
+  font-size: 23px;
   left: 55px;
 }
 .myname {
   font-size: 23px;
+  /* color: var(--navy-color); */
   font-weight: 900;
 }
 .mylevel {
@@ -185,6 +188,7 @@ export default {
 }
 .follower-num {
   margin-left: 10px;
+  color: var(--navy-color);
 }
 .following {
   display: flex;
@@ -192,6 +196,7 @@ export default {
 }
 .following-num {
   margin-left: 10px;
+  color: var(--navy-color);
 }
 .point-info,
 .myown,
@@ -222,12 +227,19 @@ export default {
 .announcement,
 .inquiry {
   cursor: pointer;
+  color: var(--navy-color);
 }
 .mypoint {
   padding: 30px;
-  color: var(--mint-color);
+  color: var(--navy-color);
   font-size: 30px;
 }
+.inquiry .title {
+  color: black;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
 .qr {
   padding: 30px;
 }

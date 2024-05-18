@@ -22,6 +22,8 @@ export default {
   display: flex;
   align-items: center;
   padding: 10px;
+  width: 36px;
+  height: 36px;
 }
 .back-button img {
   width: 36px;

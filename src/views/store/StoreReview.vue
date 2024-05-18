@@ -1,7 +1,6 @@
 <template>
   <div v-if="storeReview" class="contents">
     <!-- @@@@이 부분 로고 오는 데이터로 바꿔야함@@@@ -->
-
     <img class="store-img" :src="storeReview.imagePath" alt="" />
     <div class="store">
       <h1>{{ storeReview.name }}</h1>
@@ -25,8 +24,11 @@
     <div class="store-introduce">
       {{ storeReview.contents }}
     </div>
+    <p :style="{ 'margin-bottom': '5px', 'padding-left': '10px' }">
+      매장위치 <span class="span-style"> {{ storeReview.floor }}층</span>
+    </p>
     <p :style="{ margin: '0px', 'padding-left': '10px' }">
-      {{ storeReview.floor }} 층 / 영업시간 : {{ storeReview.operatingTime }}
+      영업시간 <span class="span-style">{{ storeReview.operatingTime }}</span>
     </p>
     <div class="store-review">
       <p class="keyword">이런점이 좋았어요!!</p>
@@ -245,11 +247,22 @@ export default {
 
 <style scoped>
 @import '@/css/common.css';
+
+.span-style {
+  margin-left: 10px;
+  color: var(--navy-color);
+}
+
 .store-introduce {
+  color: var(--dgray-color);
   padding-left: 10px;
   padding-right: 10px;
   margin-bottom: 10px;
   margin-top: 10px;
+}
+
+.store-review {
+  margin-top: 40px;
 }
 
 .review-body {
@@ -382,16 +395,17 @@ input[type='radio']:checked + label {
 
 .s-key {
   margin: 16px;
+  margin-top: 30px;
 }
 
 .section {
-  margin-top: 10px;
+  margin-top: 30px;
 }
 
 .section::before {
   content: '';
   display: block;
-  height: 10px;
+  height: 8px;
   width: 100%;
   background-color: var(--gray-color);
 }
@@ -436,7 +450,11 @@ input[type='radio']:checked + label {
 .store-location {
   width: 20px;
   height: 20px;
-  margin-left: 10px;
+  padding: 8px;
+  margin-left: 20px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--dgray-color);
+  cursor: pointer;
 }
 
 .store-phone img {
