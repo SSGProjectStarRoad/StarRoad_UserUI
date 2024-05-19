@@ -203,43 +203,16 @@ export default {
         this.storeReview.reviews.sort((a, b) => b.likeCount - a.likeCount);
       }
     },
-    components: {
-      reviewcard,
-      ProgressBar,
-      Swiper,
-      SwiperSlide,
-      reviewbutton,
-      scrollToTopButton,
+    handleScroll() {
+      const scrollPosition =
+        window.pageYOffset || document.documentElement.scrollTop;
+      this.showScrollToTopButton = scrollPosition > 100;
     },
-    mounted() {
-      window.addEventListener('scroll', this.handleScroll);
-    },
-    beforeUnmount() {
-      window.removeEventListener('scroll', this.handleScroll);
-    },
-    methods: {
-      changeSort() {
-        if (this.selectedSort === 'latest') {
-          // 날짜별 최신순으로 정렬
-          this.storeReview.reviews.sort(
-            (a, b) => new Date(b.createDate) - new Date(a.createDate),
-          );
-        } else if (this.selectedSort === 'likes') {
-          // 좋아요순으로 정렬
-          this.storeReview.reviews.sort((a, b) => b.likeCount - a.likeCount);
-        }
-      },
-      handleScroll() {
-        const scrollPosition =
-          window.pageYOffset || document.documentElement.scrollTop;
-        this.showScrollToTopButton = scrollPosition > 100;
-      },
-      scrollToTop() {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth',
-        });
-      },
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     },
   },
 };
