@@ -52,6 +52,14 @@ jobs:
     needs: build
 
     steps:
+      - name: Start SSH Agent
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
+
+      - name: Test SSH Connection
+        run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.DEPLOY_SERVER_USER }}@${{ secrets.DEPLOY_SERVER_HOST }} -vvv
+
       - name: SSH to Deploy Server
         uses: appleboy/ssh-action@master
         with:
