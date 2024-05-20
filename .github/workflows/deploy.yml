@@ -65,7 +65,7 @@ jobs:
         with:
           host: ${{ secrets.DEPLOY_SERVER_HOST }}
           username: ${{ secrets.DEPLOY_SERVER_USER }}
-          key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
+          password: ${{ secrets.DEPLOY_SERVER_PASSWORD }}
           port: ${{ secrets.DEPLOY_SERVER_PORT }}
           script: |
             docker pull ${{ env.DOCKER_IMAGE_NAME }}:latest
