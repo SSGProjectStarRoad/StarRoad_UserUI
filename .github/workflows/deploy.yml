@@ -52,13 +52,17 @@ jobs:
     needs: build
 
     steps:
+      - name: Start SSH Agent
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
 
       - name: SSH to Deploy Server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEPLOY_SERVER_HOST }}
           username: ${{ secrets.DEPLOY_SERVER_USER }}
-          password: ${{ secrets.DEPLOY_SERVER_PASSWORD }}
+          key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
           port: ${{ secrets.DEPLOY_SERVER_PORT }}
           script: |
             docker pull ${{ env.DOCKER_IMAGE_NAME }}:latest
