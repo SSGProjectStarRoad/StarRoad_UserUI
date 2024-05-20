@@ -58,7 +58,7 @@ jobs:
       - name: Add SSH key
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
 
       - name: SSH to Deploy Server
         uses: appleboy/ssh-action@master
