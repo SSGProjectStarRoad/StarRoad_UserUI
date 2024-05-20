@@ -52,6 +52,14 @@ jobs:
     needs: build
 
     steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: SSH to Deploy Server
         uses: appleboy/ssh-action@master
         with:
