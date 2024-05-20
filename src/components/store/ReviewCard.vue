@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <article v-for="(review, index) in storeReview.reviews" :key="index" class="timeline-post-item timeline-post-item-feed">
@@ -55,6 +56,7 @@
 
 <script>
 import moment from 'moment';
+import 'moment/locale/ko';
 
 export default {
   name: 'ReviewCard',
@@ -66,8 +68,9 @@ export default {
   },
   methods: {
     formatRelativeDate(date) {
-      return moment(date).fromNow();
-    },
+    moment.locale('ko');
+    return moment(date).fromNow();
+  },
     setDefaultImage(event) {
       event.target.src = 'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png';
     }
