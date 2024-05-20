@@ -52,20 +52,12 @@ jobs:
     needs: build
 
     steps:
-      - name: Start SSH Agent
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
-
-      - name: Test SSH Connection
-        run: ssh -o StrictHostKeyChecking=no -i /github/home/.ssh/id_rsa ${{ secrets.DEPLOY_SERVER_USER }}@${{ secrets.DEPLOY_SERVER_HOST }} -vvv
-
       - name: SSH to Deploy Server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEPLOY_SERVER_HOST }}
           username: ${{ secrets.DEPLOY_SERVER_USER }}
-          key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
+          password: ${{ secrets.DEPLOY_SERVER_PASSWORD }}
           port: ${{ secrets.DEPLOY_SERVER_PORT }}
           script: |
             docker pull ${{ env.DOCKER_IMAGE_NAME }}:latest
