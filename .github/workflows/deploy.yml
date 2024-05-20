@@ -55,18 +55,13 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v4
 
-      - name: Add SSH key
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
-
       - name: SSH to Deploy Server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEPLOY_SERVER_HOST }}
           username: ${{ secrets.DEPLOY_SERVER_USER }}
+          password: ${{ secrets.DEPLOY_SERVER_PASSWORD }}
           port: ${{ secrets.DEPLOY_SERVER_PORT }}
-          key: ${{ secrets.DEPLOY_SERVER_SSH_KEY }}
           script: |
             docker pull ${{ env.DOCKER_IMAGE_NAME }}:latest
             docker stop vue_frontend || true
