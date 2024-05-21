@@ -31,6 +31,8 @@ jobs:
         run: npm install
 
       - name: Build the Vue.js app
+        env:
+          NODE_ENV: production
         run: npm run build -- --mode production
 
       - name: Set up Docker Buildx
