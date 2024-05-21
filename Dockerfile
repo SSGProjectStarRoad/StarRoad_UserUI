@@ -12,7 +12,10 @@ RUN npm install
 COPY . .
 
 # 5. 프로젝트를 빌드합니다.
-RUN npm run build
+RUN npm run build -- --mode production
 
-# 6. 빌드된 파일을 서빙하는 명령을 실행합니다.
-CMD ["npm", "run", "serve"]
+# 6. serve 패키지를 설치합니다.
+RUN npm install -g serve
+
+# 7. 빌드된 파일을 서빙하는 명령을 실행합니다.
+CMD ["serve", "-s", "dist"]
