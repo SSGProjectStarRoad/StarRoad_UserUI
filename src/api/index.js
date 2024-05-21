@@ -105,6 +105,22 @@ async function selectStore(storeId, page = 0, size = 20) {
     console.error('오류:', error);
   }
 }
+
+async function getAllReview(page = 0, size = 20) {
+  try {
+    const response = await instance.get(`/reviews?page=${page}&size=${size}`);
+    if (response.status === 200) {
+      const ReviewData = response.data;
+      console.log(ReviewData);
+      return ReviewData;
+    } else {
+      throw new Error('리뷰를 가져오는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
+  }
+}
+
 async function imageUpload(imageFile) {
   try {
     const formData = new FormData();
@@ -123,10 +139,6 @@ async function imageUpload(imageFile) {
     console.error('업로드 실패:', error);
     alert('이미지 업로드 실패');
   }
-}
-
-function getAllReview() {
-  return instance.get(`/reviews`);
 }
 
 // 다른 모듈에서 접근할 수 있도록 함수들을 내보냅니다.
