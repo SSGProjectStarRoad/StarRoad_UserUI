@@ -31,7 +31,7 @@ jobs:
         run: npm install
 
       - name: Build the Vue.js app
-        run: npm run build --mode production
+        run: VUE_APP_API_URL=http://10.0.150.6:8080/ npm run build --mode production
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1

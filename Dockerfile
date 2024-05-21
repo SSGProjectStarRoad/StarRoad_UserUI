@@ -11,11 +11,14 @@ RUN npm install
 # 4. 소스 파일을 복사합니다.
 COPY . .
 
-# 5. 프로젝트를 빌드합니다.
+# 5. 환경 변수를 설정합니다.
+ENV VUE_APP_API_URL=http://10.0.150.6:8080/
+
+# 6. 프로젝트를 빌드합니다.
 RUN npm run build --mode production
 
-# 6. serve 패키지를 설치합니다.
+# 7. serve 패키지를 설치합니다.
 RUN npm install -g serve
 
-# 7. 빌드된 파일을 서빙하는 명령을 실행합니다.
+# 8. 빌드된 파일을 서빙하는 명령을 실행합니다.
 CMD ["serve", "-s", "dist"]
