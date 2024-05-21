@@ -19,3 +19,6 @@ RUN npm install -g serve
 
 # 7. 빌드된 파일을 서빙하는 명령을 실행합니다.
 CMD ["serve", "-s", "dist"]
+
+# 8. EXPOSE 명령어를 통해 컨테이너 내부 포트를 노출합니다.
+EXPOSE 3000
