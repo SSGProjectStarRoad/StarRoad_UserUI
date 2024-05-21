@@ -91,33 +91,20 @@ async function fetchStoreList() {
   }
 }
 
-async function selectStore(storeid) {
+async function selectStore(storeId, page = 0, size = 20) {
   try {
-    // 주어진 storeid를 사용하여 API 엔드포인트로 GET 요청을 보냅니다.
-    const response = await instance.get(`/store/${storeid}/reviews`);
-
-    // 응답 상태가 200 (OK)인지 확인합니다.
+    const response = await instance.get(`/store/${storeId}/reviews?page=${page}&size=${size}`);
     if (response.status === 200) {
-      // 응답이 성공적이면 응답에서 데이터를 추출합니다.
       const storeWithReviewData = response.data;
-
-      // 받은 데이터를 필요에 따라 처리합니다.
       console.log(storeWithReviewData);
-      // 데이터를 사용하여 UI를 업데이트하거나 다른 작업을 수행할 수 있습니다.
-
-      // 필요한 경우 데이터를 반환합니다.
       return storeWithReviewData;
     } else {
-      // 응답 상태가 200이 아닌 경우 오류를 발생시킵니다.
       throw new Error('리뷰가 있는 상점을 가져오는데 실패했습니다.');
     }
   } catch (error) {
-    // API 요청 중 발생한 오류를 처리합니다.
     console.error('오류:', error);
-    // 사용자에게 오류 메시지를 표시하거나 오류를 적절하게 처리할 수 있습니다.
   }
 }
-
 async function imageUpload(imageFile) {
   try {
     const formData = new FormData();

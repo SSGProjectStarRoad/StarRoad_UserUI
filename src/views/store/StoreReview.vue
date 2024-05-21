@@ -31,30 +31,29 @@
       영업시간 <span class="span-style">{{ storeReview.operatingTime }}</span>
     </p>
     <div class="store-review">
-      <p class="keyword">이런점이 좋았어요!!</p>
-      <div class="c-key">
-        <ProgressBar :progress="72">
-          <template v-slot:text>재방문 하고 싶어요</template>
-          <template v-slot:number>723</template>
-        </ProgressBar>
-        <ProgressBar :progress="42.3">
-          <template v-slot:text>서비스가 마음에 들어요</template>
-          <template v-slot:number>423</template>
-        </ProgressBar>
-        <ProgressBar :progress="82">
-          <template v-slot:text>가격이 합리적입니다</template>
-          <template v-slot:number>823</template>
-        </ProgressBar>
-        <ProgressBar :progress="5">
-          <template v-slot:text>매장이 청결합니다</template>
-          <template v-slot:number>5</template>
-        </ProgressBar>
-        {{ storeReview.Array }}
-      </div>
+    <p class="keyword">이런점이 좋았어요!!</p>
+    <div class="c-key">
+      <ProgressBar :progress="(storeReview.revisitCount / totalReviewCount) * 100">
+        <template v-slot:text>재방문 하고 싶어요</template>
+        <template v-slot:number>{{ storeReview.revisitCount }}</template>
+      </ProgressBar>
+      <ProgressBar :progress="(storeReview.serviceSatisfactionCount / totalReviewCount) * 100">
+        <template v-slot:text>서비스가 마음에 들어요</template>
+        <template v-slot:number>{{ storeReview.serviceSatisfactionCount }}</template>
+      </ProgressBar>
+      <ProgressBar :progress="(storeReview.reasonablePriceCount / totalReviewCount) * 100">
+        <template v-slot:text>가격이 합리적입니다</template>
+        <template v-slot:number>{{ storeReview.reasonablePriceCount }}</template>
+      </ProgressBar>
+      <ProgressBar :progress="(storeReview.cleanlinessCount / totalReviewCount) * 100">
+        <template v-slot:text>매장이 청결합니다</template>
+        <template v-slot:number>{{ storeReview.cleanlinessCount }}</template>
+      </ProgressBar>
     </div>
+  </div>
     <div class="section"></div>
     <div class="s-key">
-      <p class="s-key-title">리뷰 {{ review }} (선택지 검색)</p>
+      <p class="s-key-title">리뷰 {{ totalReviewCount ? totalReviewCount : 0 }} (선택지 검색)</p>
       <div>
         <div class="slide">
           <swiper
@@ -142,7 +141,7 @@ export default {
     const postData = data.timelinePost;
     console.log('postData:', postData); // 데이터를 콘솔에 출력합니다.
     return {
-      storeReview: null,
+      storeReview: { reviews: [] ,commonReviewStats: {}},
       postData,
       review: 1520,
       selectedSort: 'latest',
@@ -159,6 +158,10 @@ export default {
         loop: false,
       },
       showScrollToTopButton: false,
+      currentPage: 0,
+      pageSize: 10,
+      hasNextPage: true,
+      loading: false,
     };
   },
   computed: {
@@ -167,12 +170,19 @@ export default {
     },
   },
   async created() {
-    try {
-      this.storeReview = await selectStore(this.storeId);
-    } catch (error) {
-      console.error('Error fetching store review:', error);
+  try {
+    const initialData = await selectStore(this.storeId, this.currentPage, this.pageSize);
+    if (initialData) {
+      console.log('Initial data:', initialData); // 데이터를 콘솔에 출력하여 확인합니다.
+      this.storeReview = initialData;
+      this.hasNextPage = initialData.hasNext;
+      this.totalReviewCount = initialData.totalReviewCount || 0;
     }
-  },
+  } catch (error) {
+    console.error('Error fetching store review:', error);
+  }
+}
+,
   components: {
     reviewcard,
     ProgressBar,
@@ -203,44 +213,43 @@ export default {
         this.storeReview.reviews.sort((a, b) => b.likeCount - a.likeCount);
       }
     },
-    components: {
-      reviewcard,
-      ProgressBar,
-      Swiper,
-      SwiperSlide,
-      reviewbutton,
-      scrollToTopButton,
+    handleScroll() {
+      const scrollPosition =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // 페이지 하단 100px 전에 추가 데이터 요청
+      if (scrollPosition + windowHeight >= documentHeight - 100) {
+        this.loadMoreReviews();
+      }
+
+      this.showScrollToTopButton = scrollPosition > 100;
     },
-    mounted() {
-      window.addEventListener('scroll', this.handleScroll);
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     },
-    beforeUnmount() {
-      window.removeEventListener('scroll', this.handleScroll);
-    },
-    methods: {
-      changeSort() {
-        if (this.selectedSort === 'latest') {
-          // 날짜별 최신순으로 정렬
-          this.storeReview.reviews.sort(
-            (a, b) => new Date(b.createDate) - new Date(a.createDate),
-          );
-        } else if (this.selectedSort === 'likes') {
-          // 좋아요순으로 정렬
-          this.storeReview.reviews.sort((a, b) => b.likeCount - a.likeCount);
+    async loadMoreReviews() {
+      if (this.loading || !this.hasNextPage) return;
+
+      this.loading = true;
+      try {
+        const nextPage = this.currentPage + 1;
+        const response = await selectStore(this.storeId, nextPage, this.pageSize);
+        if (response && response.reviews) {
+          this.storeReview.reviews = [...this.storeReview.reviews, ...response.reviews];
+          this.currentPage = nextPage;
+          this.hasNextPage = response.hasNext;
         }
-      },
-      handleScroll() {
-        const scrollPosition =
-          window.pageYOffset || document.documentElement.scrollTop;
-        this.showScrollToTopButton = scrollPosition > 100;
-      },
-      scrollToTop() {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth',
-        });
-      },
-    },
+      } catch (error) {
+        console.error('Error loading more reviews:', error);
+      } finally {
+        this.loading = false;
+      }
+    }
   },
 };
 </script>
