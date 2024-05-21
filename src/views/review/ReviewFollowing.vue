@@ -2,9 +2,6 @@
   <div class="contents">
     <div class="tab-menu sticky" style="z-index: 11">
       <ul>
-        <a role="button" class="back-button">
-          <img src="@/img/back_arrow.png" />
-        </a>
         <li class="active">
           <a><span>팔로잉</span></a>
         </li>

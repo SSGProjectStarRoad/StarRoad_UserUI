@@ -169,6 +169,35 @@ async function storeguide(storeId, router) {
   }
 }
 
+async function submitSurvey(surveyData) {
+  try {
+    for (let pair of surveyData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
+    }
+    console.log("data 확인 완료");
+    // axios를 사용하여 서버에 데이터를 POST 방식으로 보냅니다.
+    const response = await instance.post('/reviews/submit', surveyData);
+
+    console.log('설문 제출 성공:', response);
+    alert('설문이 성공적으로 제출되었습니다!');
+  } catch (error) {
+    console.error('설문 제출 실패:', error);
+    alert('설문 제출에 실패했습니다.');
+  }
+}
+
+async function fetchReviewSelections(shopName) {
+  try {
+    const response = await instance.post('/review-selections/selection', {
+      shopName: shopName
+    });
+    console.log('Review Selections:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching review selections:', error);
+  }
+}
+
 //Mypage
 function mypageData(userId) {
   return instance.get(`/user/mypage/${userId}`);
@@ -223,4 +252,6 @@ export {
   deleteProfileimg,
   getAllReview,
   imageUpload,
+  submitSurvey,
+  fetchReviewSelections,
 };
