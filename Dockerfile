@@ -11,8 +11,9 @@ RUN npm install
 # 4. 소스 파일을 복사합니다.
 COPY . .
 
-# 5. 환경 변수를 설정합니다.
-ENV VUE_APP_API_URL=http://10.0.150.6:8080/
+# 5. 환경 변수를 설정합니다. (배포 환경의 예)
+ARG VUE_APP_API_URL
+ENV VUE_APP_API_URL=${VUE_APP_API_URL}
 
 # 6. 프로젝트를 빌드합니다.
 RUN npm run build --mode production
