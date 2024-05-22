@@ -121,6 +121,21 @@ async function getAllReview(page = 0, size = 20) {
   }
 }
 
+async function getFollowingReview(id = 1, page = 0, size = 20) {
+  try {
+    const response = await instance.get(`/reviews/following?id=${id}&page=${page}&size=${size}`);
+    if (response.status === 200) {
+      const ReviewData = response.data;
+      console.log(ReviewData);
+      return ReviewData;
+    } else {
+      throw new Error('리뷰를 가져오는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
+  }
+}
+
 async function imageUpload(imageFile) {
   try {
     const formData = new FormData();
@@ -253,4 +268,5 @@ export {
   imageUpload,
   submitSurvey,
   fetchReviewSelections,
+  getFollowingReview,
 };
