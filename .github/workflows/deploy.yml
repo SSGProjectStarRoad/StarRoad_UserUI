@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out the repository
+      - name: Checkout the repository
         uses: actions/checkout@v4
 
       - name: Set up Node.js
@@ -31,6 +31,8 @@ jobs:
         run: npm install
 
       - name: Build the Vue.js app
+        env:
+          NODE_ENV: production
         run: npm run build
 
       - name: Set up Docker Buildx
@@ -66,4 +68,4 @@ jobs:
             docker pull ${{ env.DOCKER_IMAGE_NAME }}:latest
             docker stop vue_frontend || true
             docker rm vue_frontend || true
-            docker run -d -p 80:8080 --name vue_frontend ${{ env.DOCKER_IMAGE_NAME }}:latest
+            docker run -d -p 80:3000 --name vue_frontend ${{ env.DOCKER_IMAGE_NAME }}:latest

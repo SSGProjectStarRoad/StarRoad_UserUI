@@ -9,6 +9,7 @@ function createInstance() {
   // 환경 변수에서 가져온 기본 URL을 사용하여 Axios 인스턴스를 생성합니다.
   const instance = axios.create({
     baseURL: process.env.VUE_APP_API_URL, // 인스턴스의 기본 URL을 설정합니다.
+    withCredentials: true,
   });
 
   // 인터셉터를 인스턴스에 적용합니다.
