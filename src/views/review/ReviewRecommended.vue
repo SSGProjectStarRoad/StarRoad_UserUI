@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import ReviewButton from "@/components/review/ReviewButton.vue";
 import { getAllReview } from '@/api/index';
+import ReviewButton from "@/components/review/ReviewButton.vue";
 import reviewcard from '@/components/review/ReviewCard.vue';
 
 
@@ -38,9 +38,10 @@ export default {
       const initialData = await getAllReview(this.currentPage, this.pageSize);
       if (initialData) {
         console.log('Initial data:', initialData); // 데이터를 콘솔에 출력하여 확인합니다.
-        this.reviews = initialData;
+        this.reviews = initialData.reviews;
         console.log("this.reviews : " + this.reviews);
         this.hasNextPage = initialData.hasNext;
+        console.log("created - this.hasNextPage : " + this.hasNextPage);
         this.totalReviewCount = initialData.totalReviewCount || 0;
       }
     } catch (error) {
@@ -59,17 +60,18 @@ export default {
   },
   methods: {
     handleScroll() {
-  const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-  const windowHeight = window.innerHeight;
-  const documentHeight = document.documentElement.scrollHeight;
+      const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
 
-  // 페이지 하단에서 300px 이내에 도달하면 추가 데이터 요청
-  if (scrollPosition + windowHeight >= documentHeight - 300) {
-    this.loadMoreReviews();
-  }
+      // 페이지 하단에서 300px 이내에 도달하면 추가 데이터 요청
+      if (scrollPosition + windowHeight >= documentHeight - 300) {
+        this.loadMoreReviews();
+        console.log("locadMoreReviews 호출");
+      }
 
-  this.showScrollToTopButton = scrollPosition > 100;
-},
+      this.showScrollToTopButton = scrollPosition > 100;
+    },
     scrollToTop() {
       window.scrollTo({
         top: 0,
@@ -77,25 +79,37 @@ export default {
       });
     },
     async loadMoreReviews() {
-  if (this.loading || !this.hasNextPage) return;
-  this.loading = true;
-  const nextPage = this.currentPage + 1;
+      console.log("this.loading : " + this.loading);
+      console.log("!this.hasNextPage : " + !this.hasNextPage);
+      if (this.loading || !this.hasNextPage) {
+        console.log("loadMoreReviews 리턴");
+        return; 
+      }
+      console.log("loadMoreReviews 통과");
+      this.loading = true;
+      const nextPage = this.currentPage + 1;
 
-  try {
-    const response = await getAllReview(nextPage, this.pageSize);
-    if (response && response.reviews && Array.isArray(response.reviews)) {
-      this.reviews = [...this.reviews, ...response.reviews];
-      this.currentPage = nextPage;
-      this.hasNextPage = response.hasNext;
-    } else {
-      console.error('Invalid response data:', response);
+      try {
+        const response = await getAllReview(nextPage, this.pageSize);
+        if (response && response.reviews) {
+          console.log("this revies : " + this.reviews);
+          console.log("loadMoreRevies response: " + response);
+          console.log("loadMoreRevies response.reviews: " + response.reviews);
+          this.reviews = [...this.reviews, ...response.reviews];
+          console.log("more Reviews : " + this.reviews);
+          this.currentPage = nextPage;
+          console.log("currentPage : " + this.currentPage);
+          this.hasNextPage = response.hasNext;
+          console.log("hasNextPage : " + this.hasNextPage);
+        } else {
+          console.error('Invalid response data:', response);
+        }
+      } catch (error) {
+        console.error('Error loading more reviews:', error);
+      } finally {
+        this.loading = false;
+      }
     }
-  } catch (error) {
-    console.error('Error loading more reviews:', error);
-  } finally {
-    this.loading = false;
-  }
-}
   },
 };
 </script>
