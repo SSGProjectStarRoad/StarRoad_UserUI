@@ -1,6 +1,6 @@
 <template>
   <div v-if="storeReview" class="contents">
-    <!-- @@@@이 부분 로고 오는 데이터로 바꿔야함@@@@ -->
+
     <img class="store-img" :src="storeReview.imagePath" alt="" />
     <div class="store">
       <h1>{{ storeReview.name }}</h1>
@@ -31,7 +31,7 @@
       영업시간 <span class="span-style">{{ storeReview.operatingTime }}</span>
     </p>
     <div class="store-review">
-    <p class="keyword">이런점이 좋았어요!!</p>
+      <p class="keyword">이런점이 좋았어요!!</p>
     <div class="c-key">
       <ProgressBar :progress="(storeReview.revisitCount / totalReviewCount) * 100">
         <template v-slot:text>재방문 하고 싶어요</template>
@@ -49,8 +49,9 @@
         <template v-slot:text>매장이 청결합니다</template>
         <template v-slot:number>{{ storeReview.cleanlinessCount }}</template>
       </ProgressBar>
+   
+      </div>
     </div>
-  </div>
     <div class="section"></div>
     <div class="s-key">
       <p class="s-key-title">리뷰 {{ totalReviewCount ? totalReviewCount : 0 }} (선택지 검색)</p>
@@ -166,23 +167,22 @@ export default {
   },
   computed: {
     storeId() {
-      return this.$route.params.storeId;
+      return this.$route.params.storeId; 
     },
   },
   async created() {
-  try {
+    try {
     const initialData = await selectStore(this.storeId, this.currentPage, this.pageSize);
     if (initialData) {
       console.log('Initial data:', initialData); // 데이터를 콘솔에 출력하여 확인합니다.
       this.storeReview = initialData;
       this.hasNextPage = initialData.hasNext;
       this.totalReviewCount = initialData.totalReviewCount || 0;
+      }
+    } catch (error) {
+      console.error('Error fetching store review:', error);
     }
-  } catch (error) {
-    console.error('Error fetching store review:', error);
-  }
-}
-,
+  },
   components: {
     reviewcard,
     ProgressBar,
