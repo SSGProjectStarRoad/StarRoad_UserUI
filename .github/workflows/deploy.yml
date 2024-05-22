@@ -33,6 +33,7 @@ jobs:
       - name: Build the Vue.js app
         env:
           NODE_ENV: production
+          VUE_APP_API_URL: ${{ secrets.VUE_APP_API_URL }}
         run: npm run build
 
       - name: Set up Docker Buildx
@@ -68,4 +69,6 @@ jobs:
             docker pull ${{ env.DOCKER_IMAGE_NAME }}:latest
             docker stop vue_frontend || true
             docker rm vue_frontend || true
-            docker run -d -p 80:3000 --name vue_frontend ${{ env.DOCKER_IMAGE_NAME }}:latest
+            docker run -d -p 80:3000 --name vue_frontend \
+              -e VUE_APP_API_URL=${{ secrets.VUE_APP_API_URL }} \
+              ${{ env.DOCKER_IMAGE_NAME }}:latest
