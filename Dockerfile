@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # 5. 프로젝트를 빌드합니다.
-RUN npm run build -- --mode production
+RUN npm run build
 
 # 6. serve 패키지를 설치합니다.
 RUN npm install -g serve
