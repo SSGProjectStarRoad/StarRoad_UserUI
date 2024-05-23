@@ -31,7 +31,7 @@
           <div class="post-date">{{ formatRelativeDate(review.createDate) }}</div>
         </div>
         <div class="post-content">
-          <div id="post-content1_2650757">{{ review.contents }}</div>
+          <div id="post-content1_2650757">{{ review.contents }} </div>
         </div>
         <div class="feedback-icons">
           <span v-for="(feedback, index) in review.reviewFeedbacks" :key="index" class="feedback">
@@ -42,12 +42,20 @@
       </div>
       <div class="timeline-post-footer _10fm75h6 _10fm75hg _10fm75hj">
         <div class="__post-meta">
-          <span class="__like la3t9m0" style="transform: none">{{ review.likeCount }}</span>
+      
+          <span       :class="{ liked: likeStatus[index] }"
+            @click="toggleLike(review,index)"
+            style="cursor: pointer;"
+          >
+            <img :src="likeStatus[index] ? require('@/img/imoji/heart-solid.svg') : require('@/img/imoji/heart-regular.svg')" alt="like" width="18" height="18" />
+            {{ review.likeCount }}
+          </span>
         </div>
       </div>
     </article>
   </div>
 </template>
+
 
 <script>
 import moment from 'moment';
@@ -55,12 +63,19 @@ import 'moment/locale/ko';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/swiper-bundle.css';
 import SwiperCore, { Navigation, Pagination } from 'swiper';
+import { likeReview } from '@/api/index.js';
+
 
 SwiperCore.use([Navigation, Pagination]);
 
 export default {
   name: 'ReviewCard',
   props: {
+      likeReview:{
+        type:Function,
+        required: true, // 'required'로 수정
+      },
+
     storeReview: {
       type: Object,
       default: () => ({})
@@ -71,6 +86,7 @@ export default {
       swiper: null, // Swiper instance
       showPrevButton: false,
       showNextButton: true,
+      likeStatus: [], // Array to track like status for each review
       swiperOptions: {
         slidesPerView: 'auto',
         spaceBetween: 10,
@@ -84,16 +100,7 @@ export default {
           clickable: true,
         },
       },
-      feedbackImageMap: {}
-    };
-  },
-  async created() {
-    this.feedbackImageMap = await this.fetchFeedbackImageMap();
-  },
-  methods: {
-    async fetchFeedbackImageMap() {
-      // 여기에 백엔드 API 호출 로직을 추가하세요. 현재는 예제 데이터입니다.
-      return {
+      feedbackImageMap: {
         '재방문 하고싶어요': require('@/img/imoji/박수.png'),
         '매장이 넓어요': require('@/img/imoji/별.png'),
         '제품이 신선해요': require('@/img/imoji/별.png'),
@@ -124,13 +131,16 @@ export default {
         '특색 있는 제품이 많아요': require('@/img/imoji/더블하트.png'),
         'A/S가 세심해요': require('@/img/imoji/AS.png'),
         '아이들이 좋아해요': require('@/img/imoji/키즈.png')
-      };
-    },
-    getFeedbackImage(feedbackText) {
-      if (!feedbackText) {
-        console.error('Invalid feedback text:', feedbackText);
-        return require('@/img/imoji/별눈얼굴.png');
       }
+    };
+  },
+  created() {
+    // Initialize likeStatus array
+    this.likeStatus = this.storeReview.reviews.map(() => false);
+  },
+
+  methods: {
+    getFeedbackImage(feedbackText) {
       return this.feedbackImageMap[feedbackText] || require('@/img/imoji/별눈얼굴.png');
     },
     formatRelativeDate(date) {
@@ -160,7 +170,31 @@ export default {
       if (this.swiper) {
         this.swiper.slideNext();
       }
-    }
+    },
+    toggleLike(review,index) {
+  const reviewId = review.id;
+  const userId = review.userId;
+
+  // 로그로 reviewId와 userId를 확인
+  console.log(reviewId);
+  console.log(userId);
+
+  // likeReview 호출
+  likeReview(reviewId, userId)
+    .then(() => {
+      review.isLiked = !review.isLiked;
+      this.likeStatus[index] = review.isLiked; // likestatus 업데이트 
+      if (review.isLiked) {
+        review.likeCount++;
+      } else {
+        review.likeCount--;
+      }
+    })
+        .catch((error) => {
+          console.error('좋아요/취소 실패:', error);
+        });
+    },
+    
   },
   components: {
     Swiper,
@@ -169,9 +203,16 @@ export default {
 };
 </script>
 
+
 <style scoped>
 @import '@/css/review/review.css';
-
+.timeline-post-footer .__post-meta > span::before {
+  content: none;
+}
+.timeline-post-footer .__post-meta > span {
+  margin: 0;
+  padding: 0;
+}
 .feedback-icons {
   display: flex;
   flex-wrap: wrap;
@@ -222,4 +263,10 @@ export default {
 .swiper-button-next {
   right: 10px;
 }
+/* New CSS for heart icon */
+.__like.liked:before {
+  background-image: url('@/img/review/heart-new.svg');
+  background-size: cover;
+}
+
 </style>

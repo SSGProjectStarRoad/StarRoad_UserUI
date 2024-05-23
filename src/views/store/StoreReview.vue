@@ -120,7 +120,7 @@
             <label for="likes"></label>좋아요 순
           </p>
         </div>
-        <reviewcard :storeReview="storeReview" />
+        <reviewcard :storeReview="storeReview" :likeReview="likeReview"/>
       </div>
     </div>
     <reviewbutton />
@@ -128,6 +128,7 @@
   </div>
 </template>
 <script>
+import {likeReview} from '@/api/index.js';
 import { selectStore } from '@/api/index.js';
 import data from '@/components/review/data.js';
 import reviewcard from '@/components/store/ReviewCard.vue';
@@ -143,6 +144,7 @@ export default {
     console.log('postData:', postData); // 데이터를 콘솔에 출력합니다.
     return {
       storeReview: { reviews: [] ,commonReviewStats: {}},
+      likeReview,
       postData,
       review: 1520,
       selectedSort: 'latest',
