@@ -112,6 +112,37 @@ async function selectStore(storeId, page = 0, size = 20) {
     console.error('오류:', error);
   }
 }
+
+async function getAllReview(page = 0, size = 20) {
+  try {
+    const response = await instance.get(`/reviews?page=${page}&size=${size}`);
+    if (response.status === 200) {
+      const ReviewData = response.data;
+      console.log(ReviewData);
+      return ReviewData;
+    } else {
+      throw new Error('리뷰를 가져오는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
+  }
+}
+
+async function getFollowingReview(id = 1, page = 0, size = 20) {
+  try {
+    const response = await instance.get(`/reviews/following?id=${id}&page=${page}&size=${size}`);
+    if (response.status === 200) {
+      const ReviewData = response.data;
+      console.log(ReviewData);
+      return ReviewData;
+    } else {
+      throw new Error('리뷰를 가져오는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
+  }
+}
+
 async function imageUpload(imageFile) {
   try {
     const formData = new FormData();
@@ -130,10 +161,6 @@ async function imageUpload(imageFile) {
     console.error('업로드 실패:', error);
     alert('이미지 업로드 실패');
   }
-}
-
-function getAllReview() {
-  return instance.get(`/reviews`);
 }
 
 // 다른 모듈에서 접근할 수 있도록 함수들을 내보냅니다.
@@ -160,6 +187,35 @@ async function storeguide(storeId, router) {
   } catch (error) {
     // 오류가 발생한 경우 처리합니다.
     console.error('오류:', error);
+  }
+}
+
+async function submitSurvey(surveyData) {
+  try {
+    for (let pair of surveyData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
+    }
+    console.log("data 확인 완료");
+    // axios를 사용하여 서버에 데이터를 POST 방식으로 보냅니다.
+    const response = await instance.post('/reviews/submit', surveyData);
+
+    console.log('설문 제출 성공:', response);
+    alert('설문이 성공적으로 제출되었습니다!');
+  } catch (error) {
+    console.error('설문 제출 실패:', error);
+    alert('설문 제출에 실패했습니다.');
+  }
+}
+
+async function fetchReviewSelections(shopName) {
+  try {
+    const response = await instance.post('/review-selections/selection', {
+      shopName: shopName
+    });
+    console.log('Review Selections:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching review selections:', error);
   }
 }
 
@@ -217,5 +273,11 @@ export {
   deleteProfileimg,
   getAllReview,
   imageUpload,
+<<<<<<< HEAD
   likeReview
+=======
+  submitSurvey,
+  fetchReviewSelections,
+  getFollowingReview,
+>>>>>>> 1ba691de40fa0ab131c9266da9235b40edfd42c9
 };
