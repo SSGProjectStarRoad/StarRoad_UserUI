@@ -273,11 +273,8 @@ export {
   deleteProfileimg,
   getAllReview,
   imageUpload,
-<<<<<<< HEAD
   likeReview
-=======
   submitSurvey,
   fetchReviewSelections,
   getFollowingReview,
->>>>>>> 1ba691de40fa0ab131c9266da9235b40edfd42c9
 };
