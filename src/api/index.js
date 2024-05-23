@@ -28,8 +28,6 @@ function rewardStart(userId) {
   // 특정 사용자의 보상 프로세스를 시작하는 요청 URL을 로깅합니다.
   console.log('Request URL:', `/reward-process/${userId}/start`);
 
-
-
   // 사용자의 보상 프로세스를 시작하기 위해 GET 요청을 보냅니다.
   return instance.get(`/reward-process/${userId}/start`);
 }
@@ -94,13 +92,13 @@ async function fetchStoreList() {
   }
 }
 
-
-``
-
+``;
 
 async function selectStore(storeId, page = 0, size = 20) {
   try {
-    const response = await instance.get(`/store/${storeId}/reviews?page=${page}&size=${size}`);
+    const response = await instance.get(
+      `/store/${storeId}/reviews?page=${page}&size=${size}`,
+    );
     if (response.status === 200) {
       const storeWithReviewData = response.data;
       console.log(storeWithReviewData);
@@ -130,7 +128,9 @@ async function getAllReview(page = 0, size = 20) {
 
 async function getFollowingReview(id = 1, page = 0, size = 20) {
   try {
-    const response = await instance.get(`/reviews/following?id=${id}&page=${page}&size=${size}`);
+    const response = await instance.get(
+      `/reviews/following?id=${id}&page=${page}&size=${size}`,
+    );
     if (response.status === 200) {
       const ReviewData = response.data;
       console.log(ReviewData);
@@ -157,7 +157,8 @@ async function imageUpload(imageFile) {
     console.log('업로드 성공:', response);
     alert('이미지 업로드 성공!');
     return response;
-  } catch (error) { // try 블록 내에서 발생하는 예외를 캐치합니다.
+  } catch (error) {
+    // try 블록 내에서 발생하는 예외를 캐치합니다.
     console.error('업로드 실패:', error);
     alert('이미지 업로드 실패');
   }
@@ -195,7 +196,7 @@ async function submitSurvey(surveyData) {
     for (let pair of surveyData.entries()) {
       console.log(pair[0] + ': ' + pair[1]);
     }
-    console.log("data 확인 완료");
+    console.log('data 확인 완료');
     // axios를 사용하여 서버에 데이터를 POST 방식으로 보냅니다.
     const response = await instance.post('/reviews/submit', surveyData);
 
@@ -210,7 +211,7 @@ async function submitSurvey(surveyData) {
 async function fetchReviewSelections(shopName) {
   try {
     const response = await instance.post('/review-selections/selection', {
-      shopName: shopName
+      shopName: shopName,
     });
     console.log('Review Selections:', response.data);
     return response.data;
@@ -273,7 +274,7 @@ export {
   deleteProfileimg,
   getAllReview,
   imageUpload,
-  likeReview
+  likeReview,
   submitSurvey,
   fetchReviewSelections,
   getFollowingReview,
