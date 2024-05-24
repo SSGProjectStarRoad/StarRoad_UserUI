@@ -1,9 +1,79 @@
 import { createStore } from 'vuex';
+import {
+  saveAccessTokenToCookie,
+  saveUserToCookie,
+  saveRefreshTokenToCookie,
+  getAccessTokenFromCookie,
+  getUserFromCookie,
+  getRefreshTokenFromCookie,
+  deleteCookie,
+} from '@/utils/cookies';
+import { loginUser, logoutUser } from '@/api/index';
 
 export default createStore({
-  state: {},
-  getters: {},
-  mutations: {},
-  actions: {},
-  modules: {},
+  state: {
+    email: getUserFromCookie() || '',
+    accessToken: getAccessTokenFromCookie() || '',
+    refreshToken: getRefreshTokenFromCookie() || '',
+  },
+  getters: {
+    isLogin(state) {
+      return state.email !== '';
+    },
+  },
+  mutations: {
+    setEmail(state, email) {
+      state.email = email;
+    },
+    clearEmail(state) {
+      state.email = '';
+    },
+    setAccessToken(state, accessToken) {
+      state.accessToken = accessToken;
+    },
+    setRefreshToken(state, refreshToken) {
+      state.refreshToken = refreshToken;
+    },
+    clearAccessToken(state) {
+      state.accessToken = '';
+    },
+    clearRefreshToken(state) {
+      state.refreshToken = '';
+    },
+  },
+  actions: {
+    async login({ commit }, userData) {
+      try {
+        const response = await loginUser(userData);
+        const { data } = response;
+        commit('setEmail', userData.email);
+        commit('setAccessToken', data.accessToken);
+        commit('setRefreshToken', data.refreshToken);
+        saveAccessTokenToCookie(data.accessToken);
+        saveRefreshTokenToCookie(data.refreshToken);
+        saveUserToCookie(userData.email);
+        return response;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+    async logout({ state, commit }) {
+      try {
+        await logoutUser({
+          email: state.email,
+          accessToken: state.accessToken,
+          refreshToken: state.refreshToken,
+        });
+        commit('clearEmail');
+        commit('clearAccessToken');
+        commit('clearRefreshToken');
+        deleteCookie('til_auth');
+        deleteCookie('til_user');
+        deleteCookie('til_refresh');
+      } catch (error) {
+        console.error('Failed to logout', error);
+      }
+    },
+  },
 });

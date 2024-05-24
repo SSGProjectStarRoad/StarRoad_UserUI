@@ -12,21 +12,28 @@
       @click="goToSelect"
     />
     <h3 class="mystar textshadow" @click="goToMyStar">나의 별자리</h3>
-    <h3 class="mycoupon textshadow" @click="goToMyCoupons">나의 쿠폰 보기</h3>
+    <!-- <h3 class="mycoupon textshadow" @click="goToMyCoupons">나의 쿠폰 보기</h3> -->
   </div>
 </template>
 
 <script>
+import { rewardStart } from '@/api/index';
 export default {
   methods: {
-    goToSelect() {
-      this.$router.push('/reward/select');
+    async goToSelect() {
+      try {
+        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await rewardStart(userId);
+        console.log('Response:', response.data);
+        this.$router.push('/reward/select');
+      } catch (error) {
+        console.error('Error:', error);
+      }
     },
     goToMyStar() {
       this.$router.push('/reward/mystar');
     },
     goToMyCoupons() {
-      // 'mycoupons' 경로가 있다고 가정하고, 없으면 실제 경로에 맞게 수정하세요.
       this.$router.push('/reward/mycoupons');
     },
   },
@@ -35,7 +42,7 @@ export default {
 
 <style scoped>
 .contents {
-  height: 100vh;
+  height: 100%;
 }
 .informicon {
   margin-top: 60px;
@@ -85,16 +92,19 @@ h3 {
   position: absolute;
   width: 120px;
   top: 410px;
-  left: 50%; /* 왼쪽으로부터 50%의 위치에 배치 */
-  transform: translate(-50%, -50%); /* 위치 보정을 위해 변환 사용 */
+  left: 50%;
+  transform: translate(-50%, -50%);
   margin: 0 auto;
   cursor: pointer;
+  border-radius: 15px;
 }
 .informicon:hover,
-.start:hover,
 .mystar:hover,
 .mycoupon:hover {
-  border: 4px solid var(--mint-color); /* 회색 테두리 추가 */
-  border-radius: 8px; /* 테두리 둥글게 처리 */
+  transform: scale(1.1);
+}
+.start:hover {
+  transform: scale(1.1) translate(-50%, -50%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 </style>

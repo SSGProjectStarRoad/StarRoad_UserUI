@@ -1,7 +1,12 @@
 <template>
   <div class="contents">
-    <div class="setting" @click="goToEditPage">
-      <img src="@/img/setting.png" alt="" />
+    <div class="img">
+      <div class="setting" @click="goToEditPage">
+        <img src="@/img/setting.png" alt="" />
+      </div>
+      <div class="logout" @click="logoutUser">
+        <img src="@/img/logout.png" alt="" />
+      </div>
     </div>
     <div class="current-mall">
       <div class="mall-name">스타필드 하남</div>
@@ -43,7 +48,7 @@
         </div>
       </div>
       <div class="mallinfo">
-        <div class="howto">
+        <div class="howto" @click="goToMallMap">
           <div class="ownimg"><img src="@/img/howto.png" alt="" /></div>
           <div class="text">오시는 길</div>
         </div>
@@ -78,17 +83,39 @@ export default {
     goToNoticePage() {
       this.$router.push('/mypage/notice'); // Vue Router를 사용하여 페이지 전환
     },
+    goToMallMap() {
+      this.$router.push('/store/mallmap');
+    },
+    logoutUser() {
+      this.$store
+        .dispatch('logout')
+        .then(() => {
+          this.$router.push('/login');
+        })
+        .catch(error => {
+          console.error('Failed to logout', error);
+          this.$router.push('/mypage/main');
+        });
+    },
   },
 };
 </script>
 
 <style scoped>
-.setting {
+.img {
+  display: flex;
+}
+.setting,
+.logout {
   position: relative;
   left: 90%;
   cursor: pointer;
 }
-.setting img {
+.setting {
+  margin-right: 5px;
+}
+.setting img,
+.logout img {
   width: 30px;
 }
 

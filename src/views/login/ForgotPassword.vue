@@ -19,8 +19,14 @@
             type="text"
             placeholder="이름을 입력해주세요"
             v-model="name"
+            @input="validateName"
           />
         </div>
+        <p class="validation-text">
+          <span class="warning" v-if="name && !isNameValid"
+            >이름을 확인해주세요</span
+          >
+        </p>
 
         <div class="email-input">
           <input
@@ -28,11 +34,22 @@
             type="text"
             placeholder="이메일을 입력해주세요"
             v-model="email"
+            @input="validateEmail"
           />
         </div>
+        <p class="validation-text">
+          <span class="warning" v-if="!isEmailValid && email">
+            이메일 주소를 입력해주세요
+          </span>
+        </p>
 
         <div class="emailcheck-input">
-          <input id="emailcheck" type="button" value="이메일 확인" />
+          <input
+            id="emailcheck"
+            type="button"
+            value="이메일 확인"
+            @click="checkEmail"
+          />
         </div>
       </form>
     </div>
@@ -44,10 +61,59 @@
 </template>
 
 <script>
+import { checkEmailDuplicate, sendAuthCode } from '@/api/index';
+import { validateName, validateEmail } from '@/utils/validation';
+
 export default {
+  data() {
+    return {
+      name: '',
+      email: '',
+    };
+  },
+  computed: {
+    isNameValid() {
+      return validateName(this.name);
+    },
+    isEmailValid() {
+      return validateEmail(this.email);
+    },
+    watch: {
+      name() {
+        this.validateName();
+      },
+      email() {
+        this.validateEmailWatcher();
+      },
+    },
+  },
   methods: {
+    validateName() {
+      return validateName(this.name);
+    },
     gotoLogin() {
       this.$router.push('/login');
+    },
+    async checkEmail() {
+      try {
+        const response = await checkEmailDuplicate(this.email);
+        console.log(response.data); // 응답 데이터를 출력하여 확인합니다.
+        if (response.data === true) {
+          // 이메일이 데이터베이스에 존재하면 인증 코드 전송
+          await sendAuthCode(this.email);
+          alert('인증 코드가 발송되었습니다.');
+          this.$router.push({
+            path: '/login/email',
+            query: { email: this.email },
+          });
+        } else {
+          console.log(this.email);
+          alert('이메일이 존재하지 않습니다.');
+        }
+      } catch (error) {
+        console.error(error);
+        alert('오류가 발생했습니다.');
+      }
     },
   },
 };
@@ -86,6 +152,11 @@ export default {
   border: 0;
   padding-left: 10px;
 }
+#name:focus,
+#email:focus {
+  border: 2px solid var(--mint-color) !important;
+  outline: none;
+}
 #emailcheck {
   box-sizing: border-box;
   width: 100%;
@@ -115,5 +186,15 @@ export default {
   color: var(--mint-color);
   font-weight: bold;
   cursor: pointer;
+}
+.warning {
+  color: #ff4057;
+}
+.validation-text {
+  margin-top: 5px;
+  font-size: 11px;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
 }
 </style>

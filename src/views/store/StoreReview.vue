@@ -1,22 +1,30 @@
 <template>
-  <div class="contents">
+  <div v-if="storeReview" class="contents">
+    <!-- @@@@이 부분 로고 오는 데이터로 바꿔야함@@@@ -->
     <img class="store-img" src="@/img/ZARA.png" alt="" />
     <div class="store">
-      <h1>자라</h1>
+      <h1>{{ storeReview.name }}</h1>
       <div class="store-detail">
-        <a :href="'tel:' + phoneNumber" class="store-phone">
+        <a :href="'tel:' + storeReview.contactNumber" class="store-phone">
           <img src="@/img/phone.png" alt="전화 걸기" />
         </a>
+
+        <!-- @@  로케이션 여기도 바꿔야함 @@ -->
         <img class="store-location" src="@/img/location.png" alt="" />
         <br />
       </div>
     </div>
-    <p :style="{ margin: '0px', 'padding-left': '10px' }">1F / 10:00 ~ 20:00</p>
+    <div class="store-introduce">
+      {{ storeReview.contents }}
+    </div>
+    <p :style="{ margin: '0px', 'padding-left': '10px' }">
+      {{ storeReview.floor }} 층 / 영업시간 : {{ storeReview.operatingTime }}
+    </p>
     <div class="store-review">
       <p class="keyword">이런점이 좋았어요!!</p>
       <div class="c-key">
         <ProgressBar :progress="72">
-          <template v-slot:text>재방문하고싶어요</template>
+          <template v-slot:text>재벙문 하고 싶어요</template>
           <template v-slot:number>723</template>
         </ProgressBar>
         <ProgressBar :progress="42.3">
@@ -31,12 +39,35 @@
           <template v-slot:text>매장이 청결합니다</template>
           <template v-slot:number>5</template>
         </ProgressBar>
+        {{ storeReview.Array }}
       </div>
     </div>
     <div class="section"></div>
     <div class="s-key">
-      <p class="s-key-title">리뷰 {{ review }} (키워드검색)</p>
+      <p class="s-key-title">리뷰 {{ review }} (선택지 검색)</p>
       <div>
+        <div class="slide">
+          <swiper
+            v-if="buttons.length > 0"
+            ref="mySwiper"
+            :options="swiperOptions"
+            :slidesPerView="'auto'"
+            :spaceBetween="10"
+            :freeMode="true"
+            :freeModeSticky="true"
+            :grabCursor="true"
+            :resistanceRatio="0.6"
+          >
+            <swiper-slide
+              v-for="button in buttons"
+              :key="button"
+              style="width: auto"
+            >
+              <!-- <swiper-slide v-for="button in buttons" :key="button"> -->
+              <button class="d-button">{{ button }}</button>
+            </swiper-slide>
+          </swiper>
+        </div>
         <div class="slide">
           <swiper
             v-if="buttons.length > 0"
@@ -79,26 +110,12 @@
             <label for="likes"></label>좋아요 순
           </p>
         </div>
-        <div class="review-Data">
-          <div class="user-header">
-            <div class="user-profile"></div>
-            <span class="user-name">Cate Blachett</span>
-
-            <span class="review-count">리뷰 420</span>
-          </div>
-          <div class="review-body"></div>
-          <div class="review-content">
-            <p>좋아요</p>
-            <p>내용wefwe</p>
-            <p class="review-date">20.20.20</p>
-          </div>
-        </div>
+        <reviewcard :storeReview="storeReview" />
       </div>
     </div>
     <reviewbutton />
   </div>
 </template>
-
 <script>
 import ProgressBar from '@/components/store/ProgressBar.vue';
 import reviewbutton from '@/components/review/ReviewButton.vue';
@@ -169,6 +186,17 @@ export default {
         console.log('좋아요 순으로 정렬');
       }
     },
+  },
+  handleScroll() {
+    const scrollPosition =
+      window.pageYOffset || document.documentElement.scrollTop;
+    this.showScrollToTopButton = scrollPosition > 100;
+  },
+  scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   },
 };
 </script>

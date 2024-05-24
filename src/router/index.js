@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { RewardProcessCheck, resetStatus, rewardFinish } from '@/api/index';
+import store from '@/store/index';
 
 const routes = [
   {
@@ -9,6 +11,7 @@ const routes = [
   {
     path: '/main',
     component: () => import('@/views/MainView.vue'),
+    meta: { auth: true },
   },
   {
     path: '/review/main',
@@ -16,6 +19,7 @@ const routes = [
   },
   {
     path: '/review/recommended',
+    name: 'ReviewRecommended',
     component: () => import('@/views/review/ReviewRecommended.vue'),
   },
   {
@@ -27,8 +31,52 @@ const routes = [
     component: () => import('@/views/review/ReviewUser.vue'),
   },
   {
+    path: '/review/check',
+    component: () => import('@/views/review/ReviewCheck.vue'),
+  },
+  {
+    path: '/review/ocr',
+    component: () => import('@/views/review/OCR.vue'),
+  },
+  {
     path: '/reward/main',
     component: () => import('@/views/reward/RewardMain.vue'),
+    beforeEnter: async (to, from, next) => {
+      const userId = 1; // 사용자 ID 설정
+      try {
+        const response = await RewardProcessCheck(userId);
+        const {
+          couponCount,
+          reviewCount,
+          usageStatus,
+          issueStatus,
+          rewardStatus,
+        } = response.data;
+
+        if (couponCount === reviewCount) {
+          if (couponCount === 3) {
+            if (rewardStatus == true) {
+              next('/reward/completed');
+            }
+            await rewardFinish(userId);
+            // 리워드 지급 api 필요 (rewardFinish 하도록할것)
+            next('/reward/getstar');
+          } else {
+            if (usageStatus === false && issueStatus === true) {
+              next('/reward/search');
+            } else {
+              await resetStatus(userId);
+              next('/reward/select');
+            }
+          }
+        } else if (usageStatus === true && issueStatus === true) {
+          next({ path: '/reward/select', query: { modal: 'true' } });
+        }
+      } catch (error) {
+        console.error('Reward Process Check Error:', error);
+        next(); // 에러가 발생하면 이동 취소
+      }
+    },
   },
   {
     path: '/reward/select',
@@ -63,7 +111,7 @@ const routes = [
     component: () => import('@/views/store/MallMap.vue'),
   },
   {
-    path: '/store/review',
+    path: '/store/:storeId/reviews',
     component: () => import('@/views/store/StoreReview.vue'),
   },
   {
@@ -73,6 +121,7 @@ const routes = [
   {
     path: '/mypage/main',
     component: () => import('@/views/mypage/MypageMain.vue'),
+    meta: { auth: true },
   },
   {
     path: '/mypage/notice',
@@ -81,6 +130,30 @@ const routes = [
   {
     path: '/mypage/mycoupon',
     component: () => import('@/views/mypage/MypageCoupon.vue'),
+  },
+  {
+    path: '/mypage/myreview',
+    component: () => import('@/views/mypage/MypageReview.vue'),
+  },
+  {
+    path: '/mypage/follow',
+    component: () => import('@/views/mypage/MypageFollow.vue'),
+  },
+  {
+    path: '/mypage/check',
+    component: () => import('@/views/mypage/MypageCheck.vue'),
+  },
+  {
+    path: '/mypage/edit',
+    component: () => import('@/views/mypage/MypageEdit.vue'),
+  },
+  {
+    path: '/mypage/editimg',
+    component: () => import('@/views/mypage/MypageEditimg.vue'),
+  },
+  {
+    path: '/mypage/withdraw',
+    component: () => import('@/views/mypage/MypageWithdrawal.vue'),
   },
   {
     path: '/login/register',
@@ -107,28 +180,16 @@ const routes = [
     component: () => import('@/views/login/ChangePw.vue'),
   },
   {
-    path: '/mypage/myreview',
-    component: () => import('@/views/mypage/MypageReview.vue'),
+    path: '/login/oauth2/code/google',
+    component: () => import('@/views/login/OAuth2Callback.vue'),
   },
   {
-    path: '/mypage/follow',
-    component: () => import('@/views/mypage/MypageFollow.vue'),
+    path: '/login/oauth2/code/kakao',
+    component: () => import('@/views/login/OAuth2Callback.vue'),
   },
   {
-    path: '/mypage/check',
-    component: () => import('@/views/mypage/MypageCheck.vue'),
-  },
-  {
-    path: '/mypage/edit',
-    component: () => import('@/views/mypage/MypageEdit.vue'),
-  },
-  {
-    path: '/mypage/editimg',
-    component: () => import('@/views/mypage/MypageEditimg.vue'),
-  },
-  {
-    path: '/mypage/withdraw',
-    component: () => import('@/views/mypage/MypageWithdrawal.vue'),
+    path: '/login/oauth2/code/naver',
+    component: () => import('@/views/login/OAuth2Callback.vue'),
   },
 
   // 추가적인 라우트...
@@ -137,6 +198,15 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.auth && !store.getters.isLogin) {
+    console.log('인증이 필요합니다'); // auth가 true인 경우
+    next('/login');
+    return;
+  }
+  next();
 });
 
 export default router;

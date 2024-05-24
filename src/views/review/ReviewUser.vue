@@ -63,41 +63,41 @@
 
                 <div class="timeline-post-content">
                     <div class="__post-meta">
-                        <div class="_6du64d0">
+                        <div class="rating-segment">
                             <div class="__rating">334</div>
                             <p class="ooezpq2 _1ltqxco1e" style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"></p>
                         </div>
-                        <div class="__date">1일 전</div>
+                        <div class="post-date">1일 전</div>
                     </div>
-                    <h3 class="__title"></h3>
-                    <div class="__content">
-                        <div id="__content1_2650757" class="">
+                    <h3 class="post-title"></h3>
+                    <div class="post-content">
+                        <div id="post-content1_2650757" class="">
                             부산에 매일 왔었는데 맛있는곳을 제대로 모르고 있었어요.!🥹
                             <br />부산 지인이 저에게 어떻게든 여기 먹어보라고 해서
                             <br />먹었는데 왜 먹어야하는 알것같아요!
                         </div>
                     </div>
 
-                    <div class="ERkm0">
-                        <span class="sIv5s">
+                    <div class="feedback-icons">
+                        <span class="feedback">
                             <img src="https://ssl.pstatic.net/static/pup/emoji/face_savoring_food20220119222022.png"
-                                class="TCCFO" alt="" width="18" height="18">음식이 맛있어요
+                                class=" emoji-icon" alt="" width="18" height="18">음식이 맛있어요
                         </span>
-                        <span class="sIv5s">
+                        <span class="feedback">
                             <img src="https://ssl.pstatic.net/static/pup/emoji/green_heart20220119222224.png"
-                                class="TCCFO" alt="" width="18" height="18">메뉴 구성이 알차요
+                                class=" emoji-icon" alt="" width="18" height="18">메뉴 구성이 알차요
                         </span>
-                        <span class="sIv5s">
+                        <span class="feedback">
                             <img src="https://ssl.pstatic.net/static/pup/emoji/couch_and_lamp20220119222025.png"
-                                class="TCCFO" alt="" width="18" height="18">인테리어가 멋져요
+                                class=" emoji-icon" alt="" width="18" height="18">인테리어가 멋져요
                         </span>
-                        <span class="sIv5s">
+                        <span class="feedback">
                             <img src="https://ssl.pstatic.net/static/pup/emoji/rice_ball20220119222026.png"
-                                class="TCCFO" alt="" width="18" height="18">혼밥하기 좋아요
+                                class=" emoji-icon" alt="" width="18" height="18">혼밥하기 좋아요
                         </span>
-                        <span class="sIv5s">
+                        <span class="feedback">
                             <img src="https://ssl.pstatic.net/static/pup/emoji/light_bulb20220119222315.png"
-                                class="TCCFO" alt="" width="18" height="18">컨셉이 독특해요
+                                class=" emoji-icon" alt="" width="18" height="18">컨셉이 독특해요
                         </span>
                     </div>
 

@@ -5,21 +5,33 @@
 
     <div class="mycoupons">
       <div class="coupons-amount">
-        사용 가능 쿠폰 <span class="coupon-count">{{ coupons.length }}</span
+        사용 가능 쿠폰
+        <span class="coupon-count">{{ availableCouponsCount }}</span
         >장
       </div>
       <form action="">
-        <div class="coupon" v-for="coupon in coupons" :key="coupon.id">
+        <div
+          class="coupon"
+          v-for="coupon in coupons"
+          :key="coupon.coupon_id"
+          :class="{ 'semi-transparent': coupon.coupon_usage_status }"
+        >
           <div class="circle1"></div>
           <div class="coupon-img">
             <img :src="coupon.image" alt="Coupon image" />
           </div>
           <div class="line"></div>
           <div class="info">
-            <div class="benefit">{{ coupon.benefit }}%</div>
-            <div class="store">{{ coupon.store }}</div>
+            <div class="benefit">{{ coupon.coupon_discount_rate }}%</div>
+            <div class="store">{{ coupon.coupon_store_type }}</div>
           </div>
-          <button class="use-coupon">사용</button>
+          <button
+            class="use-coupon"
+            v-if="!coupon.coupon_usage_status"
+            @click="myCouponUse(coupon.coupon_history_id)"
+          >
+            사용
+          </button>
           <div class="circle2"></div>
         </div>
       </form>
@@ -28,29 +40,51 @@
 </template>
 
 <script>
+import { myCouponList, CouponUse } from '@/api/index';
 export default {
   data() {
     return {
-      coupons: [
-        {
-          id: 1,
-          benefit: 10,
-          store: 'Starbucks',
-          image: require('@/img/reward.png'),
-        },
-        {
-          id: 2,
-          benefit: 15,
-          store: 'Amazon',
-          image: require('@/img/reward.png'),
-        },
-      ],
+      coupons: [],
     };
+  },
+  computed: {
+    availableCouponsCount() {
+      return this.coupons.filter(coupon => !coupon.coupon_usage_status).length;
+    },
+  },
+  methods: {
+    async myCouponList() {
+      try {
+        const userId = 1; // 실제 사용자 ID로 대체
+        const response = await myCouponList(userId);
+        console.log('API response:', response);
+        this.coupons = response.data.map(coupon => ({
+          ...coupon,
+          image: require('@/img/reward.png'), // 이미지 경로 조정
+        }));
+      } catch (error) {
+        console.error('Error fetching coupons:', error);
+      }
+    },
+    async myCouponUse(couponHistoryId) {
+      try {
+        const response = await CouponUse(couponHistoryId);
+        console.log('Coupon used response:', response);
+      } catch (error) {
+        console.error('Error fetching coupons:', error);
+      }
+    },
+  },
+  mounted() {
+    this.myCouponList(); // API 호출
   },
 };
 </script>
 
 <style scoped>
+.semi-transparent {
+  opacity: 0.5; /* 반투명 효과 */
+}
 .coupon-main {
   text-align: center;
   font-size: 30px;

@@ -56,7 +56,12 @@
         </div>
 
         <div class="codeinput">
-          <input id="codeclear" type="button" value="인증 완료" />
+          <input
+            id="codeclear"
+            type="button"
+            value="인증 완료"
+            @click="verifyCode"
+          />
         </div>
       </form>
     </div>
@@ -68,6 +73,8 @@
 </template>
 
 <script>
+import { verifyAuthCode } from '@/api/index';
+
 export default {
   data() {
     return {
@@ -75,7 +82,12 @@ export default {
       code2: '',
       code3: '',
       code4: '',
+      email: '',
     };
+  },
+  mounted() {
+    // 쿼리 파라미터로 전달된 이메일 값을 설정합니다.
+    this.email = this.$route.query.email || '';
   },
   methods: {
     autoTab(refName) {
@@ -88,6 +100,25 @@ export default {
         this.$nextTick(() => {
           this.$refs[nextRef].focus();
         });
+      }
+    },
+    async verifyCode() {
+      const code = this.code1 + this.code2 + this.code3 + this.code4;
+      try {
+        const response = await verifyAuthCode(this.email, code);
+        if (response.data) {
+          alert('인증이 완료되었습니다.');
+          // 이메일 값을 쿼리 파라미터로 전달하여 라우팅
+          this.$router.push({
+            path: '/login/newpw',
+            query: { email: this.email },
+          });
+        } else {
+          alert('인증 코드가 올바르지 않습니다.');
+        }
+      } catch (error) {
+        console.error(error);
+        alert('오류가 발생했습니다.');
       }
     },
     gotoForgotPassword() {
@@ -139,7 +170,8 @@ export default {
 /* 입력값이 있는 경우 */
 .emailinput input.filled {
   background-color: white; /* 입력되었을 때의 배경색 */
-  border: 2px solid var(--mint-color); /* 입력되었을 때의 테두리색 */
+  border: 2px solid var(--mint-color) !important;
+  outline: none; /* 입력되었을 때의 테두리색 */
 }
 #codeclear {
   box-sizing: border-box;

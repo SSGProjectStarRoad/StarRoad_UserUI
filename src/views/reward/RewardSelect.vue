@@ -1,13 +1,14 @@
 <template>
   <div class="contents">
     <!-- 모달 배경 -->
-    <div class="modal-backdrop" v-if="isModalVisible" @click="closeModal"></div>
+    <div class="modal-backdrop" v-if="isModalVisible"></div>
 
     <!-- 모달 컨텐츠 -->
     <div class="modal" v-if="isModalVisible">
       <h3>쿠폰 사용이 확인되었습니다!</h3>
       <p>리뷰를 작성해주세요</p>
-      <a href="/review">리뷰쓰기</a>
+      <a href="/reward/main" @click="closeModal">리뷰쓰기</a>
+      <!-- 리뷰쓰기로 나중에 바꿀것 -->
     </div>
     <div class="rewardcard">
       <div class="swiper-container">
@@ -18,7 +19,9 @@
             :key="index"
           >
             <h1>{{ card.title }}</h1>
-            <div class="couponimg"><img :src="card.image" alt="" /></div>
+            <div class="couponimg">
+              <img :src="getImagePath(index)" alt="" />
+            </div>
             <a
               href="javascript:void(0)"
               class="btn"
@@ -39,7 +42,7 @@
 import { onMounted } from 'vue';
 import Swiper from 'swiper';
 import 'swiper/swiper-bundle.css';
-import mystar1 from '@/img/mystar1.png';
+import { issueCouponAPI, ReviewCount } from '@/api/index';
 export default {
   data() {
     return {
@@ -48,73 +51,94 @@ export default {
       cards: [
         {
           title: '첫번째 별',
-          image: mystar1,
+
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
+          couponId: 1,
         },
         {
           title: '두번째 별',
-          image: mystar1,
+
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
+          couponId: 2,
         },
         {
           title: '세번째 별',
-          image: mystar1,
+
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
+          couponId: 3,
         },
         {
           title: '네번째 별',
-          image: mystar1,
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
+          couponId: 4,
         },
         {
           title: '다섯번째 별',
-          image: mystar1,
           message: '',
           showButton: true,
           buttonText: '의류쇼핑쿠폰',
+          couponId: 5,
         },
       ],
     };
   },
   methods: {
-    closeModal() {
-      this.isModalVisible = false;
-      this.$router.push('/reward/select'); // 모달을 닫을 때 URL에서 쿼리 파라미터 제거
+    getImagePath(index) {
+      return require(`@/img/reward/mystar${index + 1}.png`); // 인덱스에 1을 더해 이미지 파일명 생성
+    },
+    async closeModal() {
+      try {
+        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await ReviewCount(userId);
+        console.log('Response:', response.data);
+        this.isModalVisible = false;
+      } catch (error) {
+        console.error('Error:', error);
+      }
     },
     openModal() {
       this.isModalVisible = true;
     },
     checkModalState() {
-      if (this.$route.query.modal) {
+      if (this.$route.query.modal === 'true') {
         this.isModalVisible = true; // URL 쿼리 파라미터에 따라 모달 상태 변경
       }
     },
 
-    issueCoupon(index) {
-      // 메시지 초기화
-      this.cards[index].message = '';
-      // 변경 사항을 다음 틱에서 적용하여 Vue가 DOM 업데이트를 반영하도록 함
-      this.$nextTick(() => {
+    async issueCoupon(index) {
+      const card = this.cards[index];
+      const userId = 1; // 실제 사용자 ID로 대체해야 합니다.
+      if (!card.couponId) {
+        console.error('No coupon ID found for this card:', card);
+        return;
+      }
+      const couponId = card.couponId;
+
+      try {
+        const response = await issueCouponAPI(userId, couponId);
+        console.log('Coupon issued:', response.data);
         this.cards[index].message = '쿠폰이 발급되었습니다.';
-        this.cards[index].showButton = false; // 버튼을 숨깁니다.
-        // 클래스를 직접 할당
+        this.cards[index].showButton = false;
         this.cards[index].fadeClass = 'fade-in';
-        // 5초 후에 페이지 이동
         setTimeout(() => {
           this.redirectToSearch();
         }, 3000);
-      });
+      } catch (error) {
+        console.error('Error issuing coupon:', error);
+        this.cards[index].message = '쿠폰 발급에 실패하였습니다.';
+        this.cards[index].fadeClass = 'fade-in';
+      }
     },
     redirectToSearch() {
-      window.location.href = '/reward/search';
+      this.$router.push('/reward/search');
     },
   },
   mounted() {
@@ -169,7 +193,8 @@ export default {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5); /* 반투명 회색 배경 */
-  z-index: 1000; /* 모달을 다른 요소들 위에 표시 */
+  z-index: 1000;
+  /* 모달을 다른 요소들 위에 표시 */
 }
 
 .modal {

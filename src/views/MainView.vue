@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="event_space">
-      <div style="margin-left: 5px">EVENT</div>
+      <div class="event-info">EVENT</div>
       <div>
         <!-- 이벤트 페이지 -->
         <div class="event_list">
@@ -34,7 +34,7 @@
     </div>
     <button class="review_button">
       <div><img src="@/img/review/pencil.png" alt="Pencil Logo" /></div>
-      <div>Write a Review</div>
+      <div class="review_text">Write a Review</div>
     </button>
   </div>
 </template>
@@ -50,11 +50,6 @@ export default {
 </script>
 
 <style scoped>
-.contents {
-  padding: 0 20px;
-  margin-top: 20px;
-}
-
 .starroad_logo {
   position: relative;
 }
@@ -109,15 +104,27 @@ export default {
 
 .event_space {
   margin: 10px 0;
+  padding-bottom: 60px;
 }
 
-.event_space > div:first-child {
-  width: fit-content;
+.event-info {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.35);
   font-size: 20px;
-  margin-bottom: 10px;
-  border: var(--navy-color) 2px solid;
-  border-radius: 20px;
-  padding: 8px 20px;
+  margin: 8px 0px;
+}
+
+.event-info::before,
+.event-info::after {
+  content: '';
+  flex-grow: 1;
+  background: rgba(0, 0, 0, 0.35);
+  height: 1px;
+  font-size: 0px;
+  line-height: 0px;
+  margin: 0px 16px;
 }
 
 .event_space div {
@@ -127,7 +134,7 @@ export default {
 .event_list div {
   text-align: center;
   border-radius: 20px;
-  size: 100%;
+  height: 100%;
 }
 
 .event_list div img {
@@ -150,10 +157,6 @@ export default {
   justify-content: center;
 }
 
-.review_button div:first-child {
-  margin-right: 10px;
-}
-
 .review_button div {
   font-size: 15px;
 }
@@ -161,5 +164,15 @@ export default {
 .review_button:active {
   box-shadow: none;
   color: var(--mint-color);
+}
+
+.review_text {
+  display: none;
+  margin-left: 10px;
+  transition: all 0.5s;
+}
+
+.review_button:hover .review_text {
+  display: block;
 }
 </style>
