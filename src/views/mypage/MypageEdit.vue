@@ -219,7 +219,7 @@ export default {
         alert('닉네임 중복 체크를 해주세요');
         return;
       }
-      if (this.password !== this.passwordcheck) {
+      if (this.password && this.password !== this.passwordcheck) {
         alert('비밀번호가 일치하지 않습니다');
         return;
       }
@@ -227,8 +227,10 @@ export default {
         const requestData = {
           email: this.email,
           nickname: this.nickname,
-          password: this.password,
         };
+        if (this.password) {
+          requestData.password = this.password;
+        }
         await updateUserProfile(requestData);
         alert('프로필이 성공적으로 업데이트되었습니다');
         this.$router.push('/mypage/main');
