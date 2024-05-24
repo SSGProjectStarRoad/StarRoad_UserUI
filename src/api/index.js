@@ -81,9 +81,17 @@ function rewardAdd(userId) {
     reward_id: today,
   });
 }
-function likeReview(reviewId, userId) {
-  return instance.post(`/review-likes/${reviewId}/${userId}`);
+
+// 리뷰에 좋아요 추가/ 취소 기능 API 호출 함수 
+function likeReview(reviewId, userEmail) {
+  return instance.post(`/review-likes/${reviewId}/${userEmail}`);
 }
+
+// 유저 기준 리뷰에 좋아요가 눌려있는지 체크해주는 API 호출 함수 
+function getUserLikedReveiws(userEmail){
+  return instance.get(`/review-likes/${userEmail}`);
+}
+
 // 백엔드에서 보내는 매장 목록을 받아오는 fetchStoreList 함수를 추가합니다.
 async function fetchStoreList() {
   try {
@@ -95,12 +103,11 @@ async function fetchStoreList() {
 }
 
 
-``
-
-
-async function selectStore(storeId, page = 0, size = 20) {
+async function selectStore(storeId, userEmail, page = 0, size = 20) {
   try {
-    const response = await instance.get(`/store/${storeId}/reviews?page=${page}&size=${size}`);
+    const response = await instance.get(`/store/${storeId}/reviews`, {
+      params: { userEmail, page, size }
+    });
     if (response.status === 200) {
       const storeWithReviewData = response.data;
       console.log(storeWithReviewData);
@@ -273,11 +280,10 @@ export {
   deleteProfileimg,
   getAllReview,
   imageUpload,
-<<<<<<< HEAD
-  likeReview
-=======
+likeReview,
   submitSurvey,
   fetchReviewSelections,
   getFollowingReview,
->>>>>>> 1ba691de40fa0ab131c9266da9235b40edfd42c9
+  getUserLikedReveiws
+
 };
