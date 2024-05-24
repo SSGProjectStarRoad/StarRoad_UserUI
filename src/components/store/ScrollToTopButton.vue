@@ -39,7 +39,7 @@ export default {
 }
 .scroll-to-top-button img{
   width : 15px;
-  heith: 15px;
+  height: 15px;
 }
 .scroll-to-top-button:active {
   box-shadow: none;

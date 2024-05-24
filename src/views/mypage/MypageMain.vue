@@ -9,42 +9,43 @@
       </div>
     </div>
     <div class="current-mall">
-      <div class="mall-name">스타필드 하남</div>
+      <div class="mall-name">스타로드 뱅뱅</div>
       <div class="mall-time">(10:00~22:00)</div>
     </div>
     <div class="myinfo">
       <div class="basic-info">
-        <div class="myname">이수연 님</div>
-        <div class="mylevel">Blue Level</div>
+        <div class="myname">{{ mydata.name }}</div>
+        &nbsp님
+        <div :class="levelClass">{{ levelText }}</div>
       </div>
       <div class="review-follow" @click="goToFollowPage">
         <div class="follower">
           팔로워
-          <div class="follower-num">100</div>
+          <div class="follower-num">{{ follow.followerCount }}</div>
         </div>
         <div class="following">
           팔로잉
-          <div class="following-num">70</div>
+          <div class="following-num">{{ follow.followingCount }}</div>
         </div>
       </div>
       <div class="point-info">
         <div class="point">
           <div class="starroadpoint">STARROAD POINT</div>
-          <div class="mypoint">23</div>
+          <div class="mypoint">{{ mydata.point }}</div>
         </div>
         <div class="charge">
           <div class="pointcharge">POINT CHARGE</div>
-          <div class="qr">QR 넣기?</div>
+          <!-- <div class="qr">QR 넣기?</div> -->
         </div>
       </div>
       <div class="myown">
         <div class="mycoupon" @click="goToCouponPage">
           <div class="ownimg"><img src="@/img/mycoupon.png" alt="" /></div>
-          <div class="text">쿠폰</div>
+          <div class="text">내 쿠폰 보기</div>
         </div>
         <div class="myreview" @click="goToReviewPage">
           <div class="ownimg"><img src="@/img/myreview.png" alt="" /></div>
-          <div class="text">리뷰</div>
+          <div class="text">내 리뷰 보기</div>
         </div>
       </div>
       <div class="mallinfo">
@@ -52,13 +53,9 @@
           <div class="ownimg"><img src="@/img/howto.png" alt="" /></div>
           <div class="text">오시는 길</div>
         </div>
-        <div class="announcement" @click="goToNoticePage">
-          <div class="ownimg"><img src="@/img/howto.png" alt="" /></div>
-          <div class="text">공지사항</div>
-        </div>
         <div class="inquiry">
-          <div class="ownimg"><img src="@/img/howto.png" alt="" /></div>
-          <div class="text">문의하기</div>
+          <div class="title">문의하기</div>
+          <div class="text">ssg@gmail.com</div>
         </div>
       </div>
     </div>
@@ -66,8 +63,50 @@
 </template>
 
 <script>
+import { mypageData, followData } from '@/api/index';
 export default {
+  data() {
+    return {
+      mydata: [],
+      follow: [],
+    };
+  },
+  computed: {
+    levelText() {
+      const reviewExp = this.mydata.reviewExp;
+      if (reviewExp >= 300) return 'Green Level';
+      if (reviewExp >= 100) return 'Yellow Level';
+      return 'Blue Level';
+    },
+    levelClass() {
+      const reviewExp = this.mydata.reviewExp;
+      if (reviewExp >= 300) return 'green-level mylevel';
+      if (reviewExp >= 100) return 'yellow-level mylevel';
+      return 'blue-level mylevel';
+    },
+  },
   methods: {
+    async getMyFollowCount() {
+      try {
+        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await followData(userId);
+        console.log('Response:', response.data);
+        this.follow = response.data;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+    async getMydata() {
+      try {
+        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await mypageData(userId);
+        console.log('Response:', response.data);
+        this.mydata = response.data;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+
     goToEditPage() {
       this.$router.push('/mypage/edit'); // Vue Router를 사용하여 페이지 전환
     },
@@ -80,12 +119,10 @@ export default {
     goToReviewPage() {
       this.$router.push('/mypage/myreview'); // Vue Router를 사용하여 페이지 전환
     },
-    goToNoticePage() {
-      this.$router.push('/mypage/notice'); // Vue Router를 사용하여 페이지 전환
-    },
     goToMallMap() {
       this.$router.push('/store/mallmap');
     },
+
     logoutUser() {
       this.$store
         .dispatch('logout')
@@ -98,6 +135,13 @@ export default {
         });
     },
   },
+
+  },
+  mounted() {
+    this.getMydata();
+    this.getMyFollowCount();
+  },
+
 };
 </script>
 
@@ -130,7 +174,7 @@ export default {
 .mall-time {
   position: relative;
   color: var(--dgray-color);
-  left: 15px;
+  /* left: 15px; */
 }
 .myinfo {
   position: relative;
@@ -139,17 +183,18 @@ export default {
 .basic-info {
   position: relative;
   display: flex;
+  font-size: 23px;
   left: 55px;
 }
 .myname {
   font-size: 23px;
+  /* color: var(--navy-color); */
   font-weight: 900;
 }
 .mylevel {
   width: 90px;
   text-align: center;
   align-content: center;
-  background-color: var(--navy-color);
   color: white;
   border-radius: 8px;
   font-size: 14px;
@@ -171,6 +216,7 @@ export default {
 }
 .follower-num {
   margin-left: 10px;
+  color: var(--navy-color);
 }
 .following {
   display: flex;
@@ -178,6 +224,7 @@ export default {
 }
 .following-num {
   margin-left: 10px;
+  color: var(--navy-color);
 }
 .point-info,
 .myown,
@@ -208,13 +255,31 @@ export default {
 .announcement,
 .inquiry {
   cursor: pointer;
+  color: var(--navy-color);
 }
 .mypoint {
   padding: 30px;
-  color: var(--mint-color);
+  color: var(--navy-color);
   font-size: 30px;
 }
+.inquiry .title {
+  color: black;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
 .qr {
   padding: 30px;
+}
+.blue-level {
+  background-color: var(--navy-color);
+}
+
+.yellow-level {
+  background-color: rgb(235, 235, 0);
+}
+
+.green-level {
+  background-color: var(--mint-color);
 }
 </style>

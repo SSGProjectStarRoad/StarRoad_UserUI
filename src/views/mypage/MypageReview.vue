@@ -1,5 +1,6 @@
 <template>
   <div class="contents">
+    <BackButton class="back-button" />
     <div class="review-main">Review</div>
     <div class="review-sub">나의 리뷰 게시물을 확인하세요!</div>
 

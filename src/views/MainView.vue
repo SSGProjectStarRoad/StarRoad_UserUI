@@ -1,17 +1,17 @@
 <template>
   <div class="contents">
-    <!-- 필요에 따라 back.png 살릴것 -->
-    <!-- <img class="backimg" src="@/img/back.png" alt="" /> -->
-    <div class="starroad_logo">
+    <!-- <div class="starroad_logo">
       <div class="starroad_logo_img"><img src="@/img/telescope_big.png" /></div>
       <div class="starroad_logo_text">Welcome to Star Road</div>
-    </div>
+    </div> -->
     <div class="user_level">
-      <div>My Review</div>
+      <div>My Review Level</div>
       <div class="review_gage">
-        <div class="user_rank">Blue Level</div>
+        <div class="user_rank">{{ levelText }}</div>
         <div class="user_exp">
-          <ProgressBar class="user_progressbar" :progress="72" />
+          <ProgressBar class="user_progressbar" :progress="reviewProgress">
+            <!-- <template #number>{{ reviewExp }} / 300</template> -->
+          </ProgressBar>
         </div>
       </div>
     </div>
@@ -21,7 +21,9 @@
         <!-- 이벤트 페이지 -->
         <div class="event_list">
           <div>
-            <a href="#"><img src="@/img/event_test.png" /></a>
+            <a href="#">
+              <img src="@/img/event_test.png" />
+            </a>
           </div>
           <div>
             <a href="#"><img src="@/img/event_test.png" /></a>
@@ -41,8 +43,49 @@
 
 <script>
 import ProgressBar from '@/components/store/ProgressBar.vue';
+import { mypageData } from '@/api/index';
 
 export default {
+  data() {
+    return {
+      mydata: [],
+    };
+  },
+  methods: {
+    async getMydata() {
+      try {
+        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await mypageData(userId);
+        console.log('Response:', response.data);
+        this.mydata = response.data;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+  },
+  computed: {
+    reviewExp() {
+      return this.mydata.reviewExp || 0;
+    },
+    reviewProgress() {
+      return (this.reviewExp / 300) * 100;
+    },
+    levelText() {
+      const reviewExp = this.mydata.reviewExp;
+      if (reviewExp >= 300) return 'Green';
+      if (reviewExp >= 100) return 'Yellow';
+      return 'Blue';
+    },
+    levelClass() {
+      const reviewExp = this.mydata.reviewExp;
+      if (reviewExp >= 300) return 'green-level user_rank';
+      if (reviewExp >= 100) return 'yellow-level user_rank';
+      return 'blue-level user_rank';
+    },
+  },
+  mounted() {
+    this.getMydata();
+  },
   components: {
     ProgressBar,
   },
@@ -71,6 +114,7 @@ export default {
   padding: 25px;
   border-radius: 20px;
   color: #fff;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
 
 .user_level > div:first-child {
@@ -88,7 +132,7 @@ export default {
 
 .user_rank {
   font-size: 24px;
-  width: 35%;
+  width: 30%;
   margin-right: 20px;
   font-weight: bold;
 }
@@ -113,7 +157,7 @@ export default {
   align-items: center;
   color: rgba(0, 0, 0, 0.35);
   font-size: 20px;
-  margin: 8px 0px;
+  margin: 20px 0px;
 }
 
 .event-info::before,
@@ -128,13 +172,15 @@ export default {
 }
 
 .event_space div {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .event_list div {
   text-align: center;
   border-radius: 20px;
   height: 100%;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  background-color: var(--navy-color);
 }
 
 .event_list div img {
@@ -143,7 +189,7 @@ export default {
 
 .review_button {
   position: fixed;
-  right: calc(50% - 240px);
+  right: calc(55% - 240px);
   top: calc(100% - 120px);
   background-color: var(--navy-color);
   border-radius: 20px;
@@ -155,12 +201,16 @@ export default {
   box-shadow: 2px 2px 3px #00000033;
   display: flex;
   justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .review_button div {
   font-size: 15px;
 }
-
+.review_button div:first-child {
+  margin-right: 0px;
+}
 .review_button:active {
   box-shadow: none;
   color: var(--mint-color);
@@ -174,5 +224,23 @@ export default {
 
 .review_button:hover .review_text {
   display: block;
+}
+.blue-level {
+  background-color: var(--navy-color);
+}
+
+.yellow-level {
+  background-color: rgb(235, 235, 0);
+}
+
+.green-level {
+  background-color: var(--mint-color);
+}
+.number {
+  color: #333;
+  font-weight: bold;
+  margin-left: auto;
+  margin-right: 10px;
+  z-index: 1000; /* z-index를 높게 설정 */
 }
 </style>
