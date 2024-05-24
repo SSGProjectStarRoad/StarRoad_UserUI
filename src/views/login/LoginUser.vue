@@ -157,7 +157,7 @@ export default {
       this.$router.push('/login/forgotpw');
     },
     loginWith(provider) {
-      const baseUrl = 'http://localhost:8081'; // Spring Boot 서버 주소
+      const baseUrl = process.env.VUE_APP_API_URL; // Spring Boot 서버 주소
       window.location.href = `${baseUrl}/oauth2/authorization/${provider}`;
     },
   },
