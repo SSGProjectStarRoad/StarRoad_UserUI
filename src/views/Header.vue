@@ -1,5 +1,7 @@
 <template>
   <div class="header">
+    <BackButton class="back-button" />
+
     <img src="@/img/header_spaceman.png" alt="" />
     <span>STARROAD</span>
   </div>
@@ -9,4 +11,9 @@
 export default {};
 </script>
 
-<style></style>
+<style>
+.back-button {
+  position: absolute;
+  left: 40px;
+}
+</style>

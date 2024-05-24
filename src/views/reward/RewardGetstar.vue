@@ -16,6 +16,7 @@ export default {
     };
   },
   mounted() {
+    this.getReward(); // 페이지 로드 시 getReward 메서드 호출
     setTimeout(() => {
       this.redirectToCompleted();
     }, 3000);
@@ -29,7 +30,7 @@ export default {
       const userId = 1;
       try {
         const response = await rewardAdd(userId);
-        console.log('Response:', this.stars);
+        console.log('Response:', response);
       } catch (error) {
         console.error('Error:', error);
       }
@@ -39,9 +40,6 @@ export default {
       window.location.href = '/reward/completed';
     },
   },
-  mounted() {
-    this.getReward(); // 페이지 로드 시 getReward 메서드 호출
-  },
 };
 </script>
 
@@ -49,7 +47,7 @@ export default {
 h2 {
   display: inline-block;
   position: absolute;
-  color: rgba(0, 0, 0, 0.7);
+  color: var(--dgray-color);
   font-size: 25px;
   top: 350px;
   left: 50%; /* 왼쪽으로부터 50%의 위치에 배치 */
@@ -59,6 +57,9 @@ h2 {
 
 .mystar {
   position: absolute;
+  border-radius: 50%;
+  padding: 20px;
+  box-shadow: 0px 0px 30px var(--navy-color);
   top: 180px;
   left: 50%; /* 왼쪽으로부터 50%의 위치에 배치 */
   transform: translate(-50%, -50%); /* 위치 보정을 위해 변환 사용 */

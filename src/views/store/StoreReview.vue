@@ -1,50 +1,65 @@
 <template>
   <div v-if="storeReview" class="contents">
-    <!-- @@@@이 부분 로고 오는 데이터로 바꿔야함@@@@ -->
-    <img class="store-img" src="@/img/ZARA.png" alt="" />
+
+
+    <img class="store-img" :src="storeReview.imagePath" alt="" />
     <div class="store">
       <h1>{{ storeReview.name }}</h1>
+
       <div class="store-detail">
         <a :href="'tel:' + storeReview.contactNumber" class="store-phone">
           <img src="@/img/phone.png" alt="전화 걸기" />
         </a>
 
         <!-- @@  로케이션 여기도 바꿔야함 @@ -->
-        <img class="store-location" src="@/img/location.png" alt="" />
+
+        <img
+          class="store-location"
+          src="@/img/location.png"
+          alt=""
+          @click="goToguide"
+        />
+
+
         <br />
       </div>
     </div>
     <div class="store-introduce">
       {{ storeReview.contents }}
     </div>
+
+    <p :style="{ 'margin-bottom': '5px', 'padding-left': '10px' }">
+      매장위치 <span class="span-style"> {{ storeReview.floor }}층</span>
+    </p>
     <p :style="{ margin: '0px', 'padding-left': '10px' }">
-      {{ storeReview.floor }} 층 / 영업시간 : {{ storeReview.operatingTime }}
+      영업시간 <span class="span-style">{{ storeReview.operatingTime }}</span>
     </p>
     <div class="store-review">
       <p class="keyword">이런점이 좋았어요!!</p>
-      <div class="c-key">
-        <ProgressBar :progress="72">
-          <template v-slot:text>재벙문 하고 싶어요</template>
-          <template v-slot:number>723</template>
-        </ProgressBar>
-        <ProgressBar :progress="42.3">
-          <template v-slot:text>서비스가 마음에 들어요</template>
-          <template v-slot:number>423</template>
-        </ProgressBar>
-        <ProgressBar :progress="82">
-          <template v-slot:text>가격이 합리적입니다</template>
-          <template v-slot:number>823</template>
-        </ProgressBar>
-        <ProgressBar :progress="5">
-          <template v-slot:text>매장이 청결합니다</template>
-          <template v-slot:number>5</template>
-        </ProgressBar>
-        {{ storeReview.Array }}
+    <div class="c-key">
+      <ProgressBar :progress="(storeReview.revisitCount / totalReviewCount) * 100">
+        <template v-slot:text>재방문 하고 싶어요</template>
+        <template v-slot:number>{{ storeReview.revisitCount }}</template>
+      </ProgressBar>
+      <ProgressBar :progress="(storeReview.serviceSatisfactionCount / totalReviewCount) * 100">
+        <template v-slot:text>서비스가 마음에 들어요</template>
+        <template v-slot:number>{{ storeReview.serviceSatisfactionCount }}</template>
+      </ProgressBar>
+      <ProgressBar :progress="(storeReview.reasonablePriceCount / totalReviewCount) * 100">
+        <template v-slot:text>가격이 합리적입니다</template>
+        <template v-slot:number>{{ storeReview.reasonablePriceCount }}</template>
+      </ProgressBar>
+      <ProgressBar :progress="(storeReview.cleanlinessCount / totalReviewCount) * 100">
+        <template v-slot:text>매장이 청결합니다</template>
+        <template v-slot:number>{{ storeReview.cleanlinessCount }}</template>
+      </ProgressBar>
+   
+
       </div>
     </div>
     <div class="section"></div>
     <div class="s-key">
-      <p class="s-key-title">리뷰 {{ review }} (선택지 검색)</p>
+      <p class="s-key-title">리뷰 {{ totalReviewCount ? totalReviewCount : 0 }} (선택지 검색)</p>
       <div>
         <div class="slide">
           <swiper
@@ -110,99 +125,166 @@
             <label for="likes"></label>좋아요 순
           </p>
         </div>
-        <reviewcard :storeReview="storeReview" />
+        <reviewcard :storeReview="storeReview" :likeReview="likeReview"/>
       </div>
     </div>
     <reviewbutton />
+
+    <scrollToTopButton v-show="showScrollToTopButton" @click="scrollToTop" />
   </div>
 </template>
 <script>
+import {likeReview} from '@/api/index.js';
+import { selectStore } from '@/api/index.js';
+import data from '@/components/review/data.js';
+import reviewcard from '@/components/store/ReviewCard.vue';
 import ProgressBar from '@/components/store/ProgressBar.vue';
 import reviewbutton from '@/components/review/ReviewButton.vue';
+import scrollToTopButton from '@/components/store/ScrollToTopButton.vue';
+
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 
 export default {
   data() {
+
+    const postData = data.timelinePost;
+    console.log('postData:', postData); // 데이터를 콘솔에 출력합니다.
     return {
+      storeReview: { reviews: [] ,commonReviewStats: {}},
+      likeReview,
+      postData,
       review: 1520,
       selectedSort: 'latest',
       phoneNumber: '010-1234-5678',
       buttons: [
-        '종류',
-        '매장',
-        '스타일',
-        '재고',
-        '품질',
-        '품질',
-        '품질',
-        '품질2',
-        '품질',
-        '품질',
-        '품질222',
-        '품질222',
-        '품222',
-        '재고3',
-        '품질',
-        '품질',
-        '품질',
-        '품질4',
-        '품질',
-        '품질5',
-        '품질2622',
-        '품질222',
-        '품222',
-        '재고',
-        '품질',
-        '품질',
-        '품질',
-        '품질',
-        '품질',
-        '품질',
-        '품질222',
-        '품질222',
-        '1111111',
+        '재방문 하고 싶어요',
+        '서비스가 마음에 들어요',
+        '가격이 합리적입니다',
+        '매장이 청결합니다',
       ],
       swiperOptions: {
-        slidesPerView: 'auto', // 기본 설정을 'auto'로 하여 슬라이드가 유연하게 표시되도록 합니다.
+        slidesPerView: 'auto',
         spaceBetween: 5,
         loop: false,
       },
+      showScrollToTopButton: false,
+      currentPage: 0,
+      pageSize: 10,
+      hasNextPage: true,
+      loading: false,
     };
   },
+  computed: {
+    storeId() {
+      return this.$route.params.storeId; 
+    },
+  },
+  async created() {
+    try {
+    const initialData = await selectStore(this.storeId, this.currentPage, this.pageSize);
+    if (initialData) {
+      console.log('Initial data:', initialData); // 데이터를 콘솔에 출력하여 확인합니다.
+      this.storeReview = initialData;
+      this.hasNextPage = initialData.hasNext;
+      this.totalReviewCount = initialData.totalReviewCount || 0;
+      }
+    } catch (error) {
+      console.error('Error fetching store review:', error);
+    }
+  },
   components: {
+    reviewcard,
     ProgressBar,
     Swiper,
     SwiperSlide,
     reviewbutton,
+    scrollToTopButton,
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
+    goToguide() {
+      this.$router.push(`/store/${this.storeReview.id}/guidemap`);
+    },
+
     changeSort() {
       if (this.selectedSort === 'latest') {
-        // 최신순으로 정렬하는 로직
-        console.log('최신순으로 정렬');
+        // 날짜별 최신순으로 정렬
+        this.storeReview.reviews.sort(
+          (a, b) => new Date(b.createDate) - new Date(a.createDate),
+        );
       } else if (this.selectedSort === 'likes') {
-        // 좋아요 순으로 정렬하는 로직
-        console.log('좋아요 순으로 정렬');
+        // 좋아요순으로 정렬
+        this.storeReview.reviews.sort((a, b) => b.likeCount - a.likeCount);
       }
     },
-  },
-  handleScroll() {
-    const scrollPosition =
-      window.pageYOffset || document.documentElement.scrollTop;
-    this.showScrollToTopButton = scrollPosition > 100;
-  },
-  scrollToTop() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    handleScroll() {
+      const scrollPosition =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // 페이지 하단 100px 전에 추가 데이터 요청
+      if (scrollPosition + windowHeight >= documentHeight - 100) {
+        this.loadMoreReviews();
+      }
+
+      this.showScrollToTopButton = scrollPosition > 100;
+    },
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    },
+    async loadMoreReviews() {
+      if (this.loading || !this.hasNextPage) return;
+
+      this.loading = true;
+      try {
+        const nextPage = this.currentPage + 1;
+        const response = await selectStore(this.storeId, nextPage, this.pageSize);
+        if (response && response.reviews) {
+          this.storeReview.reviews = [...this.storeReview.reviews, ...response.reviews];
+          this.currentPage = nextPage;
+          this.hasNextPage = response.hasNext;
+        }
+      } catch (error) {
+        console.error('Error loading more reviews:', error);
+      } finally {
+        this.loading = false;
+      }
+    }
   },
 };
 </script>
 
 <style scoped>
 @import '@/css/common.css';
+
+
+.span-style {
+  margin-left: 10px;
+  color: var(--navy-color);
+}
+
+.store-introduce {
+  color: var(--dgray-color);
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.store-review {
+  margin-top: 40px;
+}
+
 .review-body {
   margin-top: 4%;
   background-image: url('https://picsum.photos/600?random=0');
@@ -270,7 +352,7 @@ export default {
   margin-top: 40px;
 }
 .slide {
-  width: 480px;
+  width: auto;
   position: relative;
   overflow: hidden;
 }
@@ -333,16 +415,17 @@ input[type='radio']:checked + label {
 
 .s-key {
   margin: 16px;
+  margin-top: 30px;
 }
 
 .section {
-  margin-top: 10px;
+  margin-top: 30px;
 }
 
 .section::before {
   content: '';
   display: block;
-  height: 10px;
+  height: 8px;
   width: 100%;
   background-color: var(--gray-color);
 }
@@ -387,7 +470,11 @@ input[type='radio']:checked + label {
 .store-location {
   width: 20px;
   height: 20px;
-  margin-left: 10px;
+  padding: 8px;
+  margin-left: 20px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--dgray-color);
+  cursor: pointer;
 }
 
 .store-phone img {

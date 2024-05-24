@@ -98,13 +98,14 @@ const routes = [
     path: '/reward/completed',
     component: () => import('@/views/reward/RewardCompleted.vue'),
   },
+
   {
     path: '/store/main',
     component: () => import('@/views/store/StoreMain.vue'),
   },
   {
-    path: '/store/come',
-    component: () => import('@/views/store/StoreCome.vue'),
+    path: '/store/:storeId/guidemap',
+    component: () => import('@/views/store/Storeguidemap.vue'),
   },
   {
     path: '/store/mallmap',
@@ -113,7 +114,8 @@ const routes = [
   {
     path: '/store/:storeId/reviews',
     component: () => import('@/views/store/StoreReview.vue'),
-  },
+  }
+  ,
   {
     path: '/store/map',
     component: () => import('@/views/store/StoreMap.vue'),
