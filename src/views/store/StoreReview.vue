@@ -1,5 +1,6 @@
 <template>
   <div v-if="storeReview" class="contents">
+
     <img class="store-img" :src="storeReview.imagePath" alt="" />
     <div class="store">
       <h1>{{ storeReview.name }}</h1>
@@ -10,13 +11,13 @@
 
         <!-- @@  로케이션 여기도 바꿔야함 @@ -->
 
-
         <img
           class="store-location"
           src="@/img/location.png"
           alt=""
           @click="goToguide"
         />
+
         <br />
       </div>
     </div>
@@ -51,7 +52,6 @@
       </ProgressBar>
    
 
->>>>>>> 6469ff4ac46c00fe8a61e2e23fcb61ad7db6410d
       </div>
     </div>
     <div class="section"></div>
