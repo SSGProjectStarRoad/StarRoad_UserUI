@@ -135,10 +135,13 @@ export default {
         });
     },
   },
+
+  
   mounted() {
     this.getMydata();
     this.getMyFollowCount();
   },
+
 };
 </script>
 

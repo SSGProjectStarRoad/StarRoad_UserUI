@@ -42,12 +42,8 @@
       </div>
       <div class="timeline-post-footer _10fm75h6 _10fm75hg _10fm75hj">
         <div class="__post-meta">
-      
-          <span       :class="{ liked: likeStatus[index] }"
-            @click="toggleLike(review,index)"
-            style="cursor: pointer;"
-          >
-            <img :src="likeStatus[index] ? require('@/img/imoji/heart-solid.svg') : require('@/img/imoji/heart-regular.svg')" alt="like" width="18" height="18" />
+          <span :class="{ liked: review.liked }" @click="toggleLike(review, index)" style="cursor: pointer;">
+            <img :src="review.liked ? require('@/img/imoji/heart-solid.svg') : require('@/img/imoji/heart-regular.svg')" alt="like" width="18" height="18" />
             {{ review.likeCount }}
           </span>
         </div>
@@ -55,38 +51,41 @@
     </article>
   </div>
 </template>
-
-
 <script>
 import moment from 'moment';
 import 'moment/locale/ko';
-import { Swiper, SwiperSlide } from 'swiper/vue';
+import {Swiper, SwiperSlide} from 'swiper/vue';
 import 'swiper/swiper-bundle.css';
-import SwiperCore, { Navigation, Pagination } from 'swiper';
-import { likeReview } from '@/api/index.js';
-
+import SwiperCore, {Navigation, Pagination} from 'swiper';
+import {likeReview} from '@/api/index.js';
 
 SwiperCore.use([Navigation, Pagination]);
 
 export default {
   name: 'ReviewCard',
   props: {
-      likeReview:{
-        type:Function,
-        required: true, // 'required'로 수정
-      },
-
+    likeReview: {
+      type: Function,
+      required: true,
+    },
     storeReview: {
       type: Object,
       default: () => ({})
+    },
+    userEmail: {
+      type: String,
+      required: true
+    },
+    getUserLikedReveiws: {
+      type: Function,
+      required: true
     }
   },
   data() {
     return {
-      swiper: null, // Swiper instance
+      swiper: null,
       showPrevButton: false,
       showNextButton: true,
-      likeStatus: [], // Array to track like status for each review
       swiperOptions: {
         slidesPerView: 'auto',
         spaceBetween: 10,
@@ -135,10 +134,8 @@ export default {
     };
   },
   created() {
-    // Initialize likeStatus array
-    this.likeStatus = this.storeReview.reviews.map(() => false);
+    this.initializeLikeStatus();
   },
-
   methods: {
     getFeedbackImage(feedbackText) {
       return this.feedbackImageMap[feedbackText] || require('@/img/imoji/별눈얼굴.png');
@@ -171,30 +168,35 @@ export default {
         this.swiper.slideNext();
       }
     },
-    toggleLike(review,index) {
-  const reviewId = review.id;
-  const userId = review.userId;
-
-  // 로그로 reviewId와 userId를 확인
-  console.log(reviewId);
-  console.log(userId);
-
-  // likeReview 호출
-  likeReview(reviewId, userId)
-    .then(() => {
-      review.isLiked = !review.isLiked;
-      this.likeStatus[index] = review.isLiked; // likestatus 업데이트 
-      if (review.isLiked) {
-        review.likeCount++;
-      } else {
-        review.likeCount--;
-      }
+    initializeLikeStatus() {
+  this.getUserLikedReveiws(this.userEmail)
+    .then(response => {
+      console.log('Liked Review IDs:', response.data);
+      const likedReviewIds = response.data;
+      this.storeReview.reviews.forEach(review => {
+        review.isLiked = likedReviewIds.includes(review.id);
+      });
     })
-        .catch((error) => {
-          console.error('좋아요/취소 실패:', error);
-        });
-    },
-    
+    .catch(error => {
+      console.error('사용자의 좋아요 정보를 불러오는데 실패했습니다', error);
+    });
+}
+,
+toggleLike(review, index) {
+  const reviewId = review.id;
+  const userEmail = this.userEmail;
+
+  this.likeReview(reviewId, userEmail)
+    .then(response => {
+      const { liked, likeCount } = response.data;
+      review.liked = liked;
+      review.likeCount = likeCount;
+    })
+    .catch(error => {
+      console.error('좋아요/취소 실패:', error);
+    });
+}
+
   },
   components: {
     Swiper,
@@ -263,10 +265,10 @@ export default {
 .swiper-button-next {
   right: 10px;
 }
+
 /* New CSS for heart icon */
 .__like.liked:before {
   background-image: url('@/img/review/heart-new.svg');
   background-size: cover;
 }
-
 </style>
