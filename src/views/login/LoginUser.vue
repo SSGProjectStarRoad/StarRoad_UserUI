@@ -16,6 +16,11 @@
             placeholder="이메일을 입력해주세요"
             v-model="email"
           />
+          <p class="validation-text">
+            <span class="warning" v-if="!isEmailValid && email">
+              이메일 주소를 입력해주세요
+            </span>
+          </p>
         </div>
 
         <div class="password-input">
@@ -25,7 +30,6 @@
             placeholder="비밀번호를 입력해주세요"
             v-model="password"
           />
-          <img class="passwordeye" :src="passwordEye" alt="" />
         </div>
 
         <div class="forgot-password" @click="gotoForgotPassword">
@@ -33,19 +37,25 @@
         </div>
 
         <div class="login-input">
-          <input id="loginclear" type="button" value="로그인" />
+          <button
+            id="loginclear"
+            :disabled="!isEmailValid || !password"
+            type="submit"
+          >
+            로그인
+          </button>
         </div>
 
         <div class="sns-login">Or Login with</div>
         <div class="snsimg">
-          <div class="sns">
-            <img class="kakao" :src="kakao" alt="" />
+          <div class="sns" @click="loginWith('kakao')">
+            <img class="kakao" :src="kakao" />
           </div>
-          <div class="sns">
-            <img class="google" :src="google" alt="" />
+          <div class="sns" @click="loginWith('google')">
+            <img class="google" :src="google" />
           </div>
-          <div class="sns">
-            <img class="naver" :src="naver" alt="" />
+          <div class="sns" @click="loginWith('naver')">
+            <img class="naver" :src="naver" />
           </div>
         </div>
       </form>
@@ -59,27 +69,96 @@
 
 <script>
 import loginlogo from '@/img/telescope_big.png';
-import passwordEye from '@/img/login/passwordeye.png';
 import kakao from '@/img/login/kakaologo.png';
 import google from '@/img/login/googlelogo.png';
 import naver from '@/img/login/naverlogo.png';
+import { loginUser } from '@/api/index';
+import { validateEmail } from '@/utils/validation';
+import {
+  saveAccessTokenToCookie,
+  saveRefreshTokenToCookie,
+  saveUserToCookie,
+} from '@/utils/cookies';
 
 export default {
   data() {
     return {
       loginlogo: loginlogo,
-      passwordEye: passwordEye,
       kakao: kakao,
       google: google,
       naver: naver,
+      email: '',
+      password: '',
+      logMessage: '',
     };
   },
+  computed: {
+    isEmailValid() {
+      return validateEmail(this.email);
+    },
+  },
   methods: {
+    async submitForm() {
+      try {
+        const userData = {
+          email: this.email,
+          password: this.password,
+        };
+        const response = await loginUser(userData);
+
+        // 응답 객체를 로그로 출력
+        console.log('API response:', response);
+        // 응답 데이터 로그로 출력
+        console.log('Response data:', response.data);
+
+        if (
+          response.data &&
+          response.data.accessToken &&
+          response.data.refreshToken
+        ) {
+          const { data } = response;
+
+          console.log('Response data:', data);
+          // Vuex Store에 저장
+          this.$store.commit('setEmail', userData.email);
+          this.$store.commit('setAccessToken', data.accessToken);
+          this.$store.commit('setRefreshToken', data.refreshToken);
+          // 쿠키에 저장
+          saveAccessTokenToCookie(data.accessToken);
+          saveRefreshTokenToCookie(data.refreshToken);
+          saveUserToCookie(userData.email);
+          // 메인 페이지로 이동
+          this.$router.push('/main');
+        } else {
+          throw new Error('Invalid API response');
+        }
+      } catch (error) {
+        // Axios 인터셉터가 처리하지 않은 일반적인 오류만 처리합니다.
+        console.error('Login error:', error);
+        if (
+          !error.response ||
+          !error.response.data ||
+          !error.response.data.message
+        ) {
+          alert('An error occurred. Please try again.');
+        }
+      } finally {
+        this.initForm();
+      }
+    },
+    initForm() {
+      this.email = '';
+      this.password = '';
+    },
     gotoRegister() {
       this.$router.push('/login/register');
     },
     gotoForgotPassword() {
       this.$router.push('/login/forgotpw');
+    },
+    loginWith(provider) {
+      const baseUrl = 'http://localhost:8081'; // Spring Boot 서버 주소
+      window.location.href = `${baseUrl}/oauth2/authorization/${provider}`;
     },
   },
 };
@@ -117,6 +196,9 @@ export default {
   position: relative;
   margin-bottom: 10px;
 }
+/* .password-input {
+  margin-top: 25px;
+} */
 #email,
 #password {
   box-sizing: border-box;
@@ -126,6 +208,11 @@ export default {
   background-color: var(--gray-color);
   border: 0;
   padding-left: 10px;
+}
+#email:focus,
+#password:focus {
+  border: 2px solid var(--mint-color) !important;
+  outline: none;
 }
 .passwordeye {
   position: absolute; /* 이미지를 절대 위치로 설정 */
@@ -217,5 +304,15 @@ export default {
   color: var(--mint-color);
   font-weight: bold;
   cursor: pointer;
+}
+.warning {
+  color: #ff4057;
+}
+.validation-text {
+  margin-top: 5px;
+  font-size: 11px;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
 }
 </style>

@@ -2,8 +2,8 @@
   <div class="contents">
     <div class="title">프로필 수정</div>
 
-    <div class="registerform">
-      <form action="">
+    <div class="editform">
+      <form @submit.prevent="updateProfile">
         <div class="profileimg">
           <div v-if="isLoading" class="spinner"></div>
           <img
@@ -17,26 +17,47 @@
         <div class="imgfix" @click="goToEditimgPage">
           <img src="@/img/pencil.png" alt="이미지" />
         </div>
+
         <div class="nicknameinput">
           <input
             id="nickname"
             type="text"
-            placeholder="닉네임을 입력해주세요"
+            :placeholder="nicknamePlaceholder"
             v-model="nickname"
+            @input="validateNickname"
           />
           <div class="nicknamecheck">
-            <input id="nicknamechecking" type="button" value="중복 체크" />
+            <input
+              id="nicknamechecking"
+              type="button"
+              value="중복 체크"
+              @click="checkNickname"
+            />
           </div>
         </div>
+        <p class="validation-text">
+          <span class="warning" v-if="nickname && !isNicknameValid"
+            >3자 이상 10자 이하로 문자(영어, 한국어), 숫자, 특수문자를
+            포함해주세요</span
+          >
+          <span class="warning" v-if="nicknameChecked && nicknameError">{{
+            nicknameError
+          }}</span>
+          <span class="success" v-if="nicknameChecked && !nicknameError">{{
+            nicknameSuccess
+          }}</span>
+        </p>
+
         <div class="emailinput">
           <input
             id="email"
             type="text"
-            placeholder="starroad@gmail.com"
+            :placeholder="email || 'starroad@gmail.com'"
             v-model="email"
             readonly="true"
           />
         </div>
+
         <div class="passwordinput">
           <img class="passwordeye" :src="passwordEye" alt="" />
           <input
@@ -44,8 +65,16 @@
             type="password"
             placeholder="비밀번호를 입력해주세요"
             v-model="password"
+            @input="validatePassword"
           />
         </div>
+        <p class="validation-text">
+          <span class="warning" v-if="password && !isPasswordValid">
+            8자 이상, 숫자, 영문(대/소문자), 특수문자를 각각 하나 이상
+            포함해주세요
+          </span>
+        </p>
+
         <div class="passwordcheckinput">
           <img class="passwordeye" :src="passwordEye" alt="" />
           <input
@@ -53,10 +82,20 @@
             type="password"
             placeholder="비밀번호를 한번 더 입력해주세요"
             v-model="passwordcheck"
+            @input="validatePasswordMatch"
           />
         </div>
+        <p class="validation-text">
+          <span
+            v-if="passwordcheck"
+            :class="{ warning: !isPasswordMatch, success: isPasswordMatch }"
+          >
+            {{ passwordMatchMessage }}
+          </span>
+        </p>
+
         <div class="registerinput">
-          <input id="registerclear" type="button" value="저장하기" />
+          <input id="registerclear" type="submit" value="저장하기" />
         </div>
       </form>
     </div>
@@ -66,6 +105,13 @@
 
 <script>
 import passwordEye from '@/img/login/passwordeye.png';
+import { mapState } from 'vuex';
+import {
+  fetchUserData,
+  updateUserProfile,
+  checkNicknameDuplicate,
+} from '@/api/index';
+import { validateNickname, validatePassword } from '@/utils/validation';
 import basicprofile from '@/img/spaceman_big.png';
 import { readProfileimg } from '@/api/index';
 
@@ -73,9 +119,46 @@ export default {
   data() {
     return {
       passwordEye: passwordEye,
+
+      nickname: '',
+      nicknamePlaceholder: '',
+      password: '',
+      passwordcheck: '',
+      isNicknameChecked: false, // 닉네임 중복 체크 여부
+      nicknameError: '',
+      nicknameSuccess: '',
+      nicknameChecked: false,
+      passwordMatchMessage: '',
       profileImage: basicprofile,
       isLoading: true,
     };
+  },
+  computed: {
+    ...mapState(['email']),
+    isNicknameValid() {
+      return validateNickname(this.nickname);
+    },
+    isPasswordValid() {
+      return validatePassword(this.password);
+    },
+    isPasswordMatch() {
+      return this.password === this.passwordcheck;
+    },
+  },
+  watch: {
+    nickname() {
+      this.validateNickname();
+    },
+    password() {
+      this.validatePassword();
+    },
+    passwordcheck() {
+      this.validatePasswordMatch();
+    },
+  },
+  created() {
+    console.log('Created hook:', this.email);
+    this.loadUserData();
   },
   methods: {
     handleImageLoad() {
@@ -91,6 +174,92 @@ export default {
     goToEditimgPage() {
       this.$router.push('/mypage/editimg'); // Vue Router를 사용하여 페이지 전환
     },
+
+    async loadUserData() {
+      if (!this.email) {
+        console.error('Email is not set');
+        return;
+      }
+      try {
+        const response = await fetchUserData(this.email);
+        const userData = response.data;
+        this.nicknamePlaceholder = userData.nickname;
+        this.nickname = ''; // input 초기화
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    },
+    validateNickname() {
+      this.nicknameChecked = false;
+      if (!validateNickname(this.nickname)) {
+        this.nicknameError =
+          '3자 이상 10자 이하로 문자(영어, 한국어), 숫자, 특수문자를 포함해주세요';
+        this.nicknameSuccess = '';
+      } else {
+        this.nicknameError = '';
+      }
+    },
+    async checkNickname() {
+      this.validateNickname();
+      if (this.nicknameError) {
+        this.nicknameSuccess = '';
+        this.isNicknameChecked = false;
+        return;
+      }
+      try {
+        const response = await checkNicknameDuplicate(this.nickname);
+        this.nicknameChecked = true;
+        if (response.data.isDuplicate) {
+          this.nicknameError = '중복된 닉네임입니다';
+          this.isNicknameChecked = false;
+        } else {
+          this.nicknameSuccess = '사용 가능한 닉네임입니다';
+          this.nicknameError = '';
+          this.isNicknameChecked = true;
+        }
+      } catch (error) {
+        console.error('Error checking nickname:', error);
+        this.nicknameError = '닉네임 중복 체크 중 오류가 발생했습니다';
+        this.isNicknameChecked = false;
+      }
+    },
+    validatePassword() {
+      return validatePassword(this.password);
+    },
+    validatePasswordMatch() {
+      if (this.password === this.passwordcheck) {
+        this.passwordMatchMessage = '비밀번호가 일치합니다';
+      } else {
+        this.passwordMatchMessage = '비밀번호가 일치하지 않습니다';
+      }
+      return this.password === this.passwordcheck;
+    },
+    async updateProfile() {
+      if (!this.isNicknameChecked) {
+        alert('닉네임 중복 체크를 해주세요');
+        return;
+      }
+      if (this.password && this.password !== this.passwordcheck) {
+        alert('비밀번호가 일치하지 않습니다');
+        return;
+      }
+      try {
+        const requestData = {
+          email: this.email,
+          nickname: this.nickname,
+        };
+        if (this.password) {
+          requestData.password = this.password;
+        }
+        await updateUserProfile(requestData);
+        alert('프로필이 성공적으로 업데이트되었습니다');
+        this.$router.push('/mypage/main');
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        alert('프로필 수정에 실패했습니다');
+      }
+    },
+
     async loadImage() {
       try {
         const userid = 1;
@@ -155,7 +324,7 @@ export default {
   width: 60%; /* 이미지의 크기를 .imgfix의 크기에 맞춤 */
   height: auto; /* 비율 유지 */
 }
-.registerform {
+.editform {
   display: flex;
   flex-direction: column;
   align-content: center;
@@ -268,5 +437,18 @@ export default {
   color: var(--mint-color);
   font-weight: 700;
   cursor: pointer;
+}
+.success {
+  color: var(--mint-color);
+}
+.warning {
+  color: #ff4057;
+}
+.validation-text {
+  margin-top: 5px;
+  font-size: 12.5px;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
 }
 </style>

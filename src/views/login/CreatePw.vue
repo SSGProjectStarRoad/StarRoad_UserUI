@@ -3,7 +3,7 @@
     <div></div>
 
     <div class="createpwform">
-      <form @submit.prevent="submitForm">
+      <form @submit.prevent="updatePassword">
         <div class="createpw-message">
           <h2>Create new password?</h2>
         </div>
@@ -17,7 +17,8 @@
             id="password"
             type="password"
             placeholder="새 비밀번호를 입력해주세요"
-            v-model="password"
+            v-model="newPassword"
+            @input="validatePasswordMatch"
           />
           <img class="passwordeye" :src="passwordEye" alt="" />
         </div>
@@ -27,13 +28,27 @@
             id="passwordcheck"
             type="password"
             placeholder="새 비밀번호를 한번 더 입력해주세요"
-            v-model="passwordcheck"
+            v-model="confirmPassword"
+            @input="validatePasswordMatch"
           />
           <img class="passwordeye" :src="passwordEye" alt="" />
         </div>
+        <p class="validation-text">
+          <span
+            v-if="passwordMessage"
+            :class="{ warning: !isPasswordMatch, success: isPasswordMatch }"
+          >
+            {{ passwordMessage }}
+          </span>
+        </p>
 
         <div class="newpw-input">
-          <input id="pwclear" type="button" value="비밀번호 변경" />
+          <input
+            id="pwclear"
+            type="submit"
+            value="비밀번호 변경"
+            @click="updatePassword"
+          />
         </div>
       </form>
     </div>
@@ -42,12 +57,71 @@
 
 <script>
 import passwordEye from '@/img/login/passwordeye.png';
+import { updatePassword } from '@/api/index';
+
+function validateEmail(email) {
+  const re =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\.,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,})$/i;
+  return re.test(String(email).toLowerCase());
+}
 
 export default {
   data() {
     return {
+      newPassword: '',
+      confirmPassword: '',
+      email: '',
+      passwordMessage: '',
+      isPasswordMatch: false,
       passwordEye: passwordEye,
     };
+  },
+  mounted() {
+    const email = this.$route.query.email || '';
+    if (validateEmail(email)) {
+      this.email = email;
+      console.log('Mounted: Email is valid:', this.email);
+    } else {
+      console.error('Mounted: Invalid email:', email);
+    }
+  },
+  methods: {
+    validatePasswordMatch() {
+      if (this.newPassword === this.confirmPassword) {
+        this.passwordMessage = '비밀번호가 일치합니다';
+        this.isPasswordMatch = true;
+      } else {
+        this.passwordMessage = '비밀번호가 일치하지 않습니다';
+        this.isPasswordMatch = false;
+      }
+    },
+    async updatePassword() {
+      if (this.newPassword !== this.confirmPassword) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return;
+      }
+      if (!validateEmail(this.email)) {
+        alert('유효한 이메일 주소를 입력하세요.');
+        return;
+      }
+      try {
+        console.log('Update Password: Email:', this.email); // 이메일 값 확인
+        const response = await updatePassword(this.email, this.newPassword);
+        if (response.status === 200) {
+          alert('비밀번호가 성공적으로 변경되었습니다.');
+          this.$router.push('/login/changepw');
+        } else {
+          alert('비밀번호 변경에 실패했습니다.');
+        }
+      } catch (error) {
+        console.error(error);
+        if (error.response && error.response.data) {
+          alert(error.response.data); // 서버에서 반환된 오류 메시지 표시
+        } else {
+          alert('비밀번호 변경 중 오류가 발생했습니다.');
+        }
+      }
+    },
   },
 };
 </script>
@@ -86,6 +160,11 @@ export default {
   border: 0;
   padding-left: 10px;
 }
+#password:focus,
+#passwordcheck:focus {
+  border: 2px solid var(--mint-color) !important;
+  outline: none;
+}
 .passwordeye {
   position: absolute; /* 이미지를 절대 위치로 설정 */
   top: 50%; /* 상위 요소의 정중앙에서 시작 */
@@ -109,5 +188,18 @@ export default {
   text-align: center; /* 텍스트 중앙 정렬 */
   margin-top: 45px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2); /* 테두리 대신 그림자를 추가합니다. */
+}
+.success {
+  color: var(--mint-color);
+}
+.warning {
+  color: #ff4057;
+}
+.validation-text {
+  margin-top: 5px;
+  font-size: 12.5px;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
 }
 </style>

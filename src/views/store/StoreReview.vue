@@ -7,6 +7,10 @@
         <a :href="'tel:' + storeReview.contactNumber" class="store-phone">
           <img src="@/img/phone.png" alt="전화 걸기" />
         </a>
+
+        <!-- @@  로케이션 여기도 바꿔야함 @@ -->
+
+
         <img
           class="store-location"
           src="@/img/location.png"
@@ -19,6 +23,7 @@
     <div class="store-introduce">
       {{ storeReview.contents }}
     </div>
+
     <p :style="{ 'margin-bottom': '5px', 'padding-left': '10px' }">
       매장위치 <span class="span-style"> {{ storeReview.floor }}층</span>
     </p>
@@ -27,23 +32,26 @@
     </p>
     <div class="store-review">
       <p class="keyword">이런점이 좋았어요!!</p>
-      <div class="c-key">
-        <ProgressBar :progress="(storeReview.revisitCount / totalReviewCount) * 100">
-          <template v-slot:text>재방문 하고 싶어요</template>
-          <template v-slot:number>{{ storeReview.revisitCount }}</template>
-        </ProgressBar>
-        <ProgressBar :progress="(storeReview.serviceSatisfactionCount / totalReviewCount) * 100">
-          <template v-slot:text>서비스가 마음에 들어요</template>
-          <template v-slot:number>{{ storeReview.serviceSatisfactionCount }}</template>
-        </ProgressBar>
-        <ProgressBar :progress="(storeReview.reasonablePriceCount / totalReviewCount) * 100">
-          <template v-slot:text>가격이 합리적입니다</template>
-          <template v-slot:number>{{ storeReview.reasonablePriceCount }}</template>
-        </ProgressBar>
-        <ProgressBar :progress="(storeReview.cleanlinessCount / totalReviewCount) * 100">
-          <template v-slot:text>매장이 청결합니다</template>
-          <template v-slot:number>{{ storeReview.cleanlinessCount }}</template>
-        </ProgressBar>
+    <div class="c-key">
+      <ProgressBar :progress="(storeReview.revisitCount / totalReviewCount) * 100">
+        <template v-slot:text>재방문 하고 싶어요</template>
+        <template v-slot:number>{{ storeReview.revisitCount }}</template>
+      </ProgressBar>
+      <ProgressBar :progress="(storeReview.serviceSatisfactionCount / totalReviewCount) * 100">
+        <template v-slot:text>서비스가 마음에 들어요</template>
+        <template v-slot:number>{{ storeReview.serviceSatisfactionCount }}</template>
+      </ProgressBar>
+      <ProgressBar :progress="(storeReview.reasonablePriceCount / totalReviewCount) * 100">
+        <template v-slot:text>가격이 합리적입니다</template>
+        <template v-slot:number>{{ storeReview.reasonablePriceCount }}</template>
+      </ProgressBar>
+      <ProgressBar :progress="(storeReview.cleanlinessCount / totalReviewCount) * 100">
+        <template v-slot:text>매장이 청결합니다</template>
+        <template v-slot:number>{{ storeReview.cleanlinessCount }}</template>
+      </ProgressBar>
+   
+
+>>>>>>> 6469ff4ac46c00fe8a61e2e23fcb61ad7db6410d
       </div>
     </div>
     <div class="section"></div>
@@ -96,6 +104,7 @@
       </div>
     </div>
     <reviewbutton />
+
     <scrollToTopButton v-show="showScrollToTopButton" @click="scrollToTop" />
   </div>
 </template>
@@ -107,11 +116,16 @@ import reviewcard from '@/components/store/ReviewCard.vue';
 import ProgressBar from '@/components/store/ProgressBar.vue';
 import reviewbutton from '@/components/review/ReviewButton.vue';
 import scrollToTopButton from '@/components/store/ScrollToTopButton.vue';
+
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 
 export default {
   data() {
+
+    const postData = data.timelinePost;
+    console.log('postData:', postData); // 데이터를 콘솔에 출력합니다.
+
     return {
       storeReview: { reviews: [], commonReviewStats: {} },
       likeReview,
@@ -211,6 +225,7 @@ export default {
 </script>
 <style scoped>
 @import '@/css/common.css';
+
 
 .span-style {
   margin-left: 10px;
