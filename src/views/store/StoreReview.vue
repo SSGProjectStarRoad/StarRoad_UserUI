@@ -1,6 +1,7 @@
 <template>
   <div v-if="storeReview" class="contents">
 
+
     <img class="store-img" :src="storeReview.imagePath" alt="" />
     <div class="store">
       <h1>{{ storeReview.name }}</h1>
@@ -11,6 +12,7 @@
         </a>
 
         <!-- @@  로케이션 여기도 바꿔야함 @@ -->
+
         <img
           class="store-location"
           src="@/img/location.png"
@@ -18,12 +20,14 @@
           @click="goToguide"
         />
 
+
         <br />
       </div>
     </div>
     <div class="store-introduce">
       {{ storeReview.contents }}
     </div>
+
     <p :style="{ 'margin-bottom': '5px', 'padding-left': '10px' }">
       매장위치 <span class="span-style"> {{ storeReview.floor }}층</span>
     </p>
@@ -50,6 +54,7 @@
         <template v-slot:number>{{ storeReview.cleanlinessCount }}</template>
       </ProgressBar>
    
+
       </div>
     </div>
     <div class="section"></div>
@@ -124,6 +129,7 @@
       </div>
     </div>
     <reviewbutton />
+
     <scrollToTopButton v-show="showScrollToTopButton" @click="scrollToTop" />
   </div>
 </template>
@@ -135,11 +141,13 @@ import reviewcard from '@/components/store/ReviewCard.vue';
 import ProgressBar from '@/components/store/ProgressBar.vue';
 import reviewbutton from '@/components/review/ReviewButton.vue';
 import scrollToTopButton from '@/components/store/ScrollToTopButton.vue';
+
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 
 export default {
   data() {
+
     const postData = data.timelinePost;
     console.log('postData:', postData); // 데이터를 콘솔에 출력합니다.
     return {
@@ -258,6 +266,7 @@ export default {
 
 <style scoped>
 @import '@/css/common.css';
+
 
 .span-style {
   margin-left: 10px;

@@ -2,7 +2,7 @@
   <div class="contents">
     <div class="title">탈퇴하기</div>
 
-    <div class="registerform">
+    <div class="inactiveform">
       <div class="main-content">
         {{ userName }} 님과 이별인가요? <br />
         너무 아쉬워요...
@@ -10,9 +10,9 @@
       <div class="sub-content">
         계정을 삭제하면 그동안의 모든 활동 정보가 삭제됩니다.
       </div>
-      <form action="">
+      <form @submit.prevent="deactivateAccount">
         <div class="withdraw">
-          <input id="withdraw" type="button" value="탈퇴하기" />
+          <input id="withdraw" type="submit" value="탈퇴하기" />
         </div>
       </form>
     </div>
@@ -20,12 +20,44 @@
 </template>
 
 <script>
-import passwordEye from '@/img/login/passwordeye.png';
+import { inactiveUser } from '@/api/index';
+import store from '@/store/index';
+
 export default {
   data() {
     return {
       userName: '이수연', // 계정 주인의 이름
     };
+  },
+  methods: {
+    async deactivateAccount() {
+      try {
+        const email = this.getEmail();
+        const response = await inactiveUser(email);
+        alert(response.data);
+        // 직접 Vuex 스토어와 쿠키에서 데이터를 제거
+        this.clearUserData();
+        // 로그아웃 처리 또는 리다이렉트
+        this.$router.push('/login');
+      } catch (error) {
+        console.error(error);
+        alert('탈퇴 처리 중 오류가 발생했습니다.');
+      }
+    },
+    getEmail() {
+      // Vuex store에서 이메일 가져오기
+      return store.state.email;
+    },
+    clearUserData() {
+      // Vuex store에서 이메일, 액세스 토큰 및 리프레시 토큰 지우기
+      store.commit('clearEmail');
+      store.commit('clearAccessToken');
+      store.commit('clearRefreshToken');
+      // 쿠키에서 관련 데이터 제거
+      deleteCookie('til_auth');
+      deleteCookie('til_user');
+      deleteCookie('til_refresh');
+    },
   },
 };
 </script>
@@ -54,7 +86,7 @@ export default {
   text-align: left;
 }
 
-.registerform {
+.inactiveform {
   display: flex;
   flex-direction: column;
   align-content: center;
