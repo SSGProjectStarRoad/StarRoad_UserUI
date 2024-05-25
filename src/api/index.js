@@ -83,6 +83,9 @@ function rewardAdd(userId) {
 function likeReview(reviewId, userId) {
   return instance.post(`/review-likes/${reviewId}/${userId}`);
 }
+
+
+
 // 백엔드에서 보내는 매장 목록을 받아오는 fetchStoreList 함수를 추가합니다.
 async function fetchStoreList() {
   try {
@@ -92,12 +95,11 @@ async function fetchStoreList() {
     throw new Error('Error fetching store list: ' + error.message);
   }
 }
-
-async function selectStore(storeId, page = 0, size = 20) {
+async function selectStore(storeId, userEmail, page = 0, size = 10, filter = '') {
   try {
-    const response = await instance.get(
-      `/store/${storeId}/reviews?page=${page}&size=${size}`,
-    );
+    const response = await instance.get(`/store/${storeId}/reviews`, {
+      params: { userEmail, page, size, filter }
+    });
     if (response.status === 200) {
       const storeWithReviewData = response.data;
       console.log(storeWithReviewData);
@@ -344,17 +346,9 @@ export {
   deleteProfileimg,
   getAllReview,
   imageUpload,
-<<<<<<< HEAD
-
+  
   likeReview,
   submitSurvey,
   fetchReviewSelections,
   getFollowingReview,
-
-=======
-  likeReview
-  submitSurvey,
-  fetchReviewSelections,
-  getFollowingReview,
->>>>>>> a5103d131043e1862c779f6692e63911d5432ee3
 };

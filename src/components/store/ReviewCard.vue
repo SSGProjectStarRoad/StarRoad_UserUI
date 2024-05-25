@@ -62,7 +62,7 @@ import {likeReview} from '@/api/index.js';
 SwiperCore.use([Navigation, Pagination]);
 
 export default {
-  name: 'ReviewCard',
+  name: 'reviewCard',
   props: {
     likeReview: {
       type: Function,
@@ -76,10 +76,7 @@ export default {
       type: String,
       required: true
     },
-    getUserLikedReveiws: {
-      type: Function,
-      required: true
-    }
+ 
   },
   data() {
     return {
@@ -133,9 +130,9 @@ export default {
       }
     };
   },
-  created() {
-    this.initializeLikeStatus();
-  },
+  // created() {
+  //   this.initializeLikeStatus();
+  // },
   methods: {
     getFeedbackImage(feedbackText) {
       return this.feedbackImageMap[feedbackText] || require('@/img/imoji/별눈얼굴.png');
@@ -168,20 +165,20 @@ export default {
         this.swiper.slideNext();
       }
     },
-    initializeLikeStatus() {
-  this.getUserLikedReveiws(this.userEmail)
-    .then(response => {
-      console.log('Liked Review IDs:', response.data);
-      const likedReviewIds = response.data;
-      this.storeReview.reviews.forEach(review => {
-        review.isLiked = likedReviewIds.includes(review.id);
-      });
-    })
-    .catch(error => {
-      console.error('사용자의 좋아요 정보를 불러오는데 실패했습니다', error);
-    });
-}
-,
+//     initializeLikeStatus() {
+//   this.getUserLikedReviews(this.userEmail)
+//     .then(response => {
+//       console.log('Liked Review IDs:', response.data);
+//       const likedReviewIds = response.data;
+//       this.storeReview.reviews.forEach(review => {
+//         review.liked = likedReviewIds.includes(review.id);
+//       });
+//     })
+//     .catch(error => {
+//       console.error('사용자의 좋아요 정보를 불러오는데 실패했습니다', error);
+//     });
+// }
+// ,
 toggleLike(review, index) {
   const reviewId = review.id;
   const userEmail = this.userEmail;
