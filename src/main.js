@@ -6,9 +6,7 @@ import BackButton from './components/Backbutton.vue';
 
 const app = createApp(App);
 
-// 프로덕션 환경에서 Vue DevTools를 활성화
-if (process.env.VUE_APP_ENABLE_DEVTOOLS === 'true') {
-  app.config.devtools = true;
-}
+// Vue DevTools를 상시 활성화
+app.config.devtools = true;
 
 app.component('BackButton', BackButton).use(store).use(router).mount('#app');
