@@ -71,4 +71,5 @@ jobs:
             docker rm vue_frontend || true
             docker run -d -p 80:3000 --name vue_frontend \
               -e VUE_APP_API_URL=${{ secrets.VUE_APP_API_URL }} \
+              -e VUE_APP_DEVTOOLS=true \
               ${{ env.DOCKER_IMAGE_NAME }}:latest
