@@ -3,21 +3,21 @@ function saveAccessTokenToCookie(value) {
   // document.cookie = `til_auth=${value}`;
   document.cookie = `til_auth=${value}; path=/; expires=${new Date(
     new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
-  ).toUTCString()}; SameSite=None; Secure`;
+  ).toUTCString()}; SameSite=None;`;
 }
 // 사용자 이메일을 쿠키에 저장
 function saveUserToCookie(value) {
   // document.cookie = `til_user=${value}`;
   document.cookie = `til_user=${value}; path=/; expires=${new Date(
     new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
-  ).toUTCString()}; SameSite=None; Secure`;
+  ).toUTCString()}; SameSite=None;`;
 }
 // 리프레시 토큰을 쿠키에 저장
 function saveRefreshTokenToCookie(value) {
   // document.cookie = `til_refresh=${value}`;
   document.cookie = `til_refresh=${value}; path=/; expires=${new Date(
     new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
-  ).toUTCString()}; SameSite=None; Secure`;
+  ).toUTCString()}; SameSite=None;`;
 }
 
 // 쿠키에서 액세스 토큰을 가져옴
