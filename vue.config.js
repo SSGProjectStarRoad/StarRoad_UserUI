@@ -1,5 +1,5 @@
 module.exports = {
-  productionSourceMap: false,
+  productionSourceMap: true,
   lintOnSave: false,
   devServer: {
     client: {
