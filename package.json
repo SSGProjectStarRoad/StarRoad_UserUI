@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --mode development",
-    "build": "vue-cli-service build --mode production",
+    "build": "vue-cli-service build --mode development",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
@@ -16,7 +16,8 @@
     "vue": "^3.4.23",
     "vue-click-outside": "^1.1.0",
     "vue-router": "^4.3.2",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

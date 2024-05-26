@@ -1,5 +1,6 @@
 // HTTP 요청을 보내기 위해 'axios' 라이브러리를 가져옵니다.
 import axios from 'axios';
+// import store from '@/store/index';
 
 // './common/interceptors' 모듈에서 'setInterceptors' 함수를 가져옵니다.
 import { setInterceptors } from './common/interceptors';
@@ -11,7 +12,6 @@ function createInstance() {
     baseURL: process.env.VUE_APP_API_URL, // 인스턴스의 기본 URL을 설정합니다.
     withCredentials: true,
   });
-
   // 인터셉터를 인스턴스에 적용합니다.
   return setInterceptors(instance);
 }
@@ -27,8 +27,6 @@ function rewardStart(userId) {
 
   // 특정 사용자의 보상 프로세스를 시작하는 요청 URL을 로깅합니다.
   console.log('Request URL:', `/reward-process/${userId}/start`);
-
-
 
   // 사용자의 보상 프로세스를 시작하기 위해 GET 요청을 보냅니다.
   return instance.get(`/reward-process/${userId}/start`);
@@ -82,6 +80,9 @@ function rewardAdd(userId) {
   });
 }
 
+function likeReview(reviewId, userId) {
+  return instance.post(`/review-likes/${reviewId}/${userId}`);
+}
 // 백엔드에서 보내는 매장 목록을 받아오는 fetchStoreList 함수를 추가합니다.
 async function fetchStoreList() {
   try {
@@ -94,7 +95,9 @@ async function fetchStoreList() {
 
 async function selectStore(storeId, page = 0, size = 20) {
   try {
-    const response = await instance.get(`/store/${storeId}/reviews?page=${page}&size=${size}`);
+    const response = await instance.get(
+      `/store/${storeId}/reviews?page=${page}&size=${size}`,
+    );
     if (response.status === 200) {
       const storeWithReviewData = response.data;
       console.log(storeWithReviewData);
@@ -105,6 +108,64 @@ async function selectStore(storeId, page = 0, size = 20) {
   } catch (error) {
     console.error('오류:', error);
   }
+}
+
+// 다른 모듈에서 접근할 수 있도록 함수들을 내보냅니다.
+
+// 로그인 API
+function loginUser(userData) {
+  return instance.post('/user/login', userData);
+}
+// 회원가입 API
+function registerUser(userData) {
+  return instance.post('/user/join', userData);
+}
+// 닉네임 중복 검사 API
+function checkNicknameDuplicate(nickname) {
+  return instance.post('/user/join/nickname-check', { nickname });
+}
+// 이메일 중복 검사 API
+function checkEmailDuplicate(email) {
+  return instance.post('/user/join/email-check', { email });
+}
+// 이메일 인증 코드 전송 API
+function sendAuthCode(email) {
+  return instance.post('/auth/send-code', { email });
+}
+// 이메일 인증 코드 검증 API
+function verifyAuthCode(email, code) {
+  return instance.post('/auth/verify-code', { email, code });
+}
+// 비밀번호 업데이트 API
+function updatePassword(email, newPassword) {
+  return instance.post('/user/update-password', {
+    email: email,
+    newPassword: newPassword,
+  });
+}
+// OAuth2 로그인 API
+function loginWithOAuth2(provider, code) {
+  return instance.post(`/oauth2/${provider}`, { code });
+}
+// 사용자 정보를 가져오는 API
+function fetchUserData(email) {
+  return instance.post('/user/details', { email });
+}
+// 사용자 프로필 업데이트 API
+function updateUserProfile(profileData) {
+  return instance.post('/user/update-profile', profileData);
+}
+// 액세스 토큰을 새로 발급받는 API
+function getNewAccessToken(refreshToken) {
+  return instance.post('/api/token/access-token', { refreshToken });
+}
+// 로그아웃 API
+function logoutUser(logoutData) {
+  return instance.post('/user/logout', logoutData);
+}
+// 사용자 비활성화 API
+function inactiveUser(email) {
+  return instance.post('/user/inactive', { email });
 }
 
 async function getAllReview(page = 0, size = 20) {
@@ -124,7 +185,9 @@ async function getAllReview(page = 0, size = 20) {
 
 async function getFollowingReview(id = 1, page = 0, size = 20) {
   try {
-    const response = await instance.get(`/reviews/following?id=${id}&page=${page}&size=${size}`);
+    const response = await instance.get(
+      `/reviews/following?id=${id}&page=${page}&size=${size}`,
+    );
     if (response.status === 200) {
       const ReviewData = response.data;
       console.log(ReviewData);
@@ -151,7 +214,8 @@ async function imageUpload(imageFile) {
     console.log('업로드 성공:', response);
     alert('이미지 업로드 성공!');
     return response;
-  } catch (error) { // try 블록 내에서 발생하는 예외를 캐치합니다.
+  } catch (error) {
+    // try 블록 내에서 발생하는 예외를 캐치합니다.
     console.error('업로드 실패:', error);
     alert('이미지 업로드 실패');
   }
@@ -189,7 +253,7 @@ async function submitSurvey(surveyData) {
     for (let pair of surveyData.entries()) {
       console.log(pair[0] + ': ' + pair[1]);
     }
-    console.log("data 확인 완료");
+    console.log('data 확인 완료');
     // axios를 사용하여 서버에 데이터를 POST 방식으로 보냅니다.
     const response = await instance.post('/reviews/submit', surveyData, {
       headers: {
@@ -208,7 +272,7 @@ async function submitSurvey(surveyData) {
 async function fetchReviewSelections(shopName) {
   try {
     const response = await instance.post('/review-selections/selection', {
-      shopName: shopName
+      shopName: shopName,
     });
     console.log('Review Selections:', response.data);
     return response.data;
@@ -259,6 +323,19 @@ export {
   rewardAdd,
   fetchStoreList,
   selectStore,
+  loginUser,
+  registerUser,
+  checkNicknameDuplicate,
+  checkEmailDuplicate,
+  sendAuthCode,
+  verifyAuthCode,
+  updatePassword,
+  loginWithOAuth2,
+  fetchUserData,
+  updateUserProfile,
+  getNewAccessToken,
+  logoutUser,
+  inactiveUser,
   storeguide,
   mypageData,
   followData,

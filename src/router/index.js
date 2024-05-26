@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { RewardProcessCheck, resetStatus, rewardFinish } from '@/api/index';
+import store from '@/store/index';
+
 const routes = [
   {
     path: '/',
@@ -9,6 +11,7 @@ const routes = [
   {
     path: '/main',
     component: () => import('@/views/MainView.vue'),
+    meta: { auth: true },
   },
   {
     path: '/review/main',
@@ -111,8 +114,7 @@ const routes = [
   {
     path: '/store/:storeId/reviews',
     component: () => import('@/views/store/StoreReview.vue'),
-  }
-  ,
+  },
   {
     path: '/store/map',
     component: () => import('@/views/store/StoreMap.vue'),
@@ -120,6 +122,7 @@ const routes = [
   {
     path: '/mypage/main',
     component: () => import('@/views/mypage/MypageMain.vue'),
+    meta: { auth: true },
   },
   {
     path: '/mypage/notice',
@@ -177,6 +180,18 @@ const routes = [
     path: '/login/changepw',
     component: () => import('@/views/login/ChangePw.vue'),
   },
+  {
+    path: '/login/oauth2/code/google',
+    component: () => import('@/views/login/OAuth2Callback.vue'),
+  },
+  {
+    path: '/login/oauth2/code/kakao',
+    component: () => import('@/views/login/OAuth2Callback.vue'),
+  },
+  {
+    path: '/login/oauth2/code/naver',
+    component: () => import('@/views/login/OAuth2Callback.vue'),
+  },
 
   // 추가적인 라우트...
 ];
@@ -184,6 +199,15 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.auth && !store.getters.isLogin) {
+    console.log('인증이 필요합니다'); // auth가 true인 경우
+    next('/login');
+    return;
+  }
+  next();
 });
 
 export default router;

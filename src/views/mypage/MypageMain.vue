@@ -1,7 +1,12 @@
 <template>
   <div class="contents">
-    <div class="setting" @click="goToEditPage">
-      <img src="@/img/setting.png" alt="" />
+    <div class="img">
+      <div class="setting" @click="goToEditPage">
+        <img src="@/img/setting.png" alt="" />
+      </div>
+      <div class="logout" @click="logoutUser">
+        <img src="@/img/logout.png" alt="" />
+      </div>
     </div>
     <div class="current-mall">
       <div class="mall-name">스타로드 뱅뱅</div>
@@ -117,21 +122,44 @@ export default {
     goToMallMap() {
       this.$router.push('/store/mallmap');
     },
+
+    logoutUser() {
+      this.$store
+        .dispatch('logout')
+        .then(() => {
+          this.$router.push('/login');
+        })
+        .catch(error => {
+          console.error('Failed to logout', error);
+          this.$router.push('/mypage/main');
+        });
+    },
   },
+
+  
   mounted() {
     this.getMydata();
     this.getMyFollowCount();
   },
+
 };
 </script>
 
 <style scoped>
-.setting {
+.img {
+  display: flex;
+}
+.setting,
+.logout {
   position: relative;
   left: 90%;
   cursor: pointer;
 }
-.setting img {
+.setting {
+  margin-right: 5px;
+}
+.setting img,
+.logout img {
   width: 30px;
 }
 

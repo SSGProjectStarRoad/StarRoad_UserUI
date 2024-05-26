@@ -31,7 +31,7 @@
           <div class="post-date">{{ formatRelativeDate(review.createDate) }}</div>
         </div>
         <div class="post-content">
-          <div id="post-content1_2650757">{{ review.contents }}</div>
+          <div id="post-content1_2650757">{{ review.contents }} </div>
         </div>
         <div class="feedback-icons">
           <span v-for="(feedback, index) in review.reviewFeedbacks" :key="index" class="feedback">
@@ -42,33 +42,48 @@
       </div>
       <div class="timeline-post-footer _10fm75h6 _10fm75hg _10fm75hj">
         <div class="__post-meta">
-          <span class="__like la3t9m0" style="transform: none">{{ review.likeCount }}</span>
+          <span :class="{ liked: review.liked }" @click="toggleLike(review, index)" style="cursor: pointer;">
+            <img :src="review.liked ? require('@/img/imoji/heart-solid.svg') : require('@/img/imoji/heart-regular.svg')" alt="like" width="18" height="18" />
+            {{ review.likeCount }}
+          </span>
         </div>
       </div>
     </article>
   </div>
 </template>
-
 <script>
 import moment from 'moment';
 import 'moment/locale/ko';
-import { Swiper, SwiperSlide } from 'swiper/vue';
+import {Swiper, SwiperSlide} from 'swiper/vue';
 import 'swiper/swiper-bundle.css';
-import SwiperCore, { Navigation, Pagination } from 'swiper';
+import SwiperCore, {Navigation, Pagination} from 'swiper';
+import {likeReview} from '@/api/index.js';
 
 SwiperCore.use([Navigation, Pagination]);
 
 export default {
   name: 'ReviewCard',
   props: {
+    likeReview: {
+      type: Function,
+      required: true,
+    },
     storeReview: {
       type: Object,
       default: () => ({})
+    },
+    userEmail: {
+      type: String,
+      required: true
+    },
+    getUserLikedReveiws: {
+      type: Function,
+      required: true
     }
   },
   data() {
     return {
-      swiper: null, // Swiper instance
+      swiper: null,
       showPrevButton: false,
       showNextButton: true,
       swiperOptions: {
@@ -84,16 +99,7 @@ export default {
           clickable: true,
         },
       },
-      feedbackImageMap: {}
-    };
-  },
-  async created() {
-    this.feedbackImageMap = await this.fetchFeedbackImageMap();
-  },
-  methods: {
-    async fetchFeedbackImageMap() {
-      // 여기에 백엔드 API 호출 로직을 추가하세요. 현재는 예제 데이터입니다.
-      return {
+      feedbackImageMap: {
         '재방문 하고싶어요': require('@/img/imoji/박수.png'),
         '매장이 넓어요': require('@/img/imoji/별.png'),
         '제품이 신선해요': require('@/img/imoji/별.png'),
@@ -124,13 +130,14 @@ export default {
         '특색 있는 제품이 많아요': require('@/img/imoji/더블하트.png'),
         'A/S가 세심해요': require('@/img/imoji/AS.png'),
         '아이들이 좋아해요': require('@/img/imoji/키즈.png')
-      };
-    },
-    getFeedbackImage(feedbackText) {
-      if (!feedbackText) {
-        console.error('Invalid feedback text:', feedbackText);
-        return require('@/img/imoji/별눈얼굴.png');
       }
+    };
+  },
+  created() {
+    this.initializeLikeStatus();
+  },
+  methods: {
+    getFeedbackImage(feedbackText) {
       return this.feedbackImageMap[feedbackText] || require('@/img/imoji/별눈얼굴.png');
     },
     formatRelativeDate(date) {
@@ -160,7 +167,36 @@ export default {
       if (this.swiper) {
         this.swiper.slideNext();
       }
-    }
+    },
+    initializeLikeStatus() {
+  this.getUserLikedReveiws(this.userEmail)
+    .then(response => {
+      console.log('Liked Review IDs:', response.data);
+      const likedReviewIds = response.data;
+      this.storeReview.reviews.forEach(review => {
+        review.isLiked = likedReviewIds.includes(review.id);
+      });
+    })
+    .catch(error => {
+      console.error('사용자의 좋아요 정보를 불러오는데 실패했습니다', error);
+    });
+}
+,
+toggleLike(review, index) {
+  const reviewId = review.id;
+  const userEmail = this.userEmail;
+
+  this.likeReview(reviewId, userEmail)
+    .then(response => {
+      const { liked, likeCount } = response.data;
+      review.liked = liked;
+      review.likeCount = likeCount;
+    })
+    .catch(error => {
+      console.error('좋아요/취소 실패:', error);
+    });
+}
+
   },
   components: {
     Swiper,
@@ -169,9 +205,16 @@ export default {
 };
 </script>
 
+
 <style scoped>
 @import '@/css/review/review.css';
-
+.timeline-post-footer .__post-meta > span::before {
+  content: none;
+}
+.timeline-post-footer .__post-meta > span {
+  margin: 0;
+  padding: 0;
+}
 .feedback-icons {
   display: flex;
   flex-wrap: wrap;
@@ -221,5 +264,11 @@ export default {
 
 .swiper-button-next {
   right: 10px;
+}
+
+/* New CSS for heart icon */
+.__like.liked:before {
+  background-image: url('@/img/review/heart-new.svg');
+  background-size: cover;
 }
 </style>
