@@ -13,6 +13,7 @@
           alt=""
           @click="goToguide"
         />
+
         <br />
       </div>
     </div>
@@ -29,6 +30,7 @@
     <div class="store-review">
       <p class="keyword">이런점이 좋았어요!!</p>
       <div class="c-key">
+
         <ProgressBar 
           :progress="(storeReview.revisitCount / totalReviewCount) * 100"
           @filter="filterReviews"
@@ -37,6 +39,7 @@
           <template v-slot:text>재방문 하고 싶어요</template>
           <template v-slot:number>{{ storeReview.revisitCount }}</template>
         </ProgressBar>
+
         <ProgressBar 
           :progress="(storeReview.serviceSatisfactionCount / totalReviewCount) * 100"
           @filter="filterReviews"
@@ -65,7 +68,9 @@
     </div>
     <div class="section"></div>
     <div class="s-key">
-      <p class="s-key-title">리뷰 {{ totalReviewCount ? totalReviewCount : 0 }} (선택지 검색)</p>
+      <p class="s-key-title">
+        리뷰 {{ totalReviewCount ? totalReviewCount : 0 }} (선택지 검색)
+      </p>
       <div>
         <div class="slide">
           <swiper
@@ -108,6 +113,7 @@
             <label for="likes"></label>좋아요 순
           </p>
         </div>
+
         <reviewcard 
           :storeReview="filteredReviews" 
           :likeReview="likeReview" 
@@ -138,6 +144,7 @@ export default {
       likeReview,
       userEmail: 'choijh9023@naver.com',
       selectedSort: 'latest',
+
       selectedButton: null,
       buttons: ['재방문 하고 싶어요', '서비스가 마음에 들어요', '가격이 합리적입니다', '매장이 청결합니다'],
       swiperOptions: {
@@ -159,7 +166,9 @@ export default {
   },
   async created() {
     try {
+
       await this.loadReviews();
+
     } catch (error) {
       console.error('Error fetching store review:', error);
     }
@@ -178,7 +187,9 @@ export default {
     },
     changeSort() {
       if (this.selectedSort === 'latest') {
+
         this.filteredReviews.reviews.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+
       } else if (this.selectedSort === 'likes') {
         this.filteredReviews.reviews.sort((a, b) => b.likeCount - a.likeCount);
       }
@@ -214,7 +225,8 @@ export default {
       }
     },
     handleScroll() {
-      const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollPosition =
+        window.pageYOffset || document.documentElement.scrollTop;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
@@ -232,14 +244,16 @@ export default {
 
       this.loading = true;
       try {
+
         this.currentPage += 1;
         await this.loadReviews();
+
       } catch (error) {
         console.error('Error loading more reviews:', error);
       } finally {
         this.loading = false;
       }
-    }
+    },
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);

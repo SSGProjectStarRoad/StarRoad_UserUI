@@ -346,7 +346,6 @@ export {
   deleteProfileimg,
   getAllReview,
   imageUpload,
-  
   likeReview,
   submitSurvey,
   fetchReviewSelections,
