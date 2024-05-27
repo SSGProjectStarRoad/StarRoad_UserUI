@@ -63,11 +63,12 @@ export default createStore({
     },
     async logout({ state, commit }) {
       try {
-        await logoutUser({
+        const logoutData = {
           email: state.email,
           accessToken: state.accessToken,
-          refreshToken: state.refreshToken,
-        });
+        };
+        console.log('Logout data:', logoutData); // 로그아웃 데이터 출력
+        await logoutUser(logoutData);
         commit('clearEmail');
         commit('clearAccessToken');
         commit('clearRefreshToken');

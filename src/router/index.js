@@ -42,7 +42,7 @@ const routes = [
     path: '/reward/main',
     component: () => import('@/views/reward/RewardMain.vue'),
     beforeEnter: async (to, from, next) => {
-      const email = store.getters.userEmail;
+      const email = store.getters.email;
       // const userId = 1; // 사용자 ID 설정
       try {
         const response = await RewardProcessCheck(email);
