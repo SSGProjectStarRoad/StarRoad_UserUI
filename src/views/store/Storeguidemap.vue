@@ -37,7 +37,7 @@ export default {
     async fetchStoreInfo(storeId) {
       try {
         // Axios를 사용하여 매장 정보를 서버로부터 요청합니다.
-        const response = await axios.get(`${process.env.VUE_APP_API_URL}store/${storeId}/guidemap`);
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/store/${storeId}/guidemap`);
         // 서버로부터 받은 매장 정보를 store 데이터 프로퍼티에 할당합니다.
         this.store = response.data;
       } catch (error) {
