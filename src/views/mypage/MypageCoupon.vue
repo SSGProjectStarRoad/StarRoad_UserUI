@@ -51,11 +51,11 @@ export default {
     };
   },
   computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
     availableCouponsCount() {
       return this.coupons.filter(coupon => !coupon.coupon_usage_status).length;
     },
-    ...mapState(['email']),
-    ...mapGetters(['isLogin']),
   },
   methods: {
     async myCouponList() {
