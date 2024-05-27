@@ -17,11 +17,16 @@
 
 <script>
 import { rewardList } from '@/api/index';
+import { mapState, mapGetters } from 'vuex';
 export default {
   data() {
     return {
       stars: [],
     };
+  },
+  computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
   },
   methods: {
     getImageUrl(rewardId) {
@@ -32,7 +37,7 @@ export default {
     async getRewardList() {
       try {
         // const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
-        const response = await rewardList(email);
+        const response = await rewardList(this.email);
         this.stars = response.data.map(item => ({
           rewardId: item.reward_id,
           rewardName: item.reward_name, // API의 JSON 키와 일치하도록 수정

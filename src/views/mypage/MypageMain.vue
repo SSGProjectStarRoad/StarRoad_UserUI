@@ -17,6 +17,7 @@
         <div class="myname">{{ mydata.name }}</div>
         &nbsp님
         <div :class="levelClass">{{ levelText }}</div>
+        <div class="mynickname">{{ mydata.nickname }}</div>
       </div>
       <div class="review-follow" @click="goToFollowPage">
         <div class="follower">
@@ -191,6 +192,12 @@ export default {
   font-size: 23px;
   /* color: var(--navy-color); */
   font-weight: 900;
+}
+.mynickname {
+  position: absolute;
+  top: 30px;
+  font-size: 14px;
+  color: var(--dgray-color);
 }
 .mylevel {
   width: 90px;
