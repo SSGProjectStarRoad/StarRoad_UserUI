@@ -41,6 +41,7 @@
 
 <script>
 import basicprofile from '@/img/spaceman_big.png';
+import { mapState, mapGetters } from 'vuex';
 import {
   uploadProfileimg,
   readProfileimg,
@@ -54,6 +55,10 @@ export default {
       isLoading: true,
       basicprofile,
     };
+  },
+  computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
   },
   methods: {
     handleImageLoad() {
@@ -88,8 +93,8 @@ export default {
       formData.append('file', this.selectedFile);
 
       try {
-        const userid = 1;
-        const response = await uploadProfileimg(userid, formData, {
+        // const userid = 1;
+        const response = await uploadProfileimg(this.email, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -105,8 +110,8 @@ export default {
     },
     async deleteImage() {
       try {
-        const userid = 1;
-        await deleteProfileimg(userid);
+        // const userid = 1;
+        await deleteProfileimg(this.email);
         alert('이미지가 성공적으로 삭제되었습니다.');
         this.profileImage = this.basicprofile; // 기본 이미지로 리셋
       } catch (error) {
@@ -117,8 +122,8 @@ export default {
     async loadImage() {
       try {
         this.isLoading = true; // 이미지 로드 시작 시 로딩 상태 설정
-        const userid = 1;
-        const response = await readProfileimg(userid);
+        // const userid = 1;
+        const response = await readProfileimg(this.email);
         this.profileImage = response.data || this.basicprofile;
         console.log('Loaded Image URL:', this.profileImage);
         this.isLoading = false; // 이미지가 로드되었으므로 로딩 상태를 해제

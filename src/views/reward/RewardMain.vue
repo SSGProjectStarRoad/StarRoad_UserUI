@@ -19,12 +19,18 @@
 
 <script>
 import { rewardStart } from '@/api/index';
+import { mapState, mapGetters } from 'vuex';
+
 export default {
+  computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
+  },
   methods: {
     async goToSelect() {
       try {
-        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
-        const response = await rewardStart(userId);
+        // const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await rewardStart(this.email);
         console.log('Response:', response.data);
         this.$router.push('/reward/select');
       } catch (error) {

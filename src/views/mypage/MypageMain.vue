@@ -64,6 +64,7 @@
 
 <script>
 import { mypageData, followData } from '@/api/index';
+import { mapState, mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -72,6 +73,8 @@ export default {
     };
   },
   computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
     levelText() {
       const reviewExp = this.mydata.reviewExp;
       if (reviewExp >= 300) return 'Green Level';
@@ -88,8 +91,8 @@ export default {
   methods: {
     async getMyFollowCount() {
       try {
-        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
-        const response = await followData(userId);
+        // const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await followData(this.email);
         console.log('Response:', response.data);
         this.follow = response.data;
       } catch (error) {
@@ -98,8 +101,8 @@ export default {
     },
     async getMydata() {
       try {
-        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
-        const response = await mypageData(userId);
+        // const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await mypageData(this.email);
         console.log('Response:', response.data);
         this.mydata = response.data;
       } catch (error) {
@@ -136,12 +139,10 @@ export default {
     },
   },
 
-  
   mounted() {
     this.getMydata();
     this.getMyFollowCount();
   },
-
 };
 </script>
 
