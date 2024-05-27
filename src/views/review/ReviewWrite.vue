@@ -87,13 +87,8 @@ export default {
     this.paymentType = this.$route.query.paymentType || '';
     this.approvalNumber = this.$route.query.approvalNumber || '';
     this.purchaseDate = this.$route.query.purchaseDate || '';
-    this.shopName = this.$route.query.shopName || '';
-    this.paymentType = this.$route.query.paymentType || '';
-    // approvalNumber가 필요하다면, confirmReceipt에서 이를 보내는 로직 추가 필요
-    // this.approvalNumber = this.$route.query.approvalNumber || ''; 
-    this.purchaseDate = this.$route.query.selectedDate || '';
     this.selectedTime = this.$route.query.selectedTime || '';
-    this.fetchSurveyOptions(); // fetchSurveyOptions 메서드 호출
+    this.fetchSurveyOptions();
   },
   computed: {
     currentLength() {
@@ -110,7 +105,7 @@ export default {
           this.surveyOptions = response.map(selection => ({
             text: selection, selected: false
           }));
-          console.log("surveyOptions updated:", this.surveyOptions); // 추가된 로그
+          console.log("surveyOptions updated:", this.surveyOptions);
         }
         else {
           console.error('Review selections not found in the response.');
@@ -123,7 +118,14 @@ export default {
       const files = event.target.files;
       const maxFiles = 3;
 
-      if (files.length > maxFiles) {
+      // 현재 업로드된 이미지의 개수를 확인
+      const currentImageCount = this.uploadedImages.length;
+
+      // 추가로 선택된 이미지 파일 개수를 확인
+      const newFilesCount = files.length;
+
+      // 현재 업로드된 이미지 개수와 추가로 선택된 이미지 파일 개수의 합이 최대 개수를 초과할 경우 경고 메시지 표시
+      if (currentImageCount + newFilesCount > maxFiles) {
         alert(`최대 ${maxFiles}개까지 선택할 수 있습니다.`);
         event.target.value = '';
         return;
@@ -138,9 +140,8 @@ export default {
           img.src = reader.result;
           img.onload = () => {
             const resizedImage = this.resizeImage(img);
-            this.uploadedImages.push({ preview: resizedImage });
+            this.uploadedImages.push({ file, preview: resizedImage.toDataURL() });
           };
-          console.log("uploadimages : " + this.uploadedImages);
         };
       }
     },
@@ -156,70 +157,56 @@ export default {
       }
     },
     resizeImage(img) {
-      const MAX_SIZE = 357.85;
+      const canvas = document.createElement('canvas');
+      const max_size = 357.85;
 
       let width = img.width;
       let height = img.height;
-      let ratio = 1;
 
       if (width > height) {
-        ratio = MAX_SIZE / width;
+        if (width > max_size) {
+          height *= max_size / width;
+          width = max_size;
+        }
       } else {
-        ratio = MAX_SIZE / height;
+        if (height > max_size) {
+          width *= max_size / height;
+          height = max_size;
+        }
       }
 
-      width *= ratio;
-      height *= ratio;
-
-      const canvas = document.createElement('canvas');
       canvas.width = width;
       canvas.height = height;
 
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
 
-      return canvas.toDataURL('image/jpeg');
+      return canvas;
     },
     async confirmUpload() {
       try {
-        // 선택된 필수 설문과 선택 설문 항목들을 필터링해서 배열로 만듭니다.
-        const selectedEssentialItems = this.surveyEssential.filter(item => item.selected).map(item => item.text);
-        const selectedOptionalItems = this.surveyOptions.filter(item => item.selected).map(item => item.text);
-
-        // FormData 객체를 생성합니다.
         const formData = new FormData();
 
-        // 리뷰 데이터를 하나의 객체로 묶습니다.
+        // 리뷰 데이터 객체 생성
         const reviewData = {
           userNickname: this.userNickname,
           contents: this.reviewText,
           shopName: this.shopName,
-          // paymentType: this.paymentType,
           paymentNum: this.approvalNumber,
           purchaseDate: this.purchaseDate,
           selectedTime: this.selectedTime,
           surveyData: {
-            essential: selectedEssentialItems,
-            optional: selectedOptionalItems
+            essential: this.surveyEssential.filter(item => item.selected).map(item => item.text),
+            optional: this.surveyOptions.filter(item => item.selected).map(item => item.text)
           }
         };
 
-        // 리뷰 데이터를 문자열화하여 FormData에 추가합니다.
         formData.append('review', JSON.stringify(reviewData));
 
-        this.uploadedImages.forEach((image, index) => {
-
-          // 이미지 데이터를 File 객체로 변환
-          const imageFile = new File([image.preview], `image_${index}.jpg`);
-
-          // FormData에 File로 첨부
-          formData.append('images', imageFile);
+        // 업로드할 이미지 파일 추가
+        this.uploadedImages.forEach((image) => {
+          formData.append('images', image.file);
         });
-
-        // FormData의 내용을 확인합니다.
-        for (let pair of formData.entries()) {
-          console.log(pair[0] + ': ' + pair[1]);
-        }
 
         // submitSurvey 함수를 호출하여 FormData를 전송합니다.
         const response = await submitSurvey(formData);
@@ -240,6 +227,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 @import "@/css/review/review.css";
 

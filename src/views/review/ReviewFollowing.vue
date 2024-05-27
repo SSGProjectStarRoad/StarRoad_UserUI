@@ -102,16 +102,19 @@
 
     <div v-if="reviews === null">로딩 중...</div>
     <div v-else-if="reviews.length === 0">데이터가 없습니다.</div>
-    <reviewcard :reviews="reviews" />
+    <reviewcard :reviews="reviews"
+    :userEmail="userEmail"
+    />
 
     <ReviewButton />
   </div>
 </template>
 
 <script>
-import { getFollowingReview } from '@/api/index';
+import { getFollowingReview, fetchUserData } from '@/api/index';
 import ReviewButton from "@/components/review/ReviewButton.vue";
 import reviewcard from '@/components/review/ReviewCard.vue';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   data() {
@@ -122,6 +125,14 @@ export default {
       pageSize: 10,
       hasNextPage: true,
       loading: false,
+      userEmail: 'ekmbjh@naver.com',
+    }
+  },
+  computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
+    userEmailComputed() {
+      return this.email; // Vuex 스토어의 email을 userEmailComputed로 매핑합니다.
     }
   },
   components: {
@@ -130,7 +141,7 @@ export default {
   },
   async created() {
     try {
-      const initialData = await getFollowingReview(this.id, this.currentPage, this.pageSize);
+      const initialData = await getFollowingReview(this.userEmail, this.currentPage, this.pageSize);
       if (initialData) {
         console.log('Initial data:', initialData); // 데이터를 콘솔에 출력하여 확인합니다.
         this.reviews = initialData.reviews;
