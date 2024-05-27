@@ -114,7 +114,6 @@ import {
 import { validateNickname, validatePassword } from '@/utils/validation';
 import basicprofile from '@/img/spaceman_big.png';
 import { readProfileimg } from '@/api/index';
-import { mapState, mapGetters } from 'vuex';
 
 export default {
   data() {
