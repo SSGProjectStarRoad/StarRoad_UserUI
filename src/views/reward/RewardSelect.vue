@@ -219,6 +219,7 @@ export default {
               '0 0 20px rgba(0, 0, 0, 0.5)';
             activeSlide.style.transform = 'scale(1.4)'; // 활성 슬라이드 스케일 증가
             activeSlide.style.zIndex = 1; // 활성 슬라이드를 앞으로
+            activeSlide.style.pointerEvents = 'auto';
             // 이전과 이후 슬라이드 스타일을 조정할 수 있습니다.
             // 예를 들어 this.slides[this.activeIndex + 1]으로 다음 슬라이드를 찾을 수 있습니다.
           },
@@ -283,6 +284,7 @@ export default {
   transition: transform 0.3s ease-in-out;
   max-height: 260px;
   margin: 10px;
+  pointer-events: none;
 }
 .rewardcard .swiper-container {
   /* overflow: hidden; */

@@ -105,7 +105,7 @@
 
 <script>
 import passwordEye from '@/img/login/passwordeye.png';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import {
   fetchUserData,
   updateUserProfile,
