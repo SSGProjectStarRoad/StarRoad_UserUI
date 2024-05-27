@@ -46,12 +46,11 @@
       </div>
       <div class="timeline-post-footer _10fm75h6 _10fm75hg _10fm75hj">
         <div class="__post-meta">
-          <span class="__like la3t9m0" style="transform: none">{{ review.likeCount }}</span>
-        </div>
-        <div class="_1vfgwok0">
-          <button type="button" class="_1vfgwok1">
-            <span class="_1e99eu30">MORE</span>
-          </button>
+          <span :class="{ liked: review.liked }" @click="toggleLike(review, index)" style="cursor: pointer;">
+            <img :src="review.liked ? require('@/img/imoji/heart-solid.svg') : require('@/img/imoji/heart-regular.svg')"
+              alt="like" width="18" height="18" />
+            {{ review.likeCount }}
+          </span>
         </div>
       </div>
     </article>
@@ -60,6 +59,7 @@
 
 <script>
 import moment from 'moment';
+import {likeReview} from '@/api/index.js';
 
 export default {
   name: 'ReviewCard',
@@ -67,7 +67,11 @@ export default {
     reviews: {
       type: Array,
       default: () => []
-    }
+    },
+    userEmail: {
+      type: String,
+      required: true
+    },
   },
   async created() {
     this.feedbackImageMap = await this.fetchFeedbackImageMap();
@@ -121,6 +125,20 @@ export default {
       }
       return this.feedbackImageMap[feedbackText] || require('@/img/imoji/별눈얼굴.png');
     },
+    toggleLike(review, index) {
+      const reviewId = review.id;
+      const userEmail = this.userEmail;
+
+      likeReview(reviewId, userEmail)
+        .then(response => {
+          const { liked, likeCount } = response.data;
+          review.liked = liked;
+          review.likeCount = likeCount;
+        })
+        .catch(error => {
+          console.error('좋아요/취소 실패:', error);
+        });
+    },
   }
 };
 </script>
@@ -131,7 +149,8 @@ export default {
 .feedback-icons {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px; /* 아이콘과 텍스트 간격 조정 */
+  gap: 8px;
+  /* 아이콘과 텍스트 간격 조정 */
 }
 
 .feedback {

@@ -174,9 +174,15 @@ function inactiveUser(email) {
   return instance.post('/user/inactive', { email });
 }
 
-async function getAllReview(page = 0, size = 20) {
+async function getAllReview(
+  userEmail,
+  page = 0,
+  size = 10,
+) {
   try {
-    const response = await instance.get(`/reviews?page=${page}&size=${size}`);
+    const response = await instance.get(`/reviews`, {
+      params: { userEmail, page, size },
+    });
     if (response.status === 200) {
       const ReviewData = response.data;
       console.log(ReviewData);
@@ -189,10 +195,16 @@ async function getAllReview(page = 0, size = 20) {
   }
 }
 
-async function getFollowingReview(id = 1, page = 0, size = 20) {
+async function getFollowingReview(
+  userEmail,
+  page = 0,
+  size = 10,
+) {
   try {
     const response = await instance.get(
-      `/reviews/following?id=${id}&page=${page}&size=${size}`,
+      `/reviews/following`, {
+      params: { userEmail, page, size },
+    }
     );
     if (response.status === 200) {
       const ReviewData = response.data;
