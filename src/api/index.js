@@ -167,7 +167,11 @@ function getNewAccessToken(refreshToken) {
 }
 // 로그아웃 API
 function logoutUser(logoutData) {
-  return instance.post('/user/logout', logoutData);
+  return instance.post('/user/logout', logoutData, {
+    headers: {
+      Authorization: `Bearer ${logoutData.accessToken}`,
+    },
+  });
 }
 // 사용자 비활성화 API
 function inactiveUser(email) {
