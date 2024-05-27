@@ -135,6 +135,7 @@ export default {
   },
   computed: {
     ...mapState(['email']),
+    ...mapGetters(['isLogin']),
     isNicknameValid() {
       return validateNickname(this.nickname);
     },
@@ -262,8 +263,8 @@ export default {
 
     async loadImage() {
       try {
-        const userid = 1;
-        const response = await readProfileimg(userid);
+        // const userid = 1;
+        const response = await readProfileimg(this.email);
         this.profileImage = response.data || basicprofile;
         console.log('Loaded Image URL:', this.profileImage);
         this.isLoading = false;

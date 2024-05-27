@@ -20,6 +20,9 @@ export default createStore({
     isLogin(state) {
       return state.email !== '';
     },
+    email(state) {
+      return state.email;
+    },
   },
   mutations: {
     setEmail(state, email) {

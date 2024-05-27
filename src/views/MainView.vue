@@ -44,7 +44,7 @@
 <script>
 import ProgressBar from '@/components/store/ProgressBar.vue';
 import { mypageData } from '@/api/index';
-
+import { mapState, mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -54,8 +54,8 @@ export default {
   methods: {
     async getMydata() {
       try {
-        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
-        const response = await mypageData(userId);
+        // const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await mypageData(this.email);
         console.log('Response:', response.data);
         this.mydata = response.data;
       } catch (error) {
@@ -64,6 +64,8 @@ export default {
     },
   },
   computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
     reviewExp() {
       return this.mydata.reviewExp || 0;
     },
