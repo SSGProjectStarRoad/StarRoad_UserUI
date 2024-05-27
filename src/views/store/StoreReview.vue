@@ -7,9 +7,6 @@
         <a :href="'tel:' + storeReview.contactNumber" class="store-phone">
           <img src="@/img/phone.png" alt="전화 걸기" />
         </a>
-
-        <!-- @@  로케이션 여기도 바꿔야함 @@ -->
-
         <img
           class="store-location"
           src="@/img/location.png"
@@ -33,34 +30,36 @@
     <div class="store-review">
       <p class="keyword">이런점이 좋았어요!!</p>
       <div class="c-key">
-        <ProgressBar
+
+        <ProgressBar 
           :progress="(storeReview.revisitCount / totalReviewCount) * 100"
+          @filter="filterReviews"
+          :isClicked="selectedButton === '재방문 하고 싶어요'"
         >
           <template v-slot:text>재방문 하고 싶어요</template>
           <template v-slot:number>{{ storeReview.revisitCount }}</template>
         </ProgressBar>
-        <ProgressBar
-          :progress="
-            (storeReview.serviceSatisfactionCount / totalReviewCount) * 100
-          "
+
+        <ProgressBar 
+          :progress="(storeReview.serviceSatisfactionCount / totalReviewCount) * 100"
+          @filter="filterReviews"
+          :isClicked="selectedButton === '서비스가 마음에 들어요'"
         >
           <template v-slot:text>서비스가 마음에 들어요</template>
-          <template v-slot:number>{{
-            storeReview.serviceSatisfactionCount
-          }}</template>
+          <template v-slot:number>{{ storeReview.serviceSatisfactionCount }}</template>
         </ProgressBar>
-        <ProgressBar
-          :progress="
-            (storeReview.reasonablePriceCount / totalReviewCount) * 100
-          "
+        <ProgressBar 
+          :progress="(storeReview.reasonablePriceCount / totalReviewCount) * 100"
+          @filter="filterReviews"
+          :isClicked="selectedButton === '가격이 합리적입니다'"
         >
           <template v-slot:text>가격이 합리적입니다</template>
-          <template v-slot:number>{{
-            storeReview.reasonablePriceCount
-          }}</template>
+          <template v-slot:number>{{ storeReview.reasonablePriceCount }}</template>
         </ProgressBar>
-        <ProgressBar
+        <ProgressBar 
           :progress="(storeReview.cleanlinessCount / totalReviewCount) * 100"
+          @filter="filterReviews"
+          :isClicked="selectedButton === '매장이 청결합니다'"
         >
           <template v-slot:text>매장이 청결합니다</template>
           <template v-slot:number>{{ storeReview.cleanlinessCount }}</template>
@@ -85,12 +84,12 @@
             :grabCursor="true"
             :resistanceRatio="0.6"
           >
-            <swiper-slide
-              v-for="button in buttons"
-              :key="button"
-              style="width: auto"
-            >
-              <button class="d-button">{{ button }}</button>
+            <swiper-slide v-for="button in buttons" :key="button" style="width: auto">
+              <button 
+                class="d-button" 
+                :class="{ active: selectedButton === button }" 
+                @click="filterReviews(button)"
+              >{{ button }}</button>
             </swiper-slide>
           </swiper>
         </div>
@@ -114,49 +113,40 @@
             <label for="likes"></label>좋아요 순
           </p>
         </div>
-        <reviewcard
-          :storeReview="storeReview"
-          :likeReview="likeReview"
-          :getUserLikedReveiws="getUserLikedReveiws"
-          :userEmail="userEmail"
+
+        <reviewcard 
+          :storeReview="filteredReviews" 
+          :likeReview="likeReview" 
+          :userEmail="userEmail" 
         />
       </div>
     </div>
     <reviewbutton />
-
     <scrollToTopButton v-show="showScrollToTopButton" @click="scrollToTop" />
   </div>
 </template>
 
 <script>
-import { getUserLikedReveiws, likeReview, selectStore } from '@/api/index.js';
+import { likeReview, selectStore } from '@/api/index.js';
 import data from '@/components/review/data.js';
 import reviewcard from '@/components/store/ReviewCard.vue';
 import ProgressBar from '@/components/store/ProgressBar.vue';
 import reviewbutton from '@/components/review/ReviewButton.vue';
 import scrollToTopButton from '@/components/store/ScrollToTopButton.vue';
-
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 
 export default {
   data() {
-    const postData = data.timelinePost;
-    console.log('postData:', postData); // 데이터를 콘솔에 출력합니다.
-
     return {
       storeReview: { reviews: [], commonReviewStats: {} },
+      filteredReviews: { reviews: [], commonReviewStats: {} },
       likeReview,
-      getUserLikedReveiws,
-      userEmail: 'hklee@example.com', // 여기에 로그인한 사용자의 이메일을 설정합니다.
-      postData: data.timelinePost,
+      userEmail: 'choijh9023@naver.com',
       selectedSort: 'latest',
-      buttons: [
-        '재방문 하고 싶어요',
-        '서비스가 마음에 들어요',
-        '가격이 합리적입니다',
-        '매장이 청결합니다',
-      ],
+
+      selectedButton: null,
+      buttons: ['재방문 하고 싶어요', '서비스가 마음에 들어요', '가격이 합리적입니다', '매장이 청결합니다'],
       swiperOptions: {
         slidesPerView: 'auto',
         spaceBetween: 5,
@@ -176,17 +166,9 @@ export default {
   },
   async created() {
     try {
-      const initialData = await selectStore(
-        this.storeId,
-        this.userEmail,
-        this.currentPage,
-        this.pageSize,
-      );
-      if (initialData) {
-        this.storeReview = initialData;
-        this.hasNextPage = initialData.hasNext;
-        this.totalReviewCount = initialData.totalReviewCount || 0;
-      }
+
+      await this.loadReviews();
+
     } catch (error) {
       console.error('Error fetching store review:', error);
     }
@@ -199,23 +181,47 @@ export default {
     reviewbutton,
     scrollToTopButton,
   },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll);
-  },
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
-  },
   methods: {
     goToguide() {
       this.$router.push(`/store/${this.storeReview.id}/guidemap`);
     },
     changeSort() {
       if (this.selectedSort === 'latest') {
-        this.storeReview.reviews.sort(
-          (a, b) => new Date(b.createDate) - new Date(a.createDate),
-        );
+
+        this.filteredReviews.reviews.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+
       } else if (this.selectedSort === 'likes') {
-        this.storeReview.reviews.sort((a, b) => b.likeCount - a.likeCount);
+        this.filteredReviews.reviews.sort((a, b) => b.likeCount - a.likeCount);
+      }
+    },
+    async filterReviews(button) {
+      if (this.selectedButton === button) {
+        // 버튼을 재클릭하면 필터링을 해제하고 원래 데이터를 복구합니다.
+        this.selectedButton = null;
+      } else {
+        this.selectedButton = button;
+      }
+      // 필터링된 데이터를 로드합니다.
+      this.currentPage = 0;
+      await this.loadReviews();
+    },
+    async loadReviews() {
+      this.loading = true;
+      try {
+        const response = await selectStore(this.storeId, this.userEmail, this.currentPage, this.pageSize, this.selectedButton);
+        if (this.currentPage === 0) {
+          this.storeReview = response;
+          this.filteredReviews = response; // 초기에는 모든 리뷰를 표시합니다.
+        } else {
+          this.storeReview.reviews = [...this.storeReview.reviews, ...response.reviews];
+          this.filteredReviews.reviews = [...this.filteredReviews.reviews, ...response.reviews];
+        }
+        this.hasNextPage = response.hasNext;
+        this.totalReviewCount = response.totalReviewCount || 0;
+      } catch (error) {
+        console.error('Error loading more reviews:', error);
+      } finally {
+        this.loading = false;
       }
     },
     handleScroll() {
@@ -238,21 +244,10 @@ export default {
 
       this.loading = true;
       try {
-        const nextPage = this.currentPage + 1;
-        const response = await selectStore(
-          this.storeId,
-          this.userEmail,
-          nextPage,
-          this.pageSize,
-        );
-        if (response && response.reviews) {
-          this.storeReview.reviews = [
-            ...this.storeReview.reviews,
-            ...response.reviews,
-          ];
-          this.currentPage = nextPage;
-          this.hasNextPage = response.hasNext;
-        }
+
+        this.currentPage += 1;
+        await this.loadReviews();
+
       } catch (error) {
         console.error('Error loading more reviews:', error);
       } finally {
@@ -260,8 +255,15 @@ export default {
       }
     },
   },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
 };
 </script>
+
 <style scoped>
 @import '@/css/common.css';
 
@@ -289,20 +291,24 @@ export default {
   background-position: center;
   background-size: cover;
 }
+
 .review-content {
   padding-left: 15px;
   padding-right: 15px;
   font-size: 14px;
 }
+
 .review-date {
   font-size: 13px;
   color: grey;
   margin-top: -8px;
 }
+
 .user-header {
   height: 30px;
   padding: 10px;
 }
+
 .review-Data {
   width: 100%;
   height: 100%;
@@ -312,11 +318,12 @@ export default {
   margin-bottom: 1%;
   margin-top: 1%;
 }
+
 .review-data::before {
   background-color: var(--gray-color);
 }
-.review-content {
-}
+
+.review-content {}
 
 .user-profile {
   background-image: url('https://picsum.photos/100?random=0');
@@ -326,6 +333,7 @@ export default {
   border-radius: 50%;
   float: left;
 }
+
 .user-name {
   display: block;
   padding-left: 15%;
@@ -348,6 +356,7 @@ export default {
   /* min-height: 100vh; */
   margin-top: 40px;
 }
+
 .slide {
   width: auto;
   position: relative;
@@ -383,8 +392,9 @@ export default {
   white-space: nowrap;
 }
 
-.d-button:hover {
+.d-button.active {
   background-color: var(--mint-color);
+  color: black;
 }
 
 input[type='radio'] {

@@ -1,5 +1,9 @@
 <template>
-  <div class="progress-bar">
+  <div 
+    class="progress-bar" 
+    :class="{ clicked: isClicked }" 
+    @click="handleClick"
+  >
     <div class="progress" :style="{ width: progress + '%' }"></div>
     <div class="text">
       <slot name="text"></slot>
@@ -15,9 +19,23 @@ export default {
   props: {
     progress: {
       type: Number,
-      required: true,
+      required: true
     },
+    isClicked: {
+      type: Boolean,
+      default: false
+    }
   },
+  methods: {
+    handleClick() {
+      const textSlot = this.$slots.text ? this.$slots.text()[0] : null;
+      if (textSlot && textSlot.children) {
+        this.$emit('filter', textSlot.children.trim());
+      } else {
+        console.error('Text slot is not defined or does not contain text');
+      }
+    }
+  }
 };
 </script>
 
@@ -33,6 +51,11 @@ export default {
   display: flex;
   align-items: center;
   box-shadow: 2px 2px 3px #00000033;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.progress-bar.clicked {
+  background-color: var(--navy-color);
 }
 .progress {
   position: absolute;
