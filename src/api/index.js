@@ -178,11 +178,7 @@ function inactiveUser(email) {
   return instance.post('/user/inactive', { email });
 }
 
-async function getAllReview(
-  userEmail,
-  page = 0,
-  size = 10,
-) {
+async function getAllReview(userEmail, page = 0, size = 10) {
   try {
     const response = await instance.get(`/reviews`, {
       params: { userEmail, page, size },
@@ -199,17 +195,11 @@ async function getAllReview(
   }
 }
 
-async function getFollowingReview(
-  userEmail,
-  page = 0,
-  size = 10,
-) {
+async function getFollowingReview(userEmail, page = 0, size = 10) {
   try {
-    const response = await instance.get(
-      `/reviews/following`, {
+    const response = await instance.get(`/reviews/following`, {
       params: { userEmail, page, size },
-    }
-    );
+    });
     if (response.status === 200) {
       const ReviewData = response.data;
       console.log(ReviewData);
@@ -273,8 +263,8 @@ async function submitSurvey(surveyData) {
     // axios를 사용하여 서버에 데이터를 POST 방식으로 보냅니다.
     const response = await instance.post('/reviews/submit', surveyData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        'Content-Type': 'multipart/form-data',
+      },
     });
 
     console.log('설문 제출 성공:', response);
@@ -329,6 +319,12 @@ function readProfileimg(email) {
 function deleteProfileimg(email) {
   return instance.delete(`/user/profile/delete/img/${email}`);
 }
+function getEventList() {
+  return instance.get(`/board/list`);
+}
+function getEventDetail(boardId) {
+  return instance.get(`/board-image/content/${boardId}`);
+}
 
 export {
   rewardStart,
@@ -372,4 +368,6 @@ export {
   submitSurvey,
   fetchReviewSelections,
   getFollowingReview,
+  getEventList,
+  getEventDetail,
 };
