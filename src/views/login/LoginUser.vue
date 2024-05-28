@@ -157,6 +157,7 @@ export default {
       this.$router.push('/login/forgotpw');
     },
     loginWith(provider) {
+
       const combineURLs = (baseURL, relativeURL) => {
         return (
           baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
@@ -165,6 +166,7 @@ export default {
       const baseUrl = process.env.VUE_APP_API_URL;
       const url = combineURLs(baseUrl, `/oauth2/authorization/${provider}`);
       window.location.href = url;
+
     },
   },
 };

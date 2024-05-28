@@ -21,32 +21,32 @@ const instance = createInstance();
 
 // Reward API
 // 특정 사용자의 보상 프로세스를 시작하는 함수입니다.
-function rewardStart(userId) {
+function rewardStart(email) {
   // 환경 변수에서 가져온 기본 URL을 로깅합니다.
   console.log('Base URL:', process.env.VUE_APP_API_URL);
 
   // 특정 사용자의 보상 프로세스를 시작하는 요청 URL을 로깅합니다.
-  console.log('Request URL:', `/reward-process/${userId}/start`);
+  console.log('Request URL:', `/reward-process/${email}/start`);
 
   // 사용자의 보상 프로세스를 시작하기 위해 GET 요청을 보냅니다.
-  return instance.get(`/reward-process/${userId}/start`);
+  return instance.get(`/reward-process/${email}/start`);
 }
 
-function issueCouponAPI(userId, couponId) {
+function issueCouponAPI(email, couponId) {
   // 특정 사용자와 쿠폰 ID에 대한 쿠폰 발급 시도를 로깅합니다.
-  console.log('Attempting to issue coupon:', { userId, couponId });
+  console.log('Attempting to issue coupon:', { email, couponId });
 
   // 사용자에게 쿠폰을 발급하기 위해 POST 요청을 보냅니다.
   return instance.post(`/coupon/issue`, {
-    userId,
+    email,
     couponId,
   });
 }
 
 // 사용자의 쿠폰 목록을 검색하는 함수입니다.
-function myCouponList(userId) {
+function myCouponList(email) {
   // 사용자의 쿠폰 목록을 검색하기 위해 GET 요청을 보냅니다.
-  return instance.get(`/coupon/${userId}/coupon/list`);
+  return instance.get(`/coupon/${email}/coupon/list`);
 }
 
 // 쿠폰을 사용 처리하는 함수입니다.
@@ -55,27 +55,27 @@ function CouponUse(couponHistoryId) {
   return instance.get(`/coupon-history/${couponHistoryId}/use`);
 }
 
-function RewardProcessCheck(userId) {
-  return instance.get(`/reward-process/${userId}/get`);
+function RewardProcessCheck(email) {
+  return instance.get(`/reward-process/${email}/get`);
 }
 
-function ReviewCount(userId) {
-  return instance.patch(`/reward-process/${userId}/review`);
+function ReviewCount(email) {
+  return instance.patch(`/reward-process/${email}/review`);
 }
 
-function resetStatus(userId) {
-  return instance.patch(`/reward-process/${userId}/new`);
+function resetStatus(email) {
+  return instance.patch(`/reward-process/${email}/new`);
 }
-function rewardFinish(userId) {
-  return instance.patch(`/reward-process/${userId}/completed`);
+function rewardFinish(email) {
+  return instance.patch(`/reward-process/${email}/completed`);
 }
-function rewardList(userId) {
-  return instance.get(`/reward-history/user/${userId}/list`);
+function rewardList(email) {
+  return instance.get(`/reward-history/user/${email}/list`);
 }
-function rewardAdd(userId) {
+function rewardAdd(email) {
   const today = new Date().getMonth() + 1;
   return instance.post(`/rewards/obtain`, {
-    member_id: userId,
+    member_email: email,
     reward_id: today,
   });
 }
@@ -83,6 +83,7 @@ function rewardAdd(userId) {
 function likeReview(reviewId, userId) {
   return instance.post(`/review-likes/${reviewId}/${userId}`);
 }
+
 // 백엔드에서 보내는 매장 목록을 받아오는 fetchStoreList 함수를 추가합니다.
 async function fetchStoreList() {
   try {
@@ -92,12 +93,17 @@ async function fetchStoreList() {
     throw new Error('Error fetching store list: ' + error.message);
   }
 }
-
-async function selectStore(storeId, page = 0, size = 20) {
+async function selectStore(
+  storeId,
+  userEmail,
+  page = 0,
+  size = 10,
+  filter = '',
+) {
   try {
-    const response = await instance.get(
-      `/store/${storeId}/reviews?page=${page}&size=${size}`,
-    );
+    const response = await instance.get(`/store/${storeId}/reviews`, {
+      params: { userEmail, page, size, filter },
+    });
     if (response.status === 200) {
       const storeWithReviewData = response.data;
       console.log(storeWithReviewData);
@@ -172,9 +178,15 @@ function inactiveUser(email) {
   return instance.post('/user/inactive', { email });
 }
 
-async function getAllReview(page = 0, size = 20) {
+async function getAllReview(
+  userEmail,
+  page = 0,
+  size = 10,
+) {
   try {
-    const response = await instance.get(`/reviews?page=${page}&size=${size}`);
+    const response = await instance.get(`/reviews`, {
+      params: { userEmail, page, size },
+    });
     if (response.status === 200) {
       const ReviewData = response.data;
       console.log(ReviewData);
@@ -187,10 +199,16 @@ async function getAllReview(page = 0, size = 20) {
   }
 }
 
-async function getFollowingReview(id = 1, page = 0, size = 20) {
+async function getFollowingReview(
+  userEmail,
+  page = 0,
+  size = 10,
+) {
   try {
     const response = await instance.get(
-      `/reviews/following?id=${id}&page=${page}&size=${size}`,
+      `/reviews/following`, {
+      params: { userEmail, page, size },
+    }
     );
     if (response.status === 200) {
       const ReviewData = response.data;
@@ -231,19 +249,13 @@ async function storeguide(storeId, router) {
   // 매장 ID를 서버에 전달하는 메소드입니다.
   // 여기서 HTTP 요청을 보내고 서버에서 작업을 처리할 수 있습니다.
   console.log('매장 ID:', storeId);
-
   try {
     // Axios를 사용하여 GET 요청을 보냅니다.
-    const response = await axios.get(
-      `${process.env.VUE_APP_API_URL}store/${storeId}/guidemap`,
-    );
-
+    const response = await instance.get(`/store/${storeId}/guidemap`);
     // 서버로부터 받은 응답을 처리합니다.
     console.log('서버 응답:', response.data);
-
     // 받은 데이터를 필요에 따라 처리합니다.
     // 이 부분에는 받은 데이터를 저장하거나 다른 작업을 수행할 수 있습니다.
-
     // Vue Router를 사용하여 페이지를 이동합니다.
     router.push(`/store/${storeId}/guidemap`);
   } catch (error) {
@@ -259,7 +271,11 @@ async function submitSurvey(surveyData) {
     }
     console.log('data 확인 완료');
     // axios를 사용하여 서버에 데이터를 POST 방식으로 보냅니다.
-    const response = await instance.post('/reviews/submit', surveyData);
+    const response = await instance.post('/reviews/submit', surveyData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
 
     console.log('설문 제출 성공:', response);
     alert('설문이 성공적으로 제출되었습니다!');
@@ -282,32 +298,36 @@ async function fetchReviewSelections(shopName) {
 }
 
 //Mypage
-function mypageData(userId) {
-  return instance.get(`/user/mypage/${userId}`);
+function mypageData(email) {
+  return instance.get(`/user/mypage/${email}`);
 }
-function followData(userId) {
-  return instance.get(`/follow/mycount/${userId}`);
+function followData(email) {
+  return instance.get(`/follow/mycount/${email}`);
 }
-function myfollowingData(userId) {
-  return instance.get(`/follow/from/${userId}`);
+function myfollowingData(email) {
+  return instance.get(`/follow/from/${email}`);
 }
-function myfollowerData(userId) {
-  return instance.get(`/follow/to/${userId}`);
+function myfollowerData(email) {
+  return instance.get(`/follow/to/${email}`);
 }
-function deletemyfollowingData(userId, id) {
-  return instance.delete(`/follow/${id}/deletefrom/${userId}`);
+function deletemyfollowingData(email, id) {
+  return instance.delete(`/follow/${id}/deletefrom/${email}`);
 }
-function deletemyfollowerData(userId, id) {
-  return instance.delete(`/follow/${id}/deleteto/${userId}`);
+function deletemyfollowerData(email, id) {
+  return instance.delete(`/follow/${id}/deleteto/${email}`);
 }
-function uploadProfileimg(userId, formData, config) {
-  return instance.post(`/user/profile/upload/img/${userId}`, formData, config);
+function uploadProfileimg(email, formData, config) {
+  return instance.post(
+    `/user/profile/upload/img/${this.email}`,
+    formData,
+    config,
+  );
 }
-function readProfileimg(userId) {
-  return instance.get(`/user/profile/get/img/${userId}`);
+function readProfileimg(email) {
+  return instance.get(`/user/profile/get/img/${email}`);
 }
-function deleteProfileimg(userId) {
-  return instance.delete(`/user/profile/delete/img/${userId}`);
+function deleteProfileimg(email) {
+  return instance.delete(`/user/profile/delete/img/${email}`);
 }
 
 export {

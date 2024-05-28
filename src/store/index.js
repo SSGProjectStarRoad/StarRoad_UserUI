@@ -20,7 +20,8 @@ export default createStore({
     isLogin(state) {
       return state.email !== '';
     },
-    getUserEmail(state) {
+
+    email(state) {
       return state.email;
     },
   },

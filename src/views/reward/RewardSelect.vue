@@ -48,6 +48,7 @@
 import Swiper from 'swiper';
 import 'swiper/swiper-bundle.css';
 import { issueCouponAPI, ReviewCount } from '@/api/index';
+import { mapState, mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -118,10 +119,14 @@ export default {
           benefitMessage: '',
           showButton: true,
           buttonText: '라이프스타일쿠폰받기',
-          couponId: 5,
+          couponId: 8,
         },
       ],
     };
+  },
+  computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
   },
   methods: {
     getImagePath(index) {
@@ -129,8 +134,8 @@ export default {
     },
     async closeModal() {
       try {
-        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
-        const response = await ReviewCount(userId);
+        // const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await ReviewCount(this.email);
         console.log('Response:', response.data);
         this.isModalVisible = false;
       } catch (error) {
@@ -148,7 +153,7 @@ export default {
 
     async issueCoupon(index) {
       const card = this.cards[index];
-      const userId = 1; // 실제 사용자 ID로 대체해야 합니다.
+      // const userId = 1; // 실제 사용자 ID로 대체해야 합니다.
       if (!card.couponId) {
         console.error('No coupon ID found for this card:', card);
         return;
@@ -157,7 +162,7 @@ export default {
 
       try {
         // 쿠폰 할인 백엔드에서 골라줘서 보내주기
-        const response = await issueCouponAPI(userId, couponId);
+        const response = await issueCouponAPI(this.email, couponId);
         console.log(response);
         console.log('Coupon issued:', response.data);
         this.cards[index].message = '어떤 별이 찾아올까요?';
@@ -214,6 +219,7 @@ export default {
               '0 0 20px rgba(0, 0, 0, 0.5)';
             activeSlide.style.transform = 'scale(1.4)'; // 활성 슬라이드 스케일 증가
             activeSlide.style.zIndex = 1; // 활성 슬라이드를 앞으로
+            activeSlide.style.pointerEvents = 'auto';
             // 이전과 이후 슬라이드 스타일을 조정할 수 있습니다.
             // 예를 들어 this.slides[this.activeIndex + 1]으로 다음 슬라이드를 찾을 수 있습니다.
           },
@@ -278,6 +284,7 @@ export default {
   transition: transform 0.3s ease-in-out;
   max-height: 260px;
   margin: 10px;
+  pointer-events: none;
 }
 .rewardcard .swiper-container {
   /* overflow: hidden; */

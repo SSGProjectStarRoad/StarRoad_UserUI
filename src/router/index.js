@@ -42,9 +42,10 @@ const routes = [
     path: '/reward/main',
     component: () => import('@/views/reward/RewardMain.vue'),
     beforeEnter: async (to, from, next) => {
-      const userId = 1; // 사용자 ID 설정
+      const email = store.getters.email;
+      // const userId = 1; // 사용자 ID 설정
       try {
-        const response = await RewardProcessCheck(userId);
+        const response = await RewardProcessCheck(email);
         const {
           couponCount,
           reviewCount,
@@ -58,14 +59,14 @@ const routes = [
             if (rewardStatus == true) {
               next('/reward/completed');
             }
-            await rewardFinish(userId);
+            await rewardFinish(email);
             // 리워드 지급 api 필요 (rewardFinish 하도록할것)
             next('/reward/getstar');
           } else {
             if (usageStatus === false && issueStatus === true) {
               next('/reward/search');
             } else {
-              await resetStatus(userId);
+              await resetStatus(email);
               next('/reward/select');
             }
           }

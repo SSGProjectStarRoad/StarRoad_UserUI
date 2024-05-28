@@ -31,11 +31,12 @@ export default {
       pageSize: 10,
       hasNextPage: true,
       loading: false,
+      userEmail: 'ekmbjh@naver.com',
     }
   },
   async created() {
     try {
-      const initialData = await getAllReview(this.currentPage, this.pageSize);
+      const initialData = await getAllReview(this.userEmail, this.currentPage, this.pageSize);
       if (initialData) {
         console.log('Initial data:', initialData); // 데이터를 콘솔에 출력하여 확인합니다.
         this.reviews = initialData.reviews;

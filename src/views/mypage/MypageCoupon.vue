@@ -43,6 +43,7 @@
 
 <script>
 import { myCouponList, CouponUse } from '@/api/index';
+import { mapState, mapGetters } from 'vuex';
 export default {
   data() {
     return {
@@ -50,6 +51,8 @@ export default {
     };
   },
   computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
     availableCouponsCount() {
       return this.coupons.filter(coupon => !coupon.coupon_usage_status).length;
     },
@@ -57,8 +60,9 @@ export default {
   methods: {
     async myCouponList() {
       try {
-        const userId = 1; // 실제 사용자 ID로 대체
-        const response = await myCouponList(userId);
+        // const userId = 1; // 실제 사용자 ID로 대체
+
+        const response = await myCouponList(this.email);
         console.log('API response:', response);
         this.coupons = response.data.map((coupon, index) => ({
           ...coupon,

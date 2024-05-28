@@ -3,16 +3,26 @@
     <!-- 매장 로고 -->
     <div class="store">
       <div class="store-detail">
-        <img class="store-img" :src="store.imagePath" alt="매장로고" @load="onImageLoad">
+        <img
+          class="store-img"
+          :src="store.imagePath"
+          alt="매장로고"
+          @load="onImageLoad"
+        />
       </div>
     </div>
-   
+
     <!-- 매장 이름 -->
     <h3 class="name">{{ store.name }}</h3>
 
     <!-- 매장 가이드 이미지 -->
-    <img class="guide-img" :src="store.storeGuideMap" alt="매장오시는길" @load="onImageLoad">
-    
+    <img
+      class="guide-img"
+      :src="store.storeGuideMap"
+      alt="매장오시는길"
+      @load="onImageLoad"
+    />
+
     <!-- 매장 층수 -->
     <h3 class="name">층수 : {{ store.floor }}층</h3>
   </div>
@@ -24,7 +34,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      store: null // 매장 정보를 저장할 데이터 프로퍼티를 정의합니다.
+      store: null, // 매장 정보를 저장할 데이터 프로퍼티를 정의합니다.
     };
   },
   mounted() {
@@ -37,7 +47,9 @@ export default {
     async fetchStoreInfo(storeId) {
       try {
         // Axios를 사용하여 매장 정보를 서버로부터 요청합니다.
-        const response = await axios.get(`${process.env.VUE_APP_API_URL}store/${storeId}/guidemap`);
+
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/store/${storeId}/guidemap`);
+
         // 서버로부터 받은 매장 정보를 store 데이터 프로퍼티에 할당합니다.
         this.store = response.data;
       } catch (error) {
@@ -48,8 +60,8 @@ export default {
     onImageLoad(event) {
       // 이미지 로드가 완료되면 opacity 속성을 1로 변경하여 페이드 인 효과를 적용합니다.
       event.target.classList.add('loaded');
-    }
-  }
+    },
+  },
 };
 </script>
 

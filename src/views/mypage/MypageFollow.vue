@@ -46,6 +46,7 @@
 
 <script>
 import basicprofile from '@/img/spaceman_big.png';
+import { mapState, mapGetters } from 'vuex';
 import {
   myfollowerData,
   myfollowingData,
@@ -62,6 +63,10 @@ export default {
       basicprofile,
     };
   },
+  computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
+  },
   mounted() {
     this.loadFollowSummary(); // 페이지 로드 시 요약 데이터 로드
   },
@@ -74,9 +79,9 @@ export default {
     },
     async loadFollowSummary() {
       try {
-        const userId = 1;
-        const responseFollowing = await myfollowingData(userId);
-        const responseFollower = await myfollowerData(userId);
+        // const userId = 1;
+        const responseFollowing = await myfollowingData(this.email);
+        const responseFollower = await myfollowerData(this.email);
         this.followers = responseFollower.data;
         this.followings = responseFollowing.data;
         this.loadFollowers(); // 초기 로드 시 팔로워 데이터를 기본으로 로드
@@ -94,12 +99,12 @@ export default {
     },
     async deletePerson(id) {
       if (confirm('정말로 삭제하시겠습니까?')) {
-        const userId = 1;
+        // const userId = 1;
         if (this.activeTab === 'followers') {
           // await deletemyfollowerData(id);
           this.followers = this.followers.filter(person => person.id !== id);
         } else {
-          await deletemyfollowingData(userId, id);
+          await deletemyfollowingData(this.email, id);
 
           this.followings = this.followings.filter(person => person.id !== id);
         }
