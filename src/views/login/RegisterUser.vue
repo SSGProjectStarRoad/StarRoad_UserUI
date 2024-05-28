@@ -233,7 +233,7 @@
           <label for="agreecheck1" class="small-text" style="margin-left: 6px"
             >서비스 약관에 동의합니다.</label
           >
-          <a href="#" target="_blank">내용보기</a>
+          <a href="#" @click.prevent="openTermsModal">내용보기</a>
         </div>
         <div class="agreeinput2">
           <input
@@ -245,7 +245,7 @@
           <label for="agreecheck2" class="small-text" style="margin-left: 6px"
             >개인정보 수집 및 이용에 동의합니다.</label
           >
-          <a href="#" target="_blank">내용보기</a>
+          <a href="#" @click.prevent="openPrivacyModal">내용보기</a>
         </div>
         <div class="registerinput">
           <button id="registerclear" type="submit">회원가입 완료</button>
@@ -273,6 +273,11 @@
       이미 계정이 있으시다구요?
       <div class="login" @click="gotoLogin">로그인</div>
     </div>
+    <TermsModal :isVisible="isTermsModalVisible" @close="closeTermsModal" />
+    <PrivacyModal
+      :isVisible="isPrivacyModalVisible"
+      @close="closePrivacyModal"
+    />
   </div>
 </template>
 
@@ -281,6 +286,8 @@ import passwordEye from '@/img/login/passwordeye.png';
 import kakao from '@/img/login/kakaologo.png';
 import google from '@/img/login/googlelogo.png';
 import naver from '@/img/login/naverlogo.png';
+import TermsModal from '@/components/TermsModal.vue';
+import PrivacyModal from '@/components/PrivacyModal.vue';
 import { registerUser } from '@/api/index';
 import {
   checkNicknameDuplicate,
@@ -301,6 +308,10 @@ import {
 } from '@/utils/validation';
 
 export default {
+  components: {
+    TermsModal,
+    PrivacyModal,
+  },
   data() {
     return {
       name: '',
@@ -336,6 +347,8 @@ export default {
       agreecheck2: false,
       formSubmitted: false,
       formErrorMessage: '',
+      isTermsModalVisible: false, // 서비스 약관 모달 표시 여부 상태 추가
+      isPrivacyModalVisible: false, // 개인정보 수집 및 이용 모달 표시 여부 상태 추가
       kakao: kakao,
       google: google,
       naver: naver,
@@ -527,6 +540,18 @@ export default {
     },
     gotoLogin() {
       this.$router.push('/login');
+    },
+    openTermsModal() {
+      this.isTermsModalVisible = true;
+    },
+    closeTermsModal() {
+      this.isTermsModalVisible = false;
+    },
+    openPrivacyModal() {
+      this.isPrivacyModalVisible = true;
+    },
+    closePrivacyModal() {
+      this.isPrivacyModalVisible = false;
     },
     async submitForm() {
       this.formSubmitted = true;
