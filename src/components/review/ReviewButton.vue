@@ -9,13 +9,13 @@
 export default {
   methods: {
     navigateToWritePage() {
-      console.log("button Click");
+      console.log('button Click');
       this.$router.push('/review/ocr');
     },
   },
 
   name: 'reviewbutton',
-}
+};
 </script>
 
 <style>

@@ -122,8 +122,12 @@ export default {
     goToMallMap() {
       this.$router.push('/store/mallmap');
     },
-
     logoutUser() {
+      console.log(
+        'Logging out user:',
+        this.$store.state.email,
+        this.$store.state.accessToken,
+      );
       this.$store
         .dispatch('logout')
         .then(() => {
