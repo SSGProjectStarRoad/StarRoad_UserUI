@@ -307,11 +307,7 @@ function deletemyfollowerData(email, id) {
   return instance.delete(`/follow/${id}/deleteto/${email}`);
 }
 function uploadProfileimg(email, formData, config) {
-  return instance.post(
-    `/user/profile/upload/img/${this.email}`,
-    formData,
-    config,
-  );
+  return instance.post(`/user/profile/upload/img/${email}`, formData, config);
 }
 function readProfileimg(email) {
   return instance.get(`/user/profile/get/img/${email}`);

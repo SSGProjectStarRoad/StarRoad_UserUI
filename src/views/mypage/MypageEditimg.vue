@@ -1,4 +1,7 @@
 <template>
+  <div v-if="notification" ref="notification" class="notification">
+    {{ notification }}
+  </div>
   <div class="contents">
     <div class="title">프로필 이미지 수정</div>
 
@@ -54,6 +57,7 @@ export default {
       profileImage: '',
       isLoading: true,
       basicprofile,
+      notification: '',
     };
   },
   computed: {
@@ -85,7 +89,7 @@ export default {
     },
     async saveImage() {
       if (!this.selectedFile) {
-        alert('이미지를 선택해주세요.');
+        this.showNotification('이미지를 선택해주세요.');
         return;
       }
 
@@ -93,30 +97,31 @@ export default {
       formData.append('file', this.selectedFile);
 
       try {
-        // const userid = 1;
+        this.isLoading = true;
         const response = await uploadProfileimg(this.email, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-        alert('이미지가 성공적으로 저장되었습니다.');
+        this.showNotification('이미지가 성공적으로 저장되었습니다.');
         // 프로필 이미지를 서버에서 받은 URL로 갱신할 수 있음
         this.profileImage = response.data.imageUrl;
         this.isLoading = false; // 이미지가 로드되었으므로 로딩 상태를 해제
       } catch (error) {
         console.error('이미지 업로드 실패:', error);
-        alert('이미지 업로드 실패.');
+        this.showNotification('이미지 업로드 실패.');
+        this.isLoading = false;
       }
     },
     async deleteImage() {
       try {
         // const userid = 1;
         await deleteProfileimg(this.email);
-        alert('이미지가 성공적으로 삭제되었습니다.');
+        this.showNotification('이미지가 성공적으로 삭제되었습니다.');
         this.profileImage = this.basicprofile; // 기본 이미지로 리셋
       } catch (error) {
         console.error('이미지 삭제 실패:', error);
-        alert('이미지 삭제 실패.');
+        this.showNotification('이미지 삭제 실패.');
       }
     },
     async loadImage() {
@@ -132,6 +137,20 @@ export default {
         this.profileImage = this.basicprofile;
         this.isLoading = false; // 로딩 중 오류가 발생해도 로딩 상태 해제
       }
+    },
+    showNotification(message) {
+      this.notification = message;
+      this.$nextTick(() => {
+        const notificationElement = this.$refs.notification;
+        notificationElement.classList.add('fade-in');
+        setTimeout(() => {
+          notificationElement.classList.remove('fade-in');
+          notificationElement.classList.add('fade-out');
+          setTimeout(() => {
+            this.notification = '';
+          }, 500);
+        }, 1500);
+      });
     },
   },
   mounted() {
@@ -244,5 +263,44 @@ export default {
   color: var(--mint-color);
   font-weight: 700;
   cursor: pointer;
+}
+.notification {
+  position: absolute;
+  top: 160px;
+  left: 120px;
+  margin: auto;
+  padding: 10px;
+  color: white;
+  background-color: var(--navy-color);
+  border-radius: 8px;
+  text-align: center;
+  width: 220px;
+  z-index: 1000; /* z-index 추가 */
+  opacity: 0.9; /* 불투명도 추가 */
+  animation: fadeIn 0.5s, fadeOut 0.5s 1.5s; /* 애니메이션 추가 */
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.fade-in {
+  animation: fadeIn 0.5s forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.5s forwards;
 }
 </style>
