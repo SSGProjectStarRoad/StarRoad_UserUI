@@ -127,6 +127,7 @@
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex';
 import { likeReview, selectStore } from '@/api/index.js';
 import data from '@/components/review/data.js';
 import reviewcard from '@/components/store/ReviewCard.vue';
@@ -142,7 +143,7 @@ export default {
       storeReview: { reviews: [], commonReviewStats: {} },
       filteredReviews: { reviews: [], commonReviewStats: {} },
       likeReview,
-      userEmail: 'choijh9023@naver.com',
+     
       selectedSort: 'latest',
 
       selectedButton: null,
@@ -160,7 +161,11 @@ export default {
     };
   },
   computed: {
-    storeId() {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
+    userEmail() {
+      return this.email;
+    }, storeId() {
       return this.$route.params.storeId;
     },
   },

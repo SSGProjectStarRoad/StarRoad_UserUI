@@ -178,9 +178,15 @@ function inactiveUser(email) {
   return instance.post('/user/inactive', { email });
 }
 
-async function getAllReview(page = 0, size = 20) {
+async function getAllReview(
+  userEmail,
+  page = 0,
+  size = 10,
+) {
   try {
-    const response = await instance.get(`/reviews?page=${page}&size=${size}`);
+    const response = await instance.get(`/reviews`, {
+      params: { userEmail, page, size },
+    });
     if (response.status === 200) {
       const ReviewData = response.data;
       console.log(ReviewData);
@@ -193,10 +199,16 @@ async function getAllReview(page = 0, size = 20) {
   }
 }
 
-async function getFollowingReview(id = 1, page = 0, size = 20) {
+async function getFollowingReview(
+  userEmail,
+  page = 0,
+  size = 10,
+) {
   try {
     const response = await instance.get(
-      `/reviews/following?id=${id}&page=${page}&size=${size}`,
+      `/reviews/following`, {
+      params: { userEmail, page, size },
+    }
     );
     if (response.status === 200) {
       const ReviewData = response.data;
@@ -259,7 +271,11 @@ async function submitSurvey(surveyData) {
     }
     console.log('data 확인 완료');
     // axios를 사용하여 서버에 데이터를 POST 방식으로 보냅니다.
-    const response = await instance.post('/reviews/submit', surveyData);
+    const response = await instance.post('/reviews/submit', surveyData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
 
     console.log('설문 제출 성공:', response);
     alert('설문이 성공적으로 제출되었습니다!');
