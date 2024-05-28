@@ -1,7 +1,7 @@
 <template>
-  <div 
-    class="progress-bar" 
-    :class="{ clicked: isClicked }" 
+  <div
+    class="progress-bar"
+    :class="{ clicked: isClicked }"
     @click="handleClick"
   >
     <div class="progress" :style="{ width: progress + '%' }"></div>
@@ -19,12 +19,12 @@ export default {
   props: {
     progress: {
       type: Number,
-      required: true
+      required: true,
     },
     isClicked: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     handleClick() {
@@ -34,8 +34,8 @@ export default {
       } else {
         console.error('Text slot is not defined or does not contain text');
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -55,7 +55,7 @@ export default {
   transition: background-color 0.3s ease;
 }
 .progress-bar.clicked {
-  background-color: var(--navy-color);
+  background-color: var(--dgray-color);
 }
 .progress {
   position: absolute;

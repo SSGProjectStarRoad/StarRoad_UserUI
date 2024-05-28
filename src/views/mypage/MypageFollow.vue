@@ -1,6 +1,5 @@
 <template>
   <div class="contents">
-    <BackButton class="back-button" />
     <div class="follow-type">
       <div
         class="follower"

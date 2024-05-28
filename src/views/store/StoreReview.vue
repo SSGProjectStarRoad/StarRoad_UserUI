@@ -30,8 +30,7 @@
     <div class="store-review">
       <p class="keyword">이런점이 좋았어요!!</p>
       <div class="c-key">
-
-        <ProgressBar 
+        <ProgressBar
           :progress="(storeReview.revisitCount / totalReviewCount) * 100"
           @filter="filterReviews"
           :isClicked="selectedButton === '재방문 하고 싶어요'"
@@ -40,23 +39,31 @@
           <template v-slot:number>{{ storeReview.revisitCount }}</template>
         </ProgressBar>
 
-        <ProgressBar 
-          :progress="(storeReview.serviceSatisfactionCount / totalReviewCount) * 100"
+        <ProgressBar
+          :progress="
+            (storeReview.serviceSatisfactionCount / totalReviewCount) * 100
+          "
           @filter="filterReviews"
           :isClicked="selectedButton === '서비스가 마음에 들어요'"
         >
           <template v-slot:text>서비스가 마음에 들어요</template>
-          <template v-slot:number>{{ storeReview.serviceSatisfactionCount }}</template>
+          <template v-slot:number>{{
+            storeReview.serviceSatisfactionCount
+          }}</template>
         </ProgressBar>
-        <ProgressBar 
-          :progress="(storeReview.reasonablePriceCount / totalReviewCount) * 100"
+        <ProgressBar
+          :progress="
+            (storeReview.reasonablePriceCount / totalReviewCount) * 100
+          "
           @filter="filterReviews"
           :isClicked="selectedButton === '가격이 합리적입니다'"
         >
           <template v-slot:text>가격이 합리적입니다</template>
-          <template v-slot:number>{{ storeReview.reasonablePriceCount }}</template>
+          <template v-slot:number>{{
+            storeReview.reasonablePriceCount
+          }}</template>
         </ProgressBar>
-        <ProgressBar 
+        <ProgressBar
           :progress="(storeReview.cleanlinessCount / totalReviewCount) * 100"
           @filter="filterReviews"
           :isClicked="selectedButton === '매장이 청결합니다'"
@@ -84,12 +91,18 @@
             :grabCursor="true"
             :resistanceRatio="0.6"
           >
-            <swiper-slide v-for="button in buttons" :key="button" style="width: auto">
-              <button 
-                class="d-button" 
-                :class="{ active: selectedButton === button }" 
+            <swiper-slide
+              v-for="button in buttons"
+              :key="button"
+              style="width: auto"
+            >
+              <button
+                class="d-button"
+                :class="{ active: selectedButton === button }"
                 @click="filterReviews(button)"
-              >{{ button }}</button>
+              >
+                {{ button }}
+              </button>
             </swiper-slide>
           </swiper>
         </div>
@@ -114,10 +127,10 @@
           </p>
         </div>
 
-        <reviewcard 
-          :storeReview="filteredReviews" 
-          :likeReview="likeReview" 
-          :userEmail="userEmail" 
+        <reviewcard
+          :storeReview="filteredReviews"
+          :likeReview="likeReview"
+          :userEmail="userEmail"
         />
       </div>
     </div>
@@ -143,11 +156,16 @@ export default {
       storeReview: { reviews: [], commonReviewStats: {} },
       filteredReviews: { reviews: [], commonReviewStats: {} },
       likeReview,
-     
+
       selectedSort: 'latest',
 
       selectedButton: null,
-      buttons: ['재방문 하고 싶어요', '서비스가 마음에 들어요', '가격이 합리적입니다', '매장이 청결합니다'],
+      buttons: [
+        '재방문 하고 싶어요',
+        '서비스가 마음에 들어요',
+        '가격이 합리적입니다',
+        '매장이 청결합니다',
+      ],
       swiperOptions: {
         slidesPerView: 'auto',
         spaceBetween: 5,
@@ -165,15 +183,14 @@ export default {
     ...mapGetters(['isLogin']),
     userEmail() {
       return this.email;
-    }, storeId() {
+    },
+    storeId() {
       return this.$route.params.storeId;
     },
   },
   async created() {
     try {
-
       await this.loadReviews();
-
     } catch (error) {
       console.error('Error fetching store review:', error);
     }
@@ -192,9 +209,9 @@ export default {
     },
     changeSort() {
       if (this.selectedSort === 'latest') {
-
-        this.filteredReviews.reviews.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
-
+        this.filteredReviews.reviews.sort(
+          (a, b) => new Date(b.createDate) - new Date(a.createDate),
+        );
       } else if (this.selectedSort === 'likes') {
         this.filteredReviews.reviews.sort((a, b) => b.likeCount - a.likeCount);
       }
@@ -213,13 +230,25 @@ export default {
     async loadReviews() {
       this.loading = true;
       try {
-        const response = await selectStore(this.storeId, this.userEmail, this.currentPage, this.pageSize, this.selectedButton);
+        const response = await selectStore(
+          this.storeId,
+          this.userEmail,
+          this.currentPage,
+          this.pageSize,
+          this.selectedButton,
+        );
         if (this.currentPage === 0) {
           this.storeReview = response;
           this.filteredReviews = response; // 초기에는 모든 리뷰를 표시합니다.
         } else {
-          this.storeReview.reviews = [...this.storeReview.reviews, ...response.reviews];
-          this.filteredReviews.reviews = [...this.filteredReviews.reviews, ...response.reviews];
+          this.storeReview.reviews = [
+            ...this.storeReview.reviews,
+            ...response.reviews,
+          ];
+          this.filteredReviews.reviews = [
+            ...this.filteredReviews.reviews,
+            ...response.reviews,
+          ];
         }
         this.hasNextPage = response.hasNext;
         this.totalReviewCount = response.totalReviewCount || 0;
@@ -249,10 +278,8 @@ export default {
 
       this.loading = true;
       try {
-
         this.currentPage += 1;
         await this.loadReviews();
-
       } catch (error) {
         console.error('Error loading more reviews:', error);
       } finally {
@@ -328,7 +355,8 @@ export default {
   background-color: var(--gray-color);
 }
 
-.review-content {}
+.review-content {
+}
 
 .user-profile {
   background-image: url('https://picsum.photos/100?random=0');
@@ -386,6 +414,7 @@ export default {
 
 .d-button {
   margin-right: 10px;
+  padding: 5px;
   background-color: var(--gray-color);
   border-radius: 8px;
   color: white;
