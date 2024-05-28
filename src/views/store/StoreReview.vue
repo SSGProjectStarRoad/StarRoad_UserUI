@@ -115,7 +115,7 @@
               v-model="selectedSort"
               @change="changeSort"
             />
-            <label for="latest"></label>최신순
+            <label for="latest"></label>&nbsp;최신순
             <input
               type="radio"
               id="likes"
@@ -123,7 +123,7 @@
               v-model="selectedSort"
               @change="changeSort"
             />
-            <label for="likes"></label>좋아요 순
+            <label for="likes"></label>&nbsp;v좋아요 순
           </p>
         </div>
 
