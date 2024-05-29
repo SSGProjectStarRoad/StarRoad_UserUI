@@ -1,4 +1,7 @@
 <template>
+    <div v-if="notification" ref="notification" class="notification">
+    {{ notification }}
+  </div>
   <div class="contents">
     <div class="timeline-post-item">
       <div class="timeline-post-content">
@@ -80,6 +83,7 @@ export default {
       approvalNumber: '',
       purchaseDate: '',
       selectedTime: '',
+      notification: '',
     };
   },
   created() {
@@ -135,7 +139,7 @@ export default {
 
       // 현재 업로드된 이미지 개수와 추가로 선택된 이미지 파일 개수의 합이 최대 개수를 초과할 경우 경고 메시지 표시
       if (currentImageCount + newFilesCount > maxFiles) {
-        alert(`최대 ${maxFiles}개까지 선택할 수 있습니다.`);
+        this.showNotification(`최대 ${maxFiles}개까지 선택할 수 있습니다. `);
         event.target.value = '';
         return;
       }
@@ -229,20 +233,32 @@ export default {
         const response = await submitSurvey(formData);
 
         console.log('Review Survey : ' + response);
-        alert('리뷰 설문 업로드가 성공적으로 완료되었습니다.');
+        this.showNotification('리뷰 설문 업로드가 성공적으로 완료되었습니다.')
       } catch (error) {
         console.error('리뷰 설문 업로드 실패:', error);
         // HTTP 응답 오류 메시지 확인
         if (error.response && error.response.data) {
           console.error('서버 오류 메시지:', error.response.data.message);
-          alert(
-            `리뷰 데이터 업로드에 실패하였습니다. 오류 메시지: ${error.response.data.message}`,
-          );
+          this.showNotification('리뷰 데이터 업로드에 실패하였습니다. \n오류 메시지: ${error.response.data.message}');
         } else {
-          alert('리뷰 데이터 업로드에 실패하였습니다. 다시 시도해주세요.');
+          this.showNotification('리뷰 데이터 업로드에 실패하였습니다. 다시 시도해주세요.')
         }
         this.$router.push('/review/recommended');
       }
+    },
+    showNotification(message) {
+      this.notification = message;
+      this.$nextTick(() => {
+        const notificationElement = this.$refs.notification;
+        notificationElement.classList.add('fade-in');
+        setTimeout(() => {
+          notificationElement.classList.remove('fade-in');
+          notificationElement.classList.add('fade-out');
+          setTimeout(() => {
+            this.notification = '';
+          }, 500);
+        }, 1500);
+      });
     },
   },
 };
@@ -290,5 +306,52 @@ export default {
 
 .uploaded-image-preview {
   border-radius: 10px;
+}
+
+.notification {
+  position: absolute;
+  top: 160px;
+  left: 120px;
+  margin: auto;
+  padding: 10px;
+  color: white;
+  background-color: var(--navy-color);
+  border-radius: 8px;
+  text-align: center;
+  width: 220px;
+  z-index: 1000;
+  /* z-index 추가 */
+  opacity: 0.9;
+  /* 불투명도 추가 */
+  animation: fadeIn 0.5s, fadeOut 0.5s 1.5s;
+  /* 애니메이션 추가 */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.9;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 0.9;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.5s forwards;
 }
 </style>

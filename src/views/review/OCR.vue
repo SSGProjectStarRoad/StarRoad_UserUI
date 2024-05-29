@@ -1,22 +1,15 @@
 <template>
+  <div v-if="notification" ref="notification" class="notification">
+    {{ notification }}
+  </div>
   <div class="container">
     <h3>이미지 업로드</h3>
     <div class="upload-area">
       <span v-if="!imageFile" class="upload-placeholder">+</span>
-      <img
-        v-if="imageFile"
-        :src="imagePreview"
-        alt="업로드 이미지"
-        class="uploaded-image"
-      />
+      <img v-if="imageFile" :src="imagePreview" alt="업로드 이미지" class="uploaded-image" />
     </div>
     <div class="action-area">
-      <input
-        type="file"
-        id="file-upload"
-        @change="onFileChange"
-        accept="image/*"
-      />
+      <input type="file" id="file-upload" @change="onFileChange" accept="image/*" />
       <label for="file-upload" class="custom-file-upload">파일 선택</label>
       <button @click="confirmUpload" :disabled="!imageFile">확인</button>
     </div>
@@ -31,6 +24,7 @@ export default {
     return {
       imageFile: null,
       imagePreview: null,
+      notification: '',
     };
   },
   methods: {
@@ -45,7 +39,7 @@ export default {
       try {
         const response = await imageUpload(this.imageFile);
         console.log('OCR response date : ' + response.data);
-        alert('이미지 업로드가 성공적으로 완료되었습니다.');
+        this.showNotification('이미지 업로드가 성공적으로 완료되었습니다.');
 
         // 스프레드 연산자를 사용하여 response.data의 모든 데이터를 query로 전달하고 페이지 이동
         this.$router.push({
@@ -54,8 +48,22 @@ export default {
         });
       } catch (error) {
         console.error('이미지 업로드 실패:', error);
-        alert('이미지 업로드에 실패하였습니다. 다시 시도해주세요.');
+        this.showNotification('이미지 업로드에 실패하였습니다. \n다시 시도해주세요.');
       }
+    },
+    showNotification(message) {
+      this.notification = message;
+      this.$nextTick(() => {
+        const notificationElement = this.$refs.notification;
+        notificationElement.classList.add('fade-in');
+        setTimeout(() => {
+          notificationElement.classList.remove('fade-in');
+          notificationElement.classList.add('fade-out');
+          setTimeout(() => {
+            this.notification = '';
+          }, 500);
+        }, 1500);
+      });
     },
   },
 };
@@ -123,5 +131,52 @@ button {
 button:disabled {
   background-color: gray;
   cursor: not-allowed;
+}
+
+.notification {
+  position: absolute;
+  top: 160px;
+  left: 120px;
+  margin: auto;
+  padding: 10px;
+  color: white;
+  background-color: var(--navy-color);
+  border-radius: 8px;
+  text-align: center;
+  width: 220px;
+  z-index: 1000;
+  /* z-index 추가 */
+  opacity: 0.9;
+  /* 불투명도 추가 */
+  animation: fadeIn 0.5s, fadeOut 0.5s 1.5s;
+  /* 애니메이션 추가 */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.9;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 0.9;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.5s forwards;
 }
 </style>
