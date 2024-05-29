@@ -1,5 +1,6 @@
 <template>
-  <div class="contents">
+  <LoadingSpinner v-if="isLoading" />
+  <div class="contents" v-else>
     <div class="img">
       <div class="setting" @click="goToEditPage">
         <img src="@/img/setting.png" alt="" />
@@ -65,8 +66,12 @@
 
 <script>
 import { mypageData, followData } from '@/api/index';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { mapState, mapGetters } from 'vuex';
 export default {
+  components: {
+    LoadingSpinner,
+  },
   data() {
     return {
       mydata: [],

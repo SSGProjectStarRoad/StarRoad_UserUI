@@ -45,8 +45,8 @@ function getRefreshTokenFromCookie() {
 }
 
 // 쿠키 삭제
-function deleteCookie(name) {
-  const domain = window.location.hostname;
+function deleteCookie(name, path = '/', domain = window.location.hostname) {
+  // const domain = window.location.hostname;
   document.cookie = `${name}=; path=/; domain=${domain}; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax;`;
   document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax;`;
 }
