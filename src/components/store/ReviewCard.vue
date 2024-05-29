@@ -115,6 +115,7 @@
     </article>
   </div>
 </template>
+
 <script>
 import moment from 'moment';
 import 'moment/locale/ko';
@@ -162,27 +163,27 @@ export default {
       feedbackImageMap: {
         '재방문 하고싶어요': require('@/img/imoji/박수.png'),
         '매장이 넓어요': require('@/img/imoji/별.png'),
-        '제품이 신선해요': require('@/img/imoji/별.png'),
+        '제품이 신선해요': require('@/img/imoji/신선.png'),
         '가격이 합리적입니다': require('@/img/imoji/가격.png'),
-        '웨이팅시간이 짧았어요': require('@/img/imoji/파란하트.png'),
-        '신상품이 많아요': require('@/img/imoji/더블하트.png'),
-        '가성비가 좋아요': require('@/img/imoji/파란하트.png'),
+        '웨이팅시간이 짧았어요': require('@/img/imoji/대기.png'),
+        '신상품이 많아요': require('@/img/imoji/신상.png'),
+        '가성비가 좋아요': require('@/img/imoji/가성비.png'),
         '서비스가 마음에 들어요': require('@/img/imoji/파란하트.png'),
-        '매장이 청결합니다': require('@/img/imoji/파란하트.png'),
-        '스타일 추천을 잘해줘요': require('@/img/imoji/파란하트.png'),
+        '매장이 청결합니다': require('@/img/imoji/청결.png'),
+        '스타일 추천을 잘해줘요': require('@/img/imoji/스타일.png'),
         '음식이 맛있습니다': require('@/img/imoji/도넛.png'),
-        '음식이 빨리나와요': require('@/img/imoji/도넛.png'),
+        '음식이 빨리나와요': require('@/img/imoji/음식빠름.png'),
         '종류가 다양해요': require('@/img/imoji/하트와리본.png'),
-        '시설이 청결했습니다': require('@/img/imoji/파란하트.png'),
+        '시설이 청결했습니다': require('@/img/imoji/청결.png'),
         '재료가 신선해요': require('@/img/imoji/하트장식.png'),
-        트랜디해요: require('@/img/imoji/오렌지하트.png'),
-        '재고가 충분해요': require('@/img/imoji/파란하트.png'),
+        '트랜디해요' : require('@/img/imoji/오렌지하트.png'),
+        '재고가 충분해요': require('@/img/imoji/재고.png'),
         '품질이 좋아요': require('@/img/imoji/반짝임.png'),
         '시간이 금방가요': require('@/img/imoji/시계.png'),
         '볼거리가 많아요': require('@/img/imoji/볼거리춤.png'),
         '남녀노소 즐기기 좋아요': require('@/img/imoji/별눈얼굴.png'),
         '주차하기 편해요': require('@/img/imoji/자동차.png'),
-        '시설이 깔끔해요': require('@/img/imoji/파란하트.png'),
+        '시설이 깔끔해요': require('@/img/imoji/청결.png'),
         '가격이 적절해요': require('@/img/imoji/가격.png'),
         '상품이 다양해요': require('@/img/imoji/오렌지하트.png'),
         '행사 상품이 다양해요': require('@/img/imoji/파란하트.png'),
@@ -193,9 +194,6 @@ export default {
       },
     };
   },
-  // created() {
-  //   this.initializeLikeStatus();
-  // },
   methods: {
     getFeedbackImage(feedbackText) {
       return (
@@ -232,34 +230,23 @@ export default {
         this.swiper.slideNext();
       }
     },
-    //     initializeLikeStatus() {
-    //   this.getUserLikedReviews(this.userEmail)
-    //     .then(response => {
-    //       console.log('Liked Review IDs:', response.data);
-    //       const likedReviewIds = response.data;
-    //       this.storeReview.reviews.forEach(review => {
-    //         review.liked = likedReviewIds.includes(review.id);
-    //       });
-    //     })
-    //     .catch(error => {
-    //       console.error('사용자의 좋아요 정보를 불러오는데 실패했습니다', error);
-    //     });
-    // }
-    // ,
     toggleLike(review, index) {
-      const reviewId = review.id;
-      const userEmail = this.userEmail;
+  const reviewId = review.id;
+  const userEmail = this.userEmail;
 
-      this.likeReview(reviewId, userEmail)
-        .then(response => {
-          const { liked, likeCount } = response.data;
-          review.liked = liked;
-          review.likeCount = likeCount;
-        })
-        .catch(error => {
-          console.error('좋아요/취소 실패:', error);
-        });
-    },
+  this.likeReview(reviewId, userEmail)
+    .then(response => {
+      const { liked, likeCount } = response.data;
+      this.storeReview.reviews[index] = {
+        ...review,
+        liked,
+        likeCount,
+      };
+    })
+    .catch(error => {
+      console.error('좋아요/취소 실패:', error);
+    });
+},
   },
   components: {
     Swiper,

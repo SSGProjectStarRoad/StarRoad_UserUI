@@ -99,10 +99,11 @@ async function selectStore(
   page = 0,
   size = 10,
   filter = '',
+  sort
 ) {
   try {
     const response = await instance.get(`/store/${storeId}/reviews`, {
-      params: { userEmail, page, size, filter },
+      params: { userEmail, page, size, filter ,sort},
     });
     if (response.status === 200) {
       const storeWithReviewData = response.data;
@@ -199,6 +200,22 @@ async function getFollowingReview(userEmail, page = 0, size = 10) {
   try {
     const response = await instance.get(`/reviews/following`, {
       params: { userEmail, page, size },
+    });
+    if (response.status === 200) {
+      const ReviewData = response.data;
+      console.log(ReviewData);
+      return ReviewData;
+    } else {
+      throw new Error('리뷰를 가져오는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
+  }
+}
+async function getMyReview(email, page = 0, size = 10) {
+  try {
+    const response = await instance.get(`/reviews/myreveiw`, {
+      params: { email, page, size },
     });
     if (response.status === 200) {
       const ReviewData = response.data;
@@ -422,4 +439,5 @@ export {
   getEventDetail,
   fetchRankUser,
   addFollowUser,
+  getMyReview,
 };

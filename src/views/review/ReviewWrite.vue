@@ -4,8 +4,10 @@
       <div class="timeline-post-content">
         <div class="restaurant-info">
           <div class="__info">
-            <h4 class="__name"><span>{{ shopName }}</span></h4>
-            <div class="__meta"> {{ purchaseDate }} </div>
+            <h4 class="__name">
+              <span>{{ shopName }}</span>
+            </h4>
+            <div class="__meta">{{ purchaseDate }}</div>
           </div>
         </div>
       </div>
@@ -28,13 +30,13 @@
 
       <div>
         <label for="upload" class="btn counter register">사진 등록하기</label>
-        <input id="upload" type="file" multiple @change="uploadPictures" style="display: none;">
+        <input id="upload" type="file" multiple @change="uploadPictures" style="display: none" />
         <br />
         <br />
         <br />
         <div class="newPicture">
           <div v-for="(image, index) in uploadedImages.slice(0, 3)" :key="index" class="uploaded-image">
-            <img :src="image.preview" class="uploaded-image-preview" alt="Uploaded Image">
+            <img :src="image.preview" class="uploaded-image-preview" alt="Uploaded Image" />
           </div>
         </div>
       </div>
@@ -45,7 +47,7 @@
       <textarea class="text-review" placeholder="200자 이내로 기재해주세요." v-model="reviewText" @input="limitText"></textarea>
       <br />
       <div>
-        <span style="color:#aaa;" class="counter">({{ currentLength }} / 최대 200자)</span>
+        <span style="color: #aaa" class="counter">({{ currentLength }} / 최대 200자)</span>
       </div>
       <br />
       <div>
@@ -53,24 +55,23 @@
           <span>등록하기</span>
         </button>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
 import { submitSurvey, fetchReviewSelections } from '@/api/index';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   data() {
     return {
-      userEmail: "ekmbjh@naver.com",
       uploadedImages: [],
       surveyEssential: [
-        { text: "재방문하고 싶어요", selected: false },
-        { text: "서비스가 마음에 들어요", selected: false },
-        { text: "가격이 합리적이에요", selected: false },
-        { text: "매장이 청결합니다", selected: false },
+        { text: '재방문하고 싶어요', selected: false },
+        { text: '서비스가 마음에 들어요', selected: false },
+        { text: '가격이 합리적이에요', selected: false },
+        { text: '매장이 청결합니다', selected: false },
       ],
       surveyOptions: [],
       reviewText: '',
@@ -82,7 +83,7 @@ export default {
     };
   },
   created() {
-    console.log("created 훅 실행됨");
+    console.log('created 훅 실행됨');
     this.shopName = this.$route.query.shopName || '';
     this.paymentType = this.$route.query.paymentType || '';
     this.approvalNumber = this.$route.query.approvalNumber || '';
@@ -93,21 +94,29 @@ export default {
   computed: {
     currentLength() {
       return this.reviewText.length;
+    },
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
+    userEmail() {
+      return this.email; // Vuex 스토어의 email을 userEmailComputed로 매핑합니다.
     }
+  },
+  computed: {
+
   },
   methods: {
     async fetchSurveyOptions() {
-      console.log("fetchSurveyOptions method executed");
+      console.log('fetchSurveyOptions method executed');
       try {
         const response = await fetchReviewSelections(this.shopName);
-        console.log("response received:", response);
+        console.log('response received:', response);
         if (response && Array.isArray(response)) {
           this.surveyOptions = response.map(selection => ({
-            text: selection, selected: false
+            text: selection,
+            selected: false,
           }));
-          console.log("surveyOptions updated:", this.surveyOptions);
-        }
-        else {
+          console.log('surveyOptions updated:', this.surveyOptions);
+        } else {
           console.error('Review selections not found in the response.');
         }
       } catch (error) {
@@ -140,13 +149,17 @@ export default {
           img.src = reader.result;
           img.onload = () => {
             const resizedImage = this.resizeImage(img);
-            this.uploadedImages.push({ file, preview: resizedImage.toDataURL() });
+            this.uploadedImages.push({
+              file,
+              preview: resizedImage.toDataURL(),
+            });
           };
         };
       }
     },
     toggleItemEs(index) {
-      this.surveyEssential[index].selected = !this.surveyEssential[index].selected;
+      this.surveyEssential[index].selected =
+        !this.surveyEssential[index].selected;
     },
     toggleItemOp(index) {
       this.surveyOptions[index].selected = !this.surveyOptions[index].selected;
@@ -196,29 +209,35 @@ export default {
           purchaseDate: this.purchaseDate,
           selectedTime: this.selectedTime,
           surveyData: {
-            essential: this.surveyEssential.filter(item => item.selected).map(item => item.text),
-            optional: this.surveyOptions.filter(item => item.selected).map(item => item.text)
-          }
+            essential: this.surveyEssential
+              .filter(item => item.selected)
+              .map(item => item.text),
+            optional: this.surveyOptions
+              .filter(item => item.selected)
+              .map(item => item.text),
+          },
         };
 
         formData.append('review', JSON.stringify(reviewData));
 
         // 업로드할 이미지 파일 추가
-        this.uploadedImages.forEach((image) => {
+        this.uploadedImages.forEach(image => {
           formData.append('images', image.file);
         });
 
         // submitSurvey 함수를 호출하여 FormData를 전송합니다.
         const response = await submitSurvey(formData);
 
-        console.log("Review Survey : " + response);
+        console.log('Review Survey : ' + response);
         alert('리뷰 설문 업로드가 성공적으로 완료되었습니다.');
       } catch (error) {
         console.error('리뷰 설문 업로드 실패:', error);
         // HTTP 응답 오류 메시지 확인
         if (error.response && error.response.data) {
           console.error('서버 오류 메시지:', error.response.data.message);
-          alert(`리뷰 데이터 업로드에 실패하였습니다. 오류 메시지: ${error.response.data.message}`);
+          alert(
+            `리뷰 데이터 업로드에 실패하였습니다. 오류 메시지: ${error.response.data.message}`,
+          );
         } else {
           alert('리뷰 데이터 업로드에 실패하였습니다. 다시 시도해주세요.');
         }
@@ -230,7 +249,7 @@ export default {
 </script>
 
 <style scoped>
-@import "@/css/review/review.css";
+@import '@/css/review/review.css';
 
 .newPicture {
   margin: 5px;
@@ -252,10 +271,14 @@ export default {
 
 .selected {
   background-color: var(--mint-color);
+  color: var(--dgray-color);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .survey-option-btn {
   width: 100%;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .uploaded-image-preview {
