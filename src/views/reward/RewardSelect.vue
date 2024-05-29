@@ -1,18 +1,17 @@
 <template>
+  <div class="modal-backdrop" v-if="isModalVisible"></div>
+
+  <!-- 모달 컨텐츠 -->
+  <div class="modal" v-if="isModalVisible">
+    <h3>별 탐색 완료!</h3>
+    <p>나의 기록을 별에 새겨보세요</p>
+    <a href="/reward/ocr" @click.prevent="navigateToReviewPage"
+      >리뷰 작성하기</a
+    >
+  </div>
   <div class="contents">
     <!-- 모달 배경 -->
-    <div class="modal-backdrop" v-if="isModalVisible"></div>
 
-    <!-- 모달 컨텐츠 -->
-    <div class="modal" v-if="isModalVisible">
-      <h3>별 탐색 완료!</h3>
-      <p>나의 기록을 별에 새겨보세요</p>
-      <a href="/reward/ocr" @click.prevent="navigateToReviewPage"
-        >리뷰 작성하기</a
-      >
-
-      <!-- 리뷰쓰기로 나중에 바꿀것 -->
-    </div>
     <div class="rewardcard">
       <div class="swiper-container">
         <div class="swiper-wrapper">
@@ -260,7 +259,7 @@ export default {
   transform: translate(-50%);
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4); /* 반투명 회색 배경 */
-  z-index: 1000;
+  z-index: 2000;
   /* 모달을 다른 요소들 위에 표시 */
 }
 
@@ -269,7 +268,7 @@ export default {
   top: 200px;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 1001; /* 배경보다 앞에 표시 */
+  z-index: 2000; /* 배경보다 앞에 표시 */
   background-color: white;
   text-align: center;
   padding: 20px;
