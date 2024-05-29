@@ -28,10 +28,11 @@
         </div>
       </div>
     </div>
-    <button class="review_button">
+    <reviewbutton />
+    <!-- <button class="review_button">
       <div><img src="@/img/review/pencil.png" alt="Pencil Logo" /></div>
       <div class="review_text">Write a Review</div>
-    </button>
+    </button> -->
 
     <!-- 모달 구조 -->
     <div v-if="isModalVisible" class="modal-overlay" @click="closeModal">
@@ -47,6 +48,7 @@
 import ProgressBar from '@/components/store/ProgressBar.vue';
 import { mypageData, getEventList, getEventDetail } from '@/api/index';
 import { mapState, mapGetters } from 'vuex';
+import reviewbutton from '@/components/review/ReviewButton.vue';
 export default {
   data() {
     return {
@@ -120,6 +122,7 @@ export default {
   },
   components: {
     ProgressBar,
+    reviewbutton,
   },
 };
 </script>
@@ -218,7 +221,7 @@ export default {
 
 .review_button {
   position: fixed;
-  right: calc(55% - 240px);
+  right: calc(55% - 270px);
   top: calc(100% - 120px);
   background-color: var(--navy-color);
   border-radius: 20px;

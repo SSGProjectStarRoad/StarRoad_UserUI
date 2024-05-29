@@ -1,10 +1,9 @@
 <template>
   <button class="review_button" @click="navigateToWritePage">
     <div><img src="@/img/review/pencil.png" alt="Pencil Logo" /></div>
-    <div>Write a Review</div>
+    <div class="review_text">Write a Review</div>
   </button>
 </template>
-
 <script>
 export default {
   methods: {
@@ -13,16 +12,13 @@ export default {
       this.$router.push('/review/ocr');
     },
   },
-
   name: 'reviewbutton',
 };
 </script>
-
-<style>
+<style scoped>
 .review_button {
-  z-index: 300;
   position: fixed;
-  right: calc(50% - 240px);
+  right: calc(55% - 270px);
   top: calc(100% - 120px);
   background-color: var(--navy-color);
   border-radius: 20px;
@@ -34,18 +30,28 @@ export default {
   box-shadow: 2px 2px 3px #00000033;
   display: flex;
   justify-content: center;
-}
-
-.review_button div:first-child {
-  margin-right: 10px;
+  align-items: center;
+  text-align: center;
 }
 
 .review_button div {
   font-size: 15px;
 }
-
+.review_button div:first-child {
+  margin-right: 0px;
+}
 .review_button:active {
   box-shadow: none;
   color: var(--mint-color);
+}
+
+.review_text {
+  display: none;
+  margin-left: 10px;
+  transition: all 0.5s;
+}
+
+.review_button:hover .review_text {
+  display: block;
 }
 </style>
