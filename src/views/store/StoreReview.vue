@@ -128,6 +128,7 @@
           :storeReview="filteredReviews"
           @like-review="likeReviewHandler" 
           :userEmail="userEmail"
+          :likeReview="likeReview"
         />
       </div>
     </div>
@@ -139,7 +140,6 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 import { likeReview, selectStore } from '@/api/index.js';
-import data from '@/components/review/data.js';
 import reviewcard from '@/components/store/ReviewCard.vue';
 import ProgressBar from '@/components/store/ProgressBar.vue';
 import reviewbutton from '@/components/review/ReviewButton.vue';
@@ -152,6 +152,7 @@ export default {
     return {
       storeReview: { reviews: [], commonReviewStats: {} },
       filteredReviews: { reviews: [], commonReviewStats: {} },
+      likeReview,
       selectedSort: 'latest',
       selectedButton: null,
       buttons: [
@@ -249,7 +250,7 @@ export default {
     },
     async likeReviewHandler(reviewId) {
       try {
-        await likeReview(reviewId, this.userEmail); // 좋아요 API 호출
+        await this.likeReview(reviewId, this.userEmail); // 좋아요 API 호출
         await this.loadReviews(); // 좋아요 이후 리뷰 리스트를 다시 로드
       } catch (error) {
         console.error('Error liking the review:', error);
@@ -292,7 +293,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 @import '@/css/common.css';
 

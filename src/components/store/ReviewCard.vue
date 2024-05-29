@@ -115,6 +115,7 @@
     </article>
   </div>
 </template>
+
 <script>
 import moment from 'moment';
 import 'moment/locale/ko';
@@ -193,9 +194,6 @@ export default {
       },
     };
   },
-  // created() {
-  //   this.initializeLikeStatus();
-  // },
   methods: {
     getFeedbackImage(feedbackText) {
       return (
@@ -232,34 +230,23 @@ export default {
         this.swiper.slideNext();
       }
     },
-    //     initializeLikeStatus() {
-    //   this.getUserLikedReviews(this.userEmail)
-    //     .then(response => {
-    //       console.log('Liked Review IDs:', response.data);
-    //       const likedReviewIds = response.data;
-    //       this.storeReview.reviews.forEach(review => {
-    //         review.liked = likedReviewIds.includes(review.id);
-    //       });
-    //     })
-    //     .catch(error => {
-    //       console.error('사용자의 좋아요 정보를 불러오는데 실패했습니다', error);
-    //     });
-    // }
-    // ,
     toggleLike(review, index) {
-      const reviewId = review.id;
-      const userEmail = this.userEmail;
+  const reviewId = review.id;
+  const userEmail = this.userEmail;
 
-      this.likeReview(reviewId, userEmail)
-        .then(response => {
-          const { liked, likeCount } = response.data;
-          review.liked = liked;
-          review.likeCount = likeCount;
-        })
-        .catch(error => {
-          console.error('좋아요/취소 실패:', error);
-        });
-    },
+  this.likeReview(reviewId, userEmail)
+    .then(response => {
+      const { liked, likeCount } = response.data;
+      this.storeReview.reviews[index] = {
+        ...review,
+        liked,
+        likeCount,
+      };
+    })
+    .catch(error => {
+      console.error('좋아요/취소 실패:', error);
+    });
+},
   },
   components: {
     Swiper,
