@@ -212,6 +212,22 @@ async function getFollowingReview(userEmail, page = 0, size = 10) {
     console.error('오류:', error);
   }
 }
+async function getMyReview(email, page = 0, size = 10) {
+  try {
+    const response = await instance.get(`/reviews/myreveiw`, {
+      params: { email, page, size },
+    });
+    if (response.status === 200) {
+      const ReviewData = response.data;
+      console.log(ReviewData);
+      return ReviewData;
+    } else {
+      throw new Error('리뷰를 가져오는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
+  }
+}
 
 async function imageUpload(imageFile) {
   try {
@@ -367,4 +383,5 @@ export {
   getFollowingReview,
   getEventList,
   getEventDetail,
+  getMyReview,
 };
