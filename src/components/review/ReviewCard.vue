@@ -14,6 +14,10 @@
             <span class="name username">{{ review.userNickname }}</span>
             <span class="userinfo"> 리뷰 수 {{ review.reviewcount }} </span>
           </div>
+          <button type="button" class="follow-button"
+          @click="follow(user.nickname)">
+          <span class="label">팔로우</span>
+        </button>
         </div>
       </div>
       <div class="timeline-gallery more" style="border-radius: 4px">
@@ -30,6 +34,7 @@
           <div class="rating-segment">
             <p class="ooezpq2 _1ltqxco1e" style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"></p>
           </div>
+          
           <div class="post-date">{{ formatRelativeDate(review.createDate) }}</div>
         </div>
         <!-- <h3 class="post-title">{{ review.summary }}</h3> -->
@@ -59,7 +64,7 @@
 
 <script>
 import moment from 'moment';
-import {likeReview} from '@/api/index.js';
+import { likeReview } from '@/api/index.js';
 
 export default {
   name: 'ReviewCard',
@@ -72,6 +77,11 @@ export default {
       type: String,
       required: true
     },
+    users: {
+      type: Array,
+      default: () => []
+    },
+    follow: Function
   },
   async created() {
     this.feedbackImageMap = await this.fetchFeedbackImageMap();
@@ -164,5 +174,9 @@ export default {
 .emoji-icon {
   vertical-align: middle;
   margin-right: 4px;
+}
+
+.follow-button {
+  margin-left: auto; /* 버튼을 오른쪽으로 정렬 */
 }
 </style>

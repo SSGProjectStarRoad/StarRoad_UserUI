@@ -12,13 +12,14 @@
     </div>
     <div v-if="reviews === null">로딩 중...</div>
     <div v-else-if="reviews.length === 0">데이터가 없습니다.</div>
-    <reviewcard :reviews="reviews" />
+    <reviewcard :reviews="reviews" :userEmail="userEmail"
+     :users="users" :follow="follow" />
   </div>
   <ReviewButton />
 </template>
 
 <script>
-import { getAllReview } from '@/api/index';
+import { getAllReview, addFollowUser, fetchAllUser } from '@/api/index';
 import ReviewButton from "@/components/review/ReviewButton.vue";
 import reviewcard from '@/components/review/ReviewCard.vue';
 
@@ -32,10 +33,12 @@ export default {
       hasNextPage: true,
       loading: false,
       userEmail: 'ekmbjh@naver.com',
+      users: [],
     }
   },
   async created() {
     try {
+      this.loadAllUser();
       const initialData = await getAllReview(this.userEmail, this.currentPage, this.pageSize);
       if (initialData) {
         console.log('Initial data:', initialData); // 데이터를 콘솔에 출력하여 확인합니다.
@@ -110,7 +113,29 @@ export default {
       } finally {
         this.loading = false;
       }
-    }
+    },
+    async follow(username) {
+      const user = this.users.find(user => user.nickname === username);
+      if (user) {
+        const data = await addFollowUser(username, this.userEmail);
+        if (data.status === 200) {
+          user.isFollowed = !user.isFollowed;
+          console.log(username + '님을 팔로우했습니다: ' + (user.isFollowed ? 'true' : 'false'));
+        }
+      }
+    },
+    async loadAllUser() {
+      try {
+        const data = await fetchAllUser(this.userEmail);
+        this.users = data.map(user => ({
+          ...user,
+          isFollowed: false, // isFollowed 속성을 기본적으로 추가합니다.
+        }));
+      } catch (error) {
+        console.error("사용자 목록을 불러오는 중 오류가 발생했습니다:", error);
+        this.users = [];
+      }
+    },
   },
 };
 </script>

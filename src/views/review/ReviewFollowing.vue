@@ -19,76 +19,27 @@
               <div class="v-scroll">
                 <div class="v-scroll-inner">
                   <div class="" style="display: flex; flex-wrap: nowrap">
-                    <div class="swiper-slide" id="influencser_0_0" style="margin-right: 12px">
-                      <div class="__follow-list-item">
-                        <div class="__user-info">
-                          <div class="profile">
-                            <div class="profile-pic">
-                              <img height="42" width="42" src="../../img/review/profile_default_v2.png" alt=""
-                                class="img" />
+                    <div class="swiper-container" style="display: flex; flex-wrap: nowrap">
+                      <div v-for="(user, index) in users" :key="index" class="swiper-slide"
+                        :id="'influencer_' + index + '_0'" style="margin-right: 12px">
+                        <div class="__follow-list-item">
+                          <div class="__user-info">
+                            <div class="profile">
+                              <div class="profile-pic">
+                                <img :src="user.imagePath || '@/img/review/profile_default_v2.png'" height="42"
+                                  width="42" alt="profile" class="img" />
+                              </div>
+                              <h4 class="name username">
+                                <span class="txt">{{ user.nickname }}</span>
+                              </h4>
                             </div>
-                            <h4 class="name username">
-                              <span class="txt">펭귄은정어리를사랑해</span>
-                            </h4>
                           </div>
+                          <button type="button"
+                            :class="['btn', user.isFollowed ? 'btn-grey' : 'btn-orange', 'btn-rounded']"
+                            @click="follow(user.nickname)">
+                            <span class="label">{{ user.isFollowed ? '팔로잉' : '팔로우' }}</span>
+                          </button>
                         </div>
-                        <button type="button" class="btn btn-orange btn-rounded">
-                          <span class="label">팔로우</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="swiper-slide" id="influencser_1_0" style="margin-right: 12px">
-                      <div class="__follow-list-item">
-                        <div class="__user-info">
-                          <div class="profile">
-                            <div class="profile-pic">
-                              <img height="42" width="42" src="../../img/review/profile_default_v2.png" alt=""
-                                class="img" />
-                            </div>
-                            <h4 class="name username">
-                              <span class="txt">미식가빵야빵야</span>
-                            </h4>
-                          </div>
-                        </div>
-                        <button type="button" class="btn btn-orange btn-rounded">
-                          <span class="label">팔로우</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="swiper-slide" id="influencser_2_0" style="margin-right: 12px">
-                      <div class="__follow-list-item">
-                        <div class="__user-info">
-                          <div class="profile">
-                            <div class="profile-pic">
-                              <img height="42" width="42" src="../../img/review/profile_default_v2.png" alt=""
-                                class="img" />
-                            </div>
-                            <h4 class="name username">
-                              <span class="txt">ghostcrp</span>
-                            </h4>
-                          </div>
-                        </div>
-                        <button type="button" class="btn btn-orange btn-rounded">
-                          <span class="label">팔로우</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="swiper-slide" id="influencser_3_0">
-                      <div class="__follow-list-item">
-                        <div class="__user-info">
-                          <div class="profile">
-                            <div class="profile-pic">
-                              <img height="42" width="42" src="../../img/review/profile_default_v2.png" alt=""
-                                class="img" />
-                            </div>
-                            <h4 class="name username">
-                              <span class="txt">kimdahn ee</span>
-                            </h4>
-                          </div>
-                        </div>
-                        <button type="button" class="btn btn-orange btn-rounded">
-                          <span class="label">팔로우</span>
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -102,16 +53,15 @@
 
     <div v-if="reviews === null">로딩 중...</div>
     <div v-else-if="reviews.length === 0">데이터가 없습니다.</div>
-    <reviewcard :reviews="reviews"
-    :userEmail="userEmail"
-    />
+    <reviewcard :reviews="reviews" :userEmail="userEmail"
+     :users="users" :follow="follow" />
 
     <ReviewButton />
   </div>
 </template>
 
 <script>
-import { getFollowingReview, fetchUserData } from '@/api/index';
+import { getFollowingReview, fetchRankUser, addFollowUser } from '@/api/index';
 import ReviewButton from "@/components/review/ReviewButton.vue";
 import reviewcard from '@/components/review/ReviewCard.vue';
 import { mapState, mapGetters } from 'vuex';
@@ -119,13 +69,21 @@ import { mapState, mapGetters } from 'vuex';
 export default {
   data() {
     return {
-      id: 1,
+      id: [],
+      name: [],
+      nickname: [],
+      email: [],
+      imagePath: [],
       reviews: [],
+      reviewExp: [],
+      point: [],
+      activeStatus: [],
       currentPage: 0,
       pageSize: 10,
       hasNextPage: true,
       loading: false,
       userEmail: 'ekmbjh@naver.com',
+      users: [],
     }
   },
   computed: {
@@ -141,7 +99,9 @@ export default {
   },
   async created() {
     try {
+      this.loadFollowingUser();
       const initialData = await getFollowingReview(this.userEmail, this.currentPage, this.pageSize);
+      console.log("userEmail : " + this.userEmail);
       if (initialData) {
         console.log('Initial data:', initialData); // 데이터를 콘솔에 출력하여 확인합니다.
         this.reviews = initialData.reviews;
@@ -185,7 +145,7 @@ export default {
       console.log("!this.hasNextPage : " + !this.hasNextPage);
       if (this.loading || !this.hasNextPage) {
         console.log("loadMoreReviews 리턴");
-        return; 
+        return;
       }
       console.log("loadMoreReviews 통과");
       this.loading = true;
@@ -211,6 +171,28 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    async follow(username) {
+      const user = this.users.find(user => user.nickname === username);
+      if (user) {
+        const data = await addFollowUser(username, this.userEmail);
+        if (data.status === 200) {
+          user.isFollowed = !user.isFollowed;
+          console.log(username + '님을 팔로우했습니다: ' + (user.isFollowed ? 'true' : 'false'));
+        }
+      }
+    },
+    async loadFollowingUser() {
+      try {
+        const data = await fetchRankUser(this.userEmail);
+        this.users = data.map(user => ({
+          ...user,
+          isFollowed: false, // isFollowed 속성을 기본적으로 추가합니다.
+        }));
+      } catch (error) {
+        console.error("사용자 목록을 불러오는 중 오류가 발생했습니다:", error);
+        this.users = [];
+      }
     }
   },
 
@@ -223,5 +205,14 @@ export default {
 .contents {
   width: 400px;
   margin: auto;
+}
+
+.btn-grey {
+  background-color: grey;
+  border-radius: 10px;
+}
+
+.btn-rounded {
+  border-radius: 10px;
 }
 </style>
