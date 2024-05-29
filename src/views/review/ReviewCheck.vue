@@ -42,8 +42,9 @@
                     <div class="confirmation-message">방문하신 날짜와 시간을 확인해 주세요.</div>
                 </div>
                 <div class="decision-buttons-container">
-                    <button class="button-base button-secondary" type="button">
+                    <button class="button-base button-secondary" type="button" @click="goBack">
                         이 장소가 아니에요
+                        
                     </button>
                     <button class="button-base button-secondary button-confirm" type="button" @click="confirmReceipt">
                         이 장소가 맞아요
@@ -120,6 +121,9 @@ export default {
                 }
             });
         },
+        goBack() {
+      this.$router.go(-1);
+    },
     }
 }
 </script>

@@ -50,7 +50,7 @@
       <br />
       <div>
         <button type="button" class="btn counter register" @click="confirmUpload">
-          <span class="">등록하기</span>
+          <span>등록하기</span>
         </button>
       </div>
 
@@ -64,7 +64,7 @@ import { submitSurvey, fetchReviewSelections } from '@/api/index';
 export default {
   data() {
     return {
-      userNickname: "hklee",
+      userEmail: "ekmbjh@naver.com",
       uploadedImages: [],
       surveyEssential: [
         { text: "재방문하고 싶어요", selected: false },
@@ -189,7 +189,7 @@ export default {
 
         // 리뷰 데이터 객체 생성
         const reviewData = {
-          userNickname: this.userNickname,
+          userEmail: this.userEmail,
           contents: this.reviewText,
           shopName: this.shopName,
           paymentNum: this.approvalNumber,
@@ -222,6 +222,7 @@ export default {
         } else {
           alert('리뷰 데이터 업로드에 실패하였습니다. 다시 시도해주세요.');
         }
+        this.$router.push('/review/recommended');
       }
     },
   },

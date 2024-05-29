@@ -26,8 +26,9 @@
                           <div class="__user-info">
                             <div class="profile">
                               <div class="profile-pic">
-                                <img :src="user.imagePath || '@/img/review/profile_default_v2.png'" height="42"
-                                  width="42" alt="profile" class="img" />
+                                <img
+                                  :src="user.imagePath || 'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'"
+                                  height="42" width="42" alt="profile" class="img" />
                               </div>
                               <h4 class="name username">
                                 <span class="txt">{{ user.nickname }}</span>
@@ -51,11 +52,13 @@
       </div>
     </div>
 
-    <div v-if="reviews === null">로딩 중...</div>
-    <div v-else-if="reviews.length === 0">데이터가 없습니다.</div>
-    <reviewcard :reviews="reviews" :userEmail="userEmail"
-     :users="users" :follow="follow" />
-
+    <div v-if="reviews === null" class="container">
+      <div class="message">로딩 중...</div>
+    </div>
+    <div v-else-if="reviews.length === 0" class="container">
+      <div class="message">데이터가 없습니다.</div>
+    </div>
+    <reviewcard :reviews="reviews" :userEmail="userEmail" :users="users" :follow="follow" />
     <ReviewButton />
   </div>
 </template>
@@ -72,7 +75,6 @@ export default {
       id: [],
       name: [],
       nickname: [],
-      email: [],
       imagePath: [],
       reviews: [],
       reviewExp: [],
@@ -82,15 +84,14 @@ export default {
       pageSize: 10,
       hasNextPage: true,
       loading: false,
-      userEmail: 'ekmbjh@naver.com',
       users: [],
     }
   },
   computed: {
     ...mapState(['email']),
     ...mapGetters(['isLogin']),
-    userEmailComputed() {
-      return this.email; // Vuex 스토어의 email을 userEmailComputed로 매핑합니다.
+    userEmail() {
+      return this.email; // Vuex 스토어의 email을 userEmail로 매핑합니다.
     }
   },
   components: {
@@ -115,6 +116,7 @@ export default {
     }
   },
   mounted() {
+    console.log("email : " + this.userEmail);
     window.addEventListener('scroll', this.handleScroll);
   },
   beforeUnmount() {
@@ -126,8 +128,8 @@ export default {
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      // 페이지 하단에서 300px 이내에 도달하면 추가 데이터 요청
-      if (scrollPosition + windowHeight >= documentHeight - 300) {
+      // 페이지 하단에서 100px 이내에 도달하면 추가 데이터 요청
+      if (scrollPosition + windowHeight >= documentHeight - 100) {
         this.loadMoreReviews();
         console.log("locadMoreReviews 호출");
       }
@@ -214,5 +216,20 @@ export default {
 
 .btn-rounded {
   border-radius: 10px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  /* 화면 전체 높이 */
+  text-align: center;
+  /* 텍스트 중앙 정렬 */
+}
+
+.message {
+  font-size: 1.5em;
+  /* 글자 크기 조정 */
 }
 </style>
