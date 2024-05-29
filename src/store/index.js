@@ -15,11 +15,13 @@ export default createStore({
     email: getUserFromCookie() || '',
     accessToken: getAccessTokenFromCookie() || '',
     refreshToken: getRefreshTokenFromCookie() || '',
+    errorMessage: '',
   },
   getters: {
     isLogin(state) {
       return state.email !== '';
     },
+
     email(state) {
       return state.email;
     },
@@ -42,6 +44,9 @@ export default createStore({
     },
     clearRefreshToken(state) {
       state.refreshToken = '';
+    },
+    setErrorMessage(state, errorMessage) {
+      state.errorMessage = errorMessage; // 에러 메시지 설정
     },
   },
   actions: {
@@ -75,6 +80,7 @@ export default createStore({
         deleteCookie('til_auth');
         deleteCookie('til_user');
         deleteCookie('til_refresh');
+        deleteCookie('JSESSIONID', '/'); // JSESSIONID 쿠키 삭제
       } catch (error) {
         console.error('Failed to logout', error);
       }

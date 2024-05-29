@@ -59,6 +59,9 @@
           </div>
         </div>
       </form>
+      <div v-if="notification" ref="notification" class="notification">
+        {{ notification }}
+      </div>
     </div>
     <div class="registerback">
       계정이 없으신가요?
@@ -72,13 +75,8 @@ import loginlogo from '@/img/telescope_big.png';
 import kakao from '@/img/login/kakaologo.png';
 import google from '@/img/login/googlelogo.png';
 import naver from '@/img/login/naverlogo.png';
-import { loginUser } from '@/api/index';
 import { validateEmail } from '@/utils/validation';
-import {
-  saveAccessTokenToCookie,
-  saveRefreshTokenToCookie,
-  saveUserToCookie,
-} from '@/utils/cookies';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   data() {
@@ -90,61 +88,61 @@ export default {
       email: '',
       password: '',
       logMessage: '',
+      notification: '',
     };
   },
   computed: {
+    ...mapState(['errorMessage']),
     isEmailValid() {
       return validateEmail(this.email);
     },
   },
+  watch: {
+    errorMessage(newMessage) {
+      if (newMessage) {
+        this.showNotification(newMessage);
+      }
+    },
+  },
   methods: {
+    ...mapMutations(['setErrorMessage']),
     async submitForm() {
       try {
         const userData = {
           email: this.email,
           password: this.password,
         };
-        const response = await loginUser(userData);
-
-        // 응답 객체를 로그로 출력
-        console.log('API response:', response);
-        // 응답 데이터 로그로 출력
-        console.log('Response data:', response.data);
-
+        const response = await this.$store.dispatch('login', userData);
         if (
           response.data &&
           response.data.accessToken &&
           response.data.refreshToken
         ) {
-          const { data } = response;
-
-          console.log('Response data:', data);
-          // Vuex Store에 저장
-          this.$store.commit('setEmail', userData.email);
-          this.$store.commit('setAccessToken', data.accessToken);
-          this.$store.commit('setRefreshToken', data.refreshToken);
-          // 쿠키에 저장
-          saveAccessTokenToCookie(data.accessToken);
-          saveRefreshTokenToCookie(data.refreshToken);
-          saveUserToCookie(userData.email);
-          // 메인 페이지로 이동
           this.$router.push('/main');
         } else {
           throw new Error('Invalid API response');
         }
       } catch (error) {
-        // Axios 인터셉터가 처리하지 않은 일반적인 오류만 처리합니다.
         console.error('Login error:', error);
-        if (
-          !error.response ||
-          !error.response.data ||
-          !error.response.data.message
-        ) {
-          alert('An error occurred. Please try again.');
-        }
+        // 에러 처리는 Vuex store에서 하므로 여기서는 추가 작업 필요 없음
       } finally {
         this.initForm();
       }
+    },
+    showNotification(message) {
+      this.notification = message;
+      this.$nextTick(() => {
+        const notificationElement = this.$refs.notification;
+        notificationElement.classList.add('fade-in');
+        setTimeout(() => {
+          notificationElement.classList.remove('fade-in');
+          notificationElement.classList.add('fade-out');
+          setTimeout(() => {
+            this.notification = '';
+            this.setErrorMessage(''); // Vuex의 errorMessage 상태도 초기화
+          }, 500);
+        }, 1500);
+      });
     },
     initForm() {
       this.email = '';
@@ -157,8 +155,14 @@ export default {
       this.$router.push('/login/forgotpw');
     },
     loginWith(provider) {
-      const baseUrl = process.env.VUE_APP_API_URL; // Spring Boot 서버 주소
-      window.location.href = `${baseUrl}/oauth2/authorization/${provider}`;
+      const combineURLs = (baseURL, relativeURL) => {
+        return (
+          baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
+        );
+      };
+      const baseUrl = process.env.VUE_APP_API_URL;
+      const url = combineURLs(baseUrl, `/oauth2/authorization/${provider}`);
+      window.location.href = url;
     },
   },
 };
@@ -314,5 +318,43 @@ export default {
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
+}
+.notification {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  color: white;
+  background-color: var(--navy-color);
+  border-radius: 8px;
+  text-align: center;
+  width: 220px;
+  z-index: 1000;
+  opacity: 0.9;
+  animation: fadeIn 0.5s, fadeOut 0.5s 1.5s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.fade-in {
+  animation: fadeIn 0.5s forwards;
+}
+.fade-out {
+  animation: fadeOut 0.5s forwards;
 }
 </style>

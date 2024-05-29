@@ -111,7 +111,7 @@ export default {
     async storeguide(storeId) {
       try {
         const response = await axios.get(
-          `${process.env.VUE_APP_API_URL}store/${storeId}/guidemap`,
+          `${process.env.VUE_APP_API_URL}/store/${storeId}/guidemap`,
         );
         console.log('서버 응답:', response.data);
         // 데이터 처리를 완료한 후 페이지를 이동합니다.

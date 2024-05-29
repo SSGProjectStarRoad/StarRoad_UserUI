@@ -178,11 +178,7 @@ function inactiveUser(email) {
   return instance.post('/user/inactive', { email });
 }
 
-async function getAllReview(
-  userEmail,
-  page = 0,
-  size = 10,
-) {
+async function getAllReview(userEmail, page = 0, size = 10) {
   try {
     const response = await instance.get(`/reviews`, {
       params: { userEmail, page, size },
@@ -199,17 +195,11 @@ async function getAllReview(
   }
 }
 
-async function getFollowingReview(
-  userEmail,
-  page = 0,
-  size = 10,
-) {
+async function getFollowingReview(userEmail, page = 0, size = 10) {
   try {
-    const response = await instance.get(
-      `/reviews/following`, {
+    const response = await instance.get(`/reviews/following`, {
       params: { userEmail, page, size },
-    }
-    );
+    });
     if (response.status === 200) {
       const ReviewData = response.data;
       console.log(ReviewData);
@@ -249,19 +239,13 @@ async function storeguide(storeId, router) {
   // 매장 ID를 서버에 전달하는 메소드입니다.
   // 여기서 HTTP 요청을 보내고 서버에서 작업을 처리할 수 있습니다.
   console.log('매장 ID:', storeId);
-
   try {
     // Axios를 사용하여 GET 요청을 보냅니다.
-    const response = await axios.get(
-      `${process.env.VUE_APP_API_URL}store/${storeId}/guidemap`,
-    );
-
+    const response = await instance.get(`/store/${storeId}/guidemap`);
     // 서버로부터 받은 응답을 처리합니다.
     console.log('서버 응답:', response.data);
-
     // 받은 데이터를 필요에 따라 처리합니다.
     // 이 부분에는 받은 데이터를 저장하거나 다른 작업을 수행할 수 있습니다.
-
     // Vue Router를 사용하여 페이지를 이동합니다.
     router.push(`/store/${storeId}/guidemap`);
   } catch (error) {
@@ -279,8 +263,8 @@ async function submitSurvey(surveyData) {
     // axios를 사용하여 서버에 데이터를 POST 방식으로 보냅니다.
     const response = await instance.post('/reviews/submit', surveyData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        'Content-Type': 'multipart/form-data',
+      },
     });
 
     console.log('설문 제출 성공:', response);
@@ -377,17 +361,19 @@ function deletemyfollowerData(email, id) {
   return instance.delete(`/follow/${id}/deleteto/${email}`);
 }
 function uploadProfileimg(email, formData, config) {
-  return instance.post(
-    `/user/profile/upload/img/${this.email}`,
-    formData,
-    config,
-  );
+  return instance.post(`/user/profile/upload/img/${email}`, formData, config);
 }
 function readProfileimg(email) {
   return instance.get(`/user/profile/get/img/${email}`);
 }
 function deleteProfileimg(email) {
   return instance.delete(`/user/profile/delete/img/${email}`);
+}
+function getEventList() {
+  return instance.get(`/board/list`);
+}
+function getEventDetail(boardId) {
+  return instance.get(`/board-image/content/${boardId}`);
 }
 
 export {
@@ -432,6 +418,8 @@ export {
   submitSurvey,
   fetchReviewSelections,
   getFollowingReview,
+  getEventList,
+  getEventDetail,
   fetchRankUser,
   addFollowUser,
 };

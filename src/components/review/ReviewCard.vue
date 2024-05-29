@@ -1,14 +1,25 @@
 <template>
   <div>
-    <article v-for="(review, index) in reviews" :key="index" class="timeline-post-item timeline-post-item-feed">
+    <article
+      v-for="(review, index) in reviews"
+      :key="index"
+      class="timeline-post-item timeline-post-item-feed"
+    >
       <!-- 게시글 -->
       <div class="timeline-header">
         <!-- 게시글 헤더 -->
         <div class="profile">
           <div class="profile-pic">
             <img
-              :src="review.imagePath || 'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'"
-              height="42" width="42" alt="" class="img" />
+              :src="
+                review.imagePath ||
+                'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'
+              "
+              height="42"
+              width="42"
+              alt=""
+              class="img"
+            />
           </div>
           <div class="__info">
             <span class="name username">{{ review.userNickname }}</span>
@@ -24,15 +35,27 @@
         <div class="gallery" style="border-radius: 4px">
           <div class="imgin">
             <!-- Loop through reviewImages to display all images -->
-            <img v-for="image in review.reviewImages" :key="image.id" :src="image.imagePath"
-              @error="setDefaultImage($event)" alt="" />
+
+            <img
+              v-for="image in review.reviewImages"
+              :key="image.id"
+              :src="image.imagePath"
+              @error="setDefaultImage($event)"
+              alt=""
+            />
           </div>
         </div>
       </div>
       <div class="timeline-post-content">
         <div class="__post-meta">
           <div class="rating-segment">
-            <p class="ooezpq2 _1ltqxco1e" style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"></p>
+            <p
+              class="ooezpq2 _1ltqxco1e"
+              style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"
+            ></p>
+          </div>
+          <div class="post-date">
+            {{ formatRelativeDate(review.createDate) }}
           </div>
           
           <div class="post-date">{{ formatRelativeDate(review.createDate) }}</div>
@@ -42,18 +65,39 @@
           <div id="post-content1_2650757">{{ review.contents }}</div>
         </div>
         <div class="feedback-icons">
-          <span v-for="(feedback, index) in review.reviewFeedbacks" :key="index" class="feedback">
-            <img :src="getFeedbackImage(feedback.reviewFeedbackSelection)" class="emoji-icon" alt="" width="18"
-              height="18" />
+          <span
+            v-for="(feedback, index) in review.reviewFeedbacks"
+            :key="index"
+            class="feedback"
+          >
+            <img
+              :src="getFeedbackImage(feedback.reviewFeedbackSelection)"
+              class="emoji-icon"
+              alt=""
+              width="18"
+              height="18"
+            />
             {{ feedback.reviewFeedbackSelection }}
           </span>
         </div>
       </div>
       <div class="timeline-post-footer _10fm75h6 _10fm75hg _10fm75hj">
         <div class="__post-meta">
-          <span :class="{ liked: review.liked }" @click="toggleLike(review, index)" style="cursor: pointer;">
-            <img :src="review.liked ? require('@/img/imoji/heart-solid.svg') : require('@/img/imoji/heart-regular.svg')"
-              alt="like" width="18" height="18" />
+          <span
+            :class="{ liked: review.liked }"
+            @click="toggleLike(review, index)"
+            style="cursor: pointer"
+          >
+            <img
+              :src="
+                review.liked
+                  ? require('@/img/imoji/heart-solid.svg')
+                  : require('@/img/imoji/heart-regular.svg')
+              "
+              alt="like"
+              width="18"
+              height="18"
+            />
             {{ review.likeCount }}
           </span>
         </div>
@@ -71,11 +115,12 @@ export default {
   props: {
     reviews: {
       type: Array,
-      default: () => []
+
+      default: () => [],
     },
     userEmail: {
       type: String,
-      required: true
+      required: true,
     },
     users: {
       type: Array,
@@ -91,7 +136,8 @@ export default {
       return moment(date).fromNow();
     },
     setDefaultImage(event) {
-      event.target.src = 'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png';
+      event.target.src =
+        'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png';
     },
     async fetchFeedbackImageMap() {
       return {
@@ -110,7 +156,7 @@ export default {
         '종류가 다양해요': require('@/img/imoji/하트와리본.png'),
         '시설이 청결했습니다': require('@/img/imoji/파란하트.png'),
         '재료가 신선해요': require('@/img/imoji/하트장식.png'),
-        '트랜디해요': require('@/img/imoji/오렌지하트.png'),
+        트랜디해요: require('@/img/imoji/오렌지하트.png'),
         '재고가 충분해요': require('@/img/imoji/파란하트.png'),
         '품질이 좋아요': require('@/img/imoji/반짝임.png'),
         '시간이 금방가요': require('@/img/imoji/시계.png'),
@@ -133,7 +179,10 @@ export default {
         console.error('Invalid feedback text:', feedbackText);
         return require('@/img/imoji/별눈얼굴.png');
       }
-      return this.feedbackImageMap[feedbackText] || require('@/img/imoji/별눈얼굴.png');
+      return (
+        this.feedbackImageMap[feedbackText] ||
+        require('@/img/imoji/별눈얼굴.png')
+      );
     },
     toggleLike(review, index) {
       const reviewId = review.id;
@@ -149,7 +198,7 @@ export default {
           console.error('좋아요/취소 실패:', error);
         });
     },
-  }
+  },
 };
 </script>
 
@@ -175,7 +224,6 @@ export default {
   vertical-align: middle;
   margin-right: 4px;
 }
-
 .follow-button {
   margin-left: auto; /* 버튼을 오른쪽으로 정렬 */
 }

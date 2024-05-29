@@ -1,5 +1,6 @@
 <template>
-  <div class="contents">
+  <LoadingSpinner v-if="isLoading" />
+  <div class="contents" v-else>
     <div class="img">
       <div class="setting" @click="goToEditPage">
         <img src="@/img/setting.png" alt="" />
@@ -17,6 +18,7 @@
         <div class="myname">{{ mydata.name }}</div>
         &nbsp님
         <div :class="levelClass">{{ levelText }}</div>
+        <div class="mynickname">{{ mydata.nickname }}</div>
       </div>
       <div class="review-follow" @click="goToFollowPage">
         <div class="follower">
@@ -64,8 +66,12 @@
 
 <script>
 import { mypageData, followData } from '@/api/index';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { mapState, mapGetters } from 'vuex';
 export default {
+  components: {
+    LoadingSpinner,
+  },
   data() {
     return {
       mydata: [],
@@ -125,8 +131,12 @@ export default {
     goToMallMap() {
       this.$router.push('/store/mallmap');
     },
-
     logoutUser() {
+      console.log(
+        'Logging out user:',
+        this.$store.state.email,
+        this.$store.state.accessToken,
+      );
       this.$store
         .dispatch('logout')
         .then(() => {
@@ -191,6 +201,12 @@ export default {
   font-size: 23px;
   /* color: var(--navy-color); */
   font-weight: 900;
+}
+.mynickname {
+  position: absolute;
+  top: 30px;
+  font-size: 14px;
+  color: var(--dgray-color);
 }
 .mylevel {
   width: 90px;

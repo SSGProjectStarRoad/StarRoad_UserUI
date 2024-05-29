@@ -1,10 +1,23 @@
 <template>
   <div>
-    <article v-for="(review, index) in storeReview.reviews" :key="index" class="timeline-post-item timeline-post-item-feed">
+    <article
+      v-for="(review, index) in storeReview.reviews"
+      :key="index"
+      class="timeline-post-item timeline-post-item-feed"
+    >
       <div class="timeline-header">
         <div class="profile">
           <div class="profile-pic">
-            <img :src="review.imagePath || 'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'" height="42" width="42" alt="" class="img" />
+            <img
+              :src="
+                review.imagePath ||
+                'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'
+              "
+              height="42"
+              width="42"
+              alt=""
+              class="img"
+            />
           </div>
           <div class="__info">
             <span class="name username">{{ review.userNickname }}</span>
@@ -12,38 +25,89 @@
           </div>
         </div>
       </div>
-      <div class="timeline-gallery more" style="border-radius: 4px; position: relative;">
-        <swiper :options="swiperOptions" @slideChange="onSlideChange" @swiper="onSwiper" v-if="review.reviewImages.length">
-          <swiper-slide v-for="(image, imgIndex) in review.reviewImages" :key="image.id">
+      <div
+        class="timeline-gallery more"
+        style="border-radius: 4px; position: relative"
+      >
+        <swiper
+          :options="swiperOptions"
+          @slideChange="onSlideChange"
+          @swiper="onSwiper"
+          v-if="review.reviewImages.length"
+        >
+          <swiper-slide
+            v-for="(image, imgIndex) in review.reviewImages"
+            :key="image.id"
+          >
             <div class="image-container">
-              <img :src="image.imagePath" @error="setDefaultImage($event)" alt="" />
+              <img
+                :src="image.imagePath"
+                @error="setDefaultImage($event)"
+                alt=""
+              />
             </div>
           </swiper-slide>
-          <div v-if="showPrevButton" class="swiper-button-prev" @click="slidePrev"></div>
-          <div v-if="showNextButton" class="swiper-button-next" @click="slideNext"></div>
+          <div
+            v-if="showPrevButton"
+            class="swiper-button-prev"
+            @click="slidePrev"
+          ></div>
+          <div
+            v-if="showNextButton"
+            class="swiper-button-next"
+            @click="slideNext"
+          ></div>
         </swiper>
       </div>
       <div class="timeline-post-content">
         <div class="__post-meta">
           <div class="rating-segment">
-            <p class="ooezpq2 _1ltqxco1e" style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"></p>
+            <p
+              class="ooezpq2 _1ltqxco1e"
+              style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"
+            ></p>
           </div>
-          <div class="post-date">{{ formatRelativeDate(review.createDate) }}</div>
+          <div class="post-date">
+            {{ formatRelativeDate(review.createDate) }}
+          </div>
         </div>
         <div class="post-content">
-          <div id="post-content1_2650757">{{ review.contents }} </div>
+          <div id="post-content1_2650757">{{ review.contents }}</div>
         </div>
         <div class="feedback-icons">
-          <span v-for="(feedback, index) in review.reviewFeedbacks" :key="index" class="feedback">
-            <img :src="getFeedbackImage(feedback.reviewFeedbackSelection)" class="emoji-icon" alt="" width="18" height="18" />
+          <span
+            v-for="(feedback, index) in review.reviewFeedbacks"
+            :key="index"
+            class="feedback"
+          >
+            <img
+              :src="getFeedbackImage(feedback.reviewFeedbackSelection)"
+              class="emoji-icon"
+              alt=""
+              width="18"
+              height="18"
+            />
             {{ feedback.reviewFeedbackSelection }}
           </span>
         </div>
       </div>
       <div class="timeline-post-footer _10fm75h6 _10fm75hg _10fm75hj">
         <div class="__post-meta">
-          <span :class="{ liked: review.liked }" @click="toggleLike(review, index)" style="cursor: pointer;">
-            <img :src="review.liked ? require('@/img/imoji/heart-solid.svg') : require('@/img/imoji/heart-regular.svg')" alt="like" width="18" height="18" />
+          <span
+            :class="{ liked: review.liked }"
+            @click="toggleLike(review, index)"
+            style="cursor: pointer"
+          >
+            <img
+              :src="
+                review.liked
+                  ? require('@/img/imoji/heart-solid.svg')
+                  : require('@/img/imoji/heart-regular.svg')
+              "
+              alt="like"
+              width="18"
+              height="18"
+            />&nbsp;
             {{ review.likeCount }}
           </span>
         </div>
@@ -54,10 +118,10 @@
 <script>
 import moment from 'moment';
 import 'moment/locale/ko';
-import {Swiper, SwiperSlide} from 'swiper/vue';
+import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/swiper-bundle.css';
-import SwiperCore, {Navigation, Pagination} from 'swiper';
-import {likeReview} from '@/api/index.js';
+import SwiperCore, { Navigation, Pagination } from 'swiper';
+import { likeReview } from '@/api/index.js';
 
 SwiperCore.use([Navigation, Pagination]);
 
@@ -70,13 +134,12 @@ export default {
     },
     storeReview: {
       type: Object,
-      default: () => ({})
+      default: () => ({}),
     },
     userEmail: {
       type: String,
-      required: true
+      required: true,
     },
- 
   },
   data() {
     return {
@@ -112,7 +175,7 @@ export default {
         '종류가 다양해요': require('@/img/imoji/하트와리본.png'),
         '시설이 청결했습니다': require('@/img/imoji/파란하트.png'),
         '재료가 신선해요': require('@/img/imoji/하트장식.png'),
-        '트랜디해요': require('@/img/imoji/오렌지하트.png'),
+        트랜디해요: require('@/img/imoji/오렌지하트.png'),
         '재고가 충분해요': require('@/img/imoji/파란하트.png'),
         '품질이 좋아요': require('@/img/imoji/반짝임.png'),
         '시간이 금방가요': require('@/img/imoji/시계.png'),
@@ -126,8 +189,8 @@ export default {
         '매장이 넓어요': require('@/img/imoji/별눈얼굴.png'),
         '특색 있는 제품이 많아요': require('@/img/imoji/더블하트.png'),
         'A/S가 세심해요': require('@/img/imoji/AS.png'),
-        '아이들이 좋아해요': require('@/img/imoji/키즈.png')
-      }
+        '아이들이 좋아해요': require('@/img/imoji/키즈.png'),
+      },
     };
   },
   // created() {
@@ -135,14 +198,18 @@ export default {
   // },
   methods: {
     getFeedbackImage(feedbackText) {
-      return this.feedbackImageMap[feedbackText] || require('@/img/imoji/별눈얼굴.png');
+      return (
+        this.feedbackImageMap[feedbackText] ||
+        require('@/img/imoji/별눈얼굴.png')
+      );
     },
     formatRelativeDate(date) {
       moment.locale('ko');
       return moment(date).fromNow();
     },
     setDefaultImage(event) {
-      event.target.src = 'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png';
+      event.target.src =
+        'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png';
     },
     onSwiper(swiper) {
       this.swiper = swiper;
@@ -165,35 +232,34 @@ export default {
         this.swiper.slideNext();
       }
     },
-//     initializeLikeStatus() {
-//   this.getUserLikedReviews(this.userEmail)
-//     .then(response => {
-//       console.log('Liked Review IDs:', response.data);
-//       const likedReviewIds = response.data;
-//       this.storeReview.reviews.forEach(review => {
-//         review.liked = likedReviewIds.includes(review.id);
-//       });
-//     })
-//     .catch(error => {
-//       console.error('사용자의 좋아요 정보를 불러오는데 실패했습니다', error);
-//     });
-// }
-// ,
-toggleLike(review, index) {
-  const reviewId = review.id;
-  const userEmail = this.userEmail;
+    //     initializeLikeStatus() {
+    //   this.getUserLikedReviews(this.userEmail)
+    //     .then(response => {
+    //       console.log('Liked Review IDs:', response.data);
+    //       const likedReviewIds = response.data;
+    //       this.storeReview.reviews.forEach(review => {
+    //         review.liked = likedReviewIds.includes(review.id);
+    //       });
+    //     })
+    //     .catch(error => {
+    //       console.error('사용자의 좋아요 정보를 불러오는데 실패했습니다', error);
+    //     });
+    // }
+    // ,
+    toggleLike(review, index) {
+      const reviewId = review.id;
+      const userEmail = this.userEmail;
 
-  this.likeReview(reviewId, userEmail)
-    .then(response => {
-      const { liked, likeCount } = response.data;
-      review.liked = liked;
-      review.likeCount = likeCount;
-    })
-    .catch(error => {
-      console.error('좋아요/취소 실패:', error);
-    });
-}
-
+      this.likeReview(reviewId, userEmail)
+        .then(response => {
+          const { liked, likeCount } = response.data;
+          review.liked = liked;
+          review.likeCount = likeCount;
+        })
+        .catch(error => {
+          console.error('좋아요/취소 실패:', error);
+        });
+    },
   },
   components: {
     Swiper,
@@ -201,7 +267,6 @@ toggleLike(review, index) {
   },
 };
 </script>
-
 
 <style scoped>
 @import '@/css/review/review.css';
@@ -247,7 +312,8 @@ toggleLike(review, index) {
   border-radius: 8px;
 }
 
-.swiper-button-prev, .swiper-button-next {
+.swiper-button-prev,
+.swiper-button-next {
   color: #000;
   width: 20px;
   height: 20px;

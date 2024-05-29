@@ -14,6 +14,11 @@ export default {
     Header,
     Footer,
   },
+  data() {
+    return {
+      isModalVisible: false,
+    };
+  },
 };
 </script>
 
