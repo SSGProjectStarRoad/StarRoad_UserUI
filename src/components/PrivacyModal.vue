@@ -2,7 +2,7 @@
   <div class="modal" v-if="isVisible">
     <div class="modal-content">
       <span class="close" @click="closeModal">&times;</span>
-      <h2>Star Road 개인정보 수집 및 이용 동의서</h2>
+      <h2>Star Road 개인정보 수집 및 <br />이용 동의서</h2>
       <div class="modal-body">
         <p>
           Star Road(이하 "회사")는 개인정보보호법에 따라 회원(이하 "회원")의

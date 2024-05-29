@@ -38,7 +38,7 @@ export function setInterceptors(instance) {
         error.response.data &&
         error.response.data.message
       ) {
-        alert(error.response.data.message); // 백엔드에서 보낸 메시지를 알림으로 표시합니다.
+        store.commit('setErrorMessage', error.response.data.message);
       }
       if (status === 401 && !error.response.data.message) {
         // 액세스 토큰이 만료된 경우 새로운 액세스 토큰을 발급받습니다.

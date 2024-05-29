@@ -99,10 +99,11 @@ async function selectStore(
   page = 0,
   size = 10,
   filter = '',
+  sort
 ) {
   try {
     const response = await instance.get(`/store/${storeId}/reviews`, {
-      params: { userEmail, page, size, filter },
+      params: { userEmail, page, size, filter ,sort},
     });
     if (response.status === 200) {
       const storeWithReviewData = response.data;

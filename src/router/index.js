@@ -6,7 +6,7 @@ const routes = [
   {
     path: '/',
 
-    redirect: '/main',
+    redirect: '/login',
   },
   {
     path: '/main',
@@ -16,27 +16,33 @@ const routes = [
   {
     path: '/review/main',
     component: () => import('@/views/review/ReviewFollowing.vue'),
+    meta: { auth: true },
   },
   {
     path: '/review/recommended',
     name: 'ReviewRecommended',
     component: () => import('@/views/review/ReviewRecommended.vue'),
+    meta: { auth: true },
   },
   {
     path: '/review/write',
     component: () => import('@/views/review/ReviewWrite.vue'),
+    meta: { auth: true },
   },
   {
     path: '/review/user',
     component: () => import('@/views/review/ReviewUser.vue'),
+    meta: { auth: true },
   },
   {
     path: '/review/check',
     component: () => import('@/views/review/ReviewCheck.vue'),
+    meta: { auth: true },
   },
   {
     path: '/review/ocr',
     component: () => import('@/views/review/OCR.vue'),
+    meta: { auth: true },
   },
   {
     path: '/reward/main',
@@ -78,47 +84,58 @@ const routes = [
       }
       return next(); // 에러가 발생하거나 조건을 만족하지 않는 경우
     },
+    meta: { auth: true },
   },
   {
     path: '/reward/select',
     component: () => import('@/views/reward/RewardSelect.vue'),
+    meta: { auth: true },
   },
   {
     path: '/reward/mystar',
     component: () => import('@/views/reward/RewardMystar.vue'),
+    meta: { auth: true },
   },
   {
     path: '/reward/search',
     component: () => import('@/views/reward/RewardSearch.vue'),
+    meta: { auth: true },
   },
   {
     path: '/reward/getstar',
     component: () => import('@/views/reward/RewardGetstar.vue'),
+    meta: { auth: true },
   },
   {
     path: '/reward/completed',
     component: () => import('@/views/reward/RewardCompleted.vue'),
+    meta: { auth: true },
   },
 
   {
     path: '/store/main',
     component: () => import('@/views/store/StoreMain.vue'),
+    meta: { auth: true },
   },
   {
     path: '/store/:storeId/guidemap',
     component: () => import('@/views/store/Storeguidemap.vue'),
+    meta: { auth: true },
   },
   {
     path: '/store/mallmap',
     component: () => import('@/views/store/MallMap.vue'),
+    meta: { auth: true },
   },
   {
     path: '/store/:storeId/reviews',
     component: () => import('@/views/store/StoreReview.vue'),
+    meta: { auth: true },
   },
   {
     path: '/store/map',
     component: () => import('@/views/store/StoreMap.vue'),
+    meta: { auth: true },
   },
   {
     path: '/mypage/main',
@@ -128,34 +145,42 @@ const routes = [
   {
     path: '/mypage/notice',
     component: () => import('@/views/mypage/MypageNotice.vue'),
+    meta: { auth: true },
   },
   {
     path: '/mypage/mycoupon',
     component: () => import('@/views/mypage/MypageCoupon.vue'),
+    meta: { auth: true },
   },
   {
     path: '/mypage/myreview',
     component: () => import('@/views/mypage/MypageReview.vue'),
+    meta: { auth: true },
   },
   {
     path: '/mypage/follow',
     component: () => import('@/views/mypage/MypageFollow.vue'),
+    meta: { auth: true },
   },
   {
     path: '/mypage/check',
     component: () => import('@/views/mypage/MypageCheck.vue'),
+    meta: { auth: true },
   },
   {
     path: '/mypage/edit',
     component: () => import('@/views/mypage/MypageEdit.vue'),
+    meta: { auth: true },
   },
   {
     path: '/mypage/editimg',
     component: () => import('@/views/mypage/MypageEditimg.vue'),
+    meta: { auth: true },
   },
   {
     path: '/mypage/withdraw',
     component: () => import('@/views/mypage/MypageWithdrawal.vue'),
+    meta: { auth: true },
   },
   {
     path: '/login/register',
