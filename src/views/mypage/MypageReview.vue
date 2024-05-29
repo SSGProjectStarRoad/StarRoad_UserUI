@@ -1,33 +1,103 @@
 <template>
   <div class="contents">
-    <BackButton class="back-button" />
-    <div class="review-main">Review</div>
+    <div class="review-main">My Review</div>
     <div class="review-sub">나의 리뷰 게시물을 확인하세요!</div>
 
     <div class="myreviews">
-      <div class="reviews-type">최신 순</div>
-      <div class="review">
-        <div class="store-img"><img src="@/img/reward.png" alt="" /></div>
-        <div class="line"></div>
-        <div class="info">
-          <div class="title">매장이름</div>
-          <div class="store">좋아요 수?</div>
-        </div>
-      </div>
-      <div class="review">
-        <div class="store-img"><img src="@/img/reward.png" alt="" /></div>
-        <div class="line"></div>
-        <div class="info">
-          <div class="title">10%</div>
-          <div class="store">Starbucks</div>
-        </div>
-      </div>
+      <reviewCard
+        :reviews="storeReview.reviews"
+        :userEmail="email"
+        @likeReview="handleLikeReview"
+      />
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { getMyReview, likeReview } from '@/api/index';
+import { mapState, mapGetters } from 'vuex';
+import reviewCard from '@/components/review/ReviewCard.vue';
+
+export default {
+  name: 'MyReviewPage',
+  components: {
+    reviewCard,
+  },
+  data() {
+    return {
+      storeReview: {
+        reviews: [],
+        pageNumber: 0,
+        pageSize: 10,
+        hasNext: false,
+      },
+      loading: false,
+    };
+  },
+  async created() {
+    await this.fetchReviews();
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
+  computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
+  },
+  methods: {
+    async fetchReviews() {
+      try {
+        this.loading = true;
+        const ReviewData = await getMyReview(
+          this.email,
+          this.storeReview.pageNumber,
+          this.storeReview.pageSize,
+        );
+        if (ReviewData) {
+          this.storeReview.reviews = [
+            ...this.storeReview.reviews,
+            ...ReviewData.reviews,
+          ];
+          this.storeReview.hasNext = ReviewData.hasNext;
+        }
+      } catch (error) {
+        console.error('리뷰를 가져오는데 실패했습니다:', error);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async loadMoreReviews() {
+      if (this.loading || !this.storeReview.hasNext) return;
+      this.storeReview.pageNumber += 1;
+      await this.fetchReviews();
+    },
+    handleScroll() {
+      const scrollPosition =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      if (scrollPosition + windowHeight >= documentHeight - 100) {
+        this.loadMoreReviews();
+      }
+    },
+    async handleLikeReview(reviewId) {
+      try {
+        await likeReview(reviewId, this.email);
+        const reviewIndex = this.storeReview.reviews.findIndex(
+          r => r.id === reviewId,
+        );
+        if (reviewIndex !== -1) {
+          this.storeReview.reviews[reviewIndex].liked =
+            !this.storeReview.reviews[reviewIndex].liked;
+        }
+      } catch (error) {
+        console.error('좋아요 실패:', error);
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -41,49 +111,5 @@ export default {};
   color: var(--dgray-color);
   text-align: center;
   margin-top: 5px;
-}
-.myreviews {
-  margin: 30px 60px;
-  /* overflow: hidden; */
-}
-.reviews-type {
-  margin-left: 10px;
-  font-size: 12px;
-  color: var(--dgray-color);
-}
-.review {
-  position: relative;
-  display: flex;
-  /* overflow: hidden; */
-  width: 100%;
-  height: 100px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  background-color: white;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-}
-.store-img {
-  width: 110px;
-  text-align: center;
-  align-content: center;
-}
-.line {
-  width: 1px;
-  margin: 10px;
-  background: none;
-  border-left: 2px dashed #bababa; /* 점선 스타일 적용 */
-}
-.title {
-  font-size: 20px;
-  font-weight: 700;
-}
-.store {
-  font-size: 14px;
-}
-.info {
-  margin-top: 20px;
-  margin-left: 10px;
 }
 </style>
