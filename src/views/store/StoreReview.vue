@@ -13,14 +13,12 @@
           alt=""
           @click="goToguide"
         />
-
         <br />
       </div>
     </div>
     <div class="store-introduce">
       {{ storeReview.contents }}
     </div>
-
     <p :style="{ 'margin-bottom': '5px', 'padding-left': '10px' }">
       매장위치 <span class="span-style"> {{ storeReview.floor }}층</span>
     </p>
@@ -38,7 +36,6 @@
           <template v-slot:text>재방문 하고 싶어요</template>
           <template v-slot:number>{{ storeReview.revisitCount }}</template>
         </ProgressBar>
-
         <ProgressBar
           :progress="
             (storeReview.serviceSatisfactionCount / totalReviewCount) * 100
@@ -123,13 +120,13 @@
               v-model="selectedSort"
               @change="changeSort"
             />
-            <label for="likes"></label>&nbsp;v좋아요 순
+            <label for="likes"></label>&nbsp;좋아요 순
           </p>
         </div>
 
         <reviewcard
           :storeReview="filteredReviews"
-          :likeReview="likeReview"
+          @like-review="likeReviewHandler" 
           :userEmail="userEmail"
         />
       </div>
@@ -155,10 +152,7 @@ export default {
     return {
       storeReview: { reviews: [], commonReviewStats: {} },
       filteredReviews: { reviews: [], commonReviewStats: {} },
-      likeReview,
-
       selectedSort: 'latest',
-
       selectedButton: null,
       buttons: [
         '재방문 하고 싶어요',
@@ -208,13 +202,8 @@ export default {
       this.$router.push(`/store/${this.storeReview.id}/guidemap`);
     },
     changeSort() {
-      if (this.selectedSort === 'latest') {
-        this.filteredReviews.reviews.sort(
-          (a, b) => new Date(b.createDate) - new Date(a.createDate),
-        );
-      } else if (this.selectedSort === 'likes') {
-        this.filteredReviews.reviews.sort((a, b) => b.likeCount - a.likeCount);
-      }
+      this.currentPage = 0;
+      this.loadReviews(); // 정렬 방식을 변경하면 리뷰를 다시 불러옵니다.
     },
     async filterReviews(button) {
       if (this.selectedButton === button) {
@@ -223,9 +212,8 @@ export default {
       } else {
         this.selectedButton = button;
       }
-      // 필터링된 데이터를 로드합니다.
       this.currentPage = 0;
-      await this.loadReviews();
+      await this.loadReviews(); // 필터링된 데이터를 로드합니다.
     },
     async loadReviews() {
       this.loading = true;
@@ -236,6 +224,7 @@ export default {
           this.currentPage,
           this.pageSize,
           this.selectedButton,
+          this.selectedSort // 정렬 방식을 전달
         );
         if (this.currentPage === 0) {
           this.storeReview = response;
@@ -256,6 +245,14 @@ export default {
         console.error('Error loading more reviews:', error);
       } finally {
         this.loading = false;
+      }
+    },
+    async likeReviewHandler(reviewId) {
+      try {
+        await likeReview(reviewId, this.userEmail); // 좋아요 API 호출
+        await this.loadReviews(); // 좋아요 이후 리뷰 리스트를 다시 로드
+      } catch (error) {
+        console.error('Error liking the review:', error);
       }
     },
     handleScroll() {
