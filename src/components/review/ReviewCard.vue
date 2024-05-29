@@ -25,12 +25,20 @@
             <span class="name username">{{ review.userNickname }}</span>
             <span class="userinfo"> 리뷰 수 {{ review.reviewcount }} </span>
           </div>
-        
-        <button type="button"
-                            :class="['btn', user.isFollowed ? 'btn-grey' : 'btn-orange', 'btn-rounded']"
-                            @click="follow(review.userNickname)">
-                            <span class="label">{{ user.isFollowed ? '팔로잉' : '팔로우' }}</span>
-                          </button>
+
+          <button
+            type="button"
+            :class="[
+              'btn',
+              user.isFollowed ? 'btn-grey' : 'btn-orange',
+              'btn-rounded',
+            ]"
+            @click="follow(review.userNickname)"
+          >
+            <span class="label">{{
+              user.isFollowed ? '팔로잉' : '팔로우'
+            }}</span>
+          </button>
         </div>
       </div>
       <div class="timeline-gallery more" style="border-radius: 4px">
@@ -56,8 +64,10 @@
               style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"
             ></p>
           </div>
-          
-          <div class="post-date">{{ formatRelativeDate(review.createDate) }}</div>
+
+          <div class="post-date">
+            {{ formatRelativeDate(review.createDate) }}
+          </div>
         </div>
         <!-- <h3 class="post-title">{{ review.summary }}</h3> -->
         <div class="post-content">
@@ -123,9 +133,9 @@ export default {
     },
     users: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
-    follow: Function
+    follow: Function,
   },
   async created() {
     this.feedbackImageMap = await this.fetchFeedbackImageMap();
@@ -203,7 +213,11 @@ export default {
         const data = await addFollowUser(username, this.userEmail);
         if (data.status === 200) {
           user.isFollowed = !user.isFollowed;
-          console.log(username + '님을 팔로우했습니다: ' + (user.isFollowed ? 'true' : 'false'));
+          console.log(
+            username +
+              '님을 팔로우했습니다: ' +
+              (user.isFollowed ? 'true' : 'false'),
+          );
         }
       }
     },
