@@ -292,6 +292,60 @@ async function submitSurvey(surveyData) {
   }
 }
 
+async function fetchRankUser(userEmail) {
+  try {
+    const response = await instance.get(
+      `/reviews/rank`, {
+    params: { userEmail },
+  });
+
+    if (response.status === 200) {
+      const RankData = response.data;
+      console.log(RankData);
+      return RankData;
+    } else {
+      throw new Error('랭킹 유저를 가져오는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
+  }
+}
+
+async function fetchAllUser(userEmail) {
+  try {
+    const response = await instance.get(
+      `/reviews/allUser`, {
+    params: { userEmail },
+  });
+
+    if (response.status === 200) {
+      const RankData = response.data;
+      console.log(RankData);
+      return RankData;
+    } else {
+      throw new Error('랭킹 유저를 가져오는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
+  }
+}
+
+async function addFollowUser(userName, userEmail) {
+  console.log("username : "  + userName);
+  try {
+    const response = await instance.post(`/reviews/addFollowUser?userName=${encodeURIComponent(userName)}&userEmail=${encodeURIComponent(userEmail)}`);
+
+    if (response.status === 200) {
+      console.log(response);
+      return response;
+    } else {
+      throw new Error('팔로우하는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
+  }
+}
+
 async function fetchReviewSelections(shopName) {
   try {
     const response = await instance.post('/review-selections/selection', {
@@ -383,5 +437,7 @@ export {
   getFollowingReview,
   getEventList,
   getEventDetail,
+  fetchRankUser,
+  addFollowUser,
   getMyReview,
 };

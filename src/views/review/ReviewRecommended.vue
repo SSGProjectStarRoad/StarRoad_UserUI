@@ -10,17 +10,23 @@
         </li>
       </ul>
     </div>
-    <div v-if="reviews === null">로딩 중...</div>
-    <div v-else-if="reviews.length === 0">데이터가 없습니다.</div>
-    <reviewcard :reviews="reviews" />
+
+    <div v-if="reviews === null" class="container">
+      <div class="message">로딩 중...</div>
+    </div>
+    <div v-else-if="reviews.length === 0" class="container">
+      <div class="message">데이터가 없습니다.</div>
+    </div>
+    <reviewcard :reviews="reviews" :userEmail="userEmail" :users="users" :follow="follow" />
   </div>
   <ReviewButton />
 </template>
 
 <script>
-import { getAllReview } from '@/api/index';
+import { getAllReview, addFollowUser, fetchAllUser } from '@/api/index';
 import ReviewButton from "@/components/review/ReviewButton.vue";
 import reviewcard from '@/components/review/ReviewCard.vue';
+import { mapState, mapGetters } from 'vuex';
 
 
 export default {
@@ -31,11 +37,12 @@ export default {
       pageSize: 10,
       hasNextPage: true,
       loading: false,
-      userEmail: 'ekmbjh@naver.com',
+      users: [],
     }
   },
   async created() {
     try {
+      this.loadAllUser();
       const initialData = await getAllReview(this.userEmail, this.currentPage, this.pageSize);
       if (initialData) {
         console.log('Initial data:', initialData); // 데이터를 콘솔에 출력하여 확인합니다.
@@ -47,6 +54,13 @@ export default {
       }
     } catch (error) {
       console.error('Error fetching store review:', error);
+    }
+  },
+  computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
+    userEmail() {
+      return this.email; // Vuex 스토어의 email을 userEmailComputed로 매핑합니다.
     }
   },
   components: {
@@ -65,8 +79,8 @@ export default {
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      // 페이지 하단에서 300px 이내에 도달하면 추가 데이터 요청
-      if (scrollPosition + windowHeight >= documentHeight - 300) {
+      // 페이지 하단에서 100px 이내에 도달하면 추가 데이터 요청
+      if (scrollPosition + windowHeight >= documentHeight - 100) {
         this.loadMoreReviews();
         console.log("locadMoreReviews 호출");
       }
@@ -84,7 +98,7 @@ export default {
       console.log("!this.hasNextPage : " + !this.hasNextPage);
       if (this.loading || !this.hasNextPage) {
         console.log("loadMoreReviews 리턴");
-        return; 
+        return;
       }
       console.log("loadMoreReviews 통과");
       this.loading = true;
@@ -110,7 +124,29 @@ export default {
       } finally {
         this.loading = false;
       }
-    }
+    },
+    async follow(username) {
+      const user = this.users.find(user => user.nickname === username);
+      if (user) {
+        const data = await addFollowUser(username, this.userEmail);
+        if (data.status === 200) {
+          user.isFollowed = !user.isFollowed;
+          console.log(username + '님을 팔로우했습니다: ' + (user.isFollowed ? 'true' : 'false'));
+        }
+      }
+    },
+    async loadAllUser() {
+      try {
+        const data = await fetchAllUser(this.userEmail);
+        this.users = data.map(user => ({
+          ...user,
+          isFollowed: false, // isFollowed 속성을 기본적으로 추가합니다.
+        }));
+      } catch (error) {
+        console.error("사용자 목록을 불러오는 중 오류가 발생했습니다:", error);
+        this.users = [];
+      }
+    },
   },
 };
 </script>
@@ -122,5 +158,20 @@ export default {
   width: 400px;
   margin: auto;
   /* padding-bottom: 120px; */
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  /* 화면 전체 높이 */
+  text-align: center;
+  /* 텍스트 중앙 정렬 */
+}
+
+.message {
+  font-size: 1.5em;
+  /* 글자 크기 조정 */
 }
 </style>

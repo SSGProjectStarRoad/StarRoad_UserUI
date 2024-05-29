@@ -15,58 +15,28 @@
 
     <div class="survey">
       <div class="survey-title">어떤 점이 좋았나요 ? (공통)</div>
-      <div
-        v-for="(item, index) in surveyEssential"
-        :key="index"
-        class="survey-item"
-      >
-        <button
-          class="survey-option-btn"
-          :class="{ selected: item.selected }"
-          @click="toggleItemEs(index)"
-        >
+      <div v-for="(item, index) in surveyEssential" :key="index" class="survey-item">
+        <button class="survey-option-btn" :class="{ selected: item.selected }" @click="toggleItemEs(index)">
           {{ item.text }}
         </button>
       </div>
 
       <div class="survey-title">어떤 점이 좋았나요 ? (선택)</div>
-      <div
-        v-for="(item, index) in surveyOptions"
-        :key="index"
-        class="survey-item"
-      >
-        <button
-          class="survey-option-btn"
-          :class="{ selected: item.selected }"
-          @click="toggleItemOp(index)"
-        >
+      <div v-for="(item, index) in surveyOptions" :key="index" class="survey-item">
+        <button class="survey-option-btn" :class="{ selected: item.selected }" @click="toggleItemOp(index)">
           {{ item.text }}
         </button>
       </div>
 
       <div>
         <label for="upload" class="btn counter register">사진 등록하기</label>
-        <input
-          id="upload"
-          type="file"
-          multiple
-          @change="uploadPictures"
-          style="display: none"
-        />
+        <input id="upload" type="file" multiple @change="uploadPictures" style="display: none" />
         <br />
         <br />
         <br />
         <div class="newPicture">
-          <div
-            v-for="(image, index) in uploadedImages.slice(0, 3)"
-            :key="index"
-            class="uploaded-image"
-          >
-            <img
-              :src="image.preview"
-              class="uploaded-image-preview"
-              alt="Uploaded Image"
-            />
+          <div v-for="(image, index) in uploadedImages.slice(0, 3)" :key="index" class="uploaded-image">
+            <img :src="image.preview" class="uploaded-image-preview" alt="Uploaded Image" />
           </div>
         </div>
       </div>
@@ -74,26 +44,15 @@
       <br />
       <br />
       <br />
-      <textarea
-        class="text-review"
-        placeholder="200자 이내로 기재해주세요."
-        v-model="reviewText"
-        @input="limitText"
-      ></textarea>
+      <textarea class="text-review" placeholder="200자 이내로 기재해주세요." v-model="reviewText" @input="limitText"></textarea>
       <br />
       <div>
-        <span style="color: #aaa" class="counter"
-          >({{ currentLength }} / 최대 200자)</span
-        >
+        <span style="color: #aaa" class="counter">({{ currentLength }} / 최대 200자)</span>
       </div>
       <br />
       <div>
-        <button
-          type="button"
-          class="btn counter register"
-          @click="confirmUpload"
-        >
-          <span class="">등록하기</span>
+        <button type="button" class="btn counter register" @click="confirmUpload">
+          <span>등록하기</span>
         </button>
       </div>
     </div>
@@ -102,11 +61,11 @@
 
 <script>
 import { submitSurvey, fetchReviewSelections } from '@/api/index';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
   data() {
     return {
-      userNickname: 'hklee',
       uploadedImages: [],
       surveyEssential: [
         { text: '재방문하고 싶어요', selected: false },
@@ -136,6 +95,14 @@ export default {
     currentLength() {
       return this.reviewText.length;
     },
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
+    userEmail() {
+      return this.email; // Vuex 스토어의 email을 userEmailComputed로 매핑합니다.
+    }
+  },
+  computed: {
+
   },
   methods: {
     async fetchSurveyOptions() {
@@ -235,7 +202,7 @@ export default {
 
         // 리뷰 데이터 객체 생성
         const reviewData = {
-          userNickname: this.userNickname,
+          userEmail: this.userEmail,
           contents: this.reviewText,
           shopName: this.shopName,
           paymentNum: this.approvalNumber,
@@ -274,6 +241,7 @@ export default {
         } else {
           alert('리뷰 데이터 업로드에 실패하였습니다. 다시 시도해주세요.');
         }
+        this.$router.push('/review/recommended');
       }
     },
   },

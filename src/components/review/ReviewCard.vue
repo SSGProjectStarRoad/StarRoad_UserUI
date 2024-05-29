@@ -25,6 +25,12 @@
             <span class="name username">{{ review.userNickname }}</span>
             <span class="userinfo"> 리뷰 수 {{ review.reviewcount }} </span>
           </div>
+        
+        <button type="button"
+                            :class="['btn', user.isFollowed ? 'btn-grey' : 'btn-orange', 'btn-rounded']"
+                            @click="follow(review.userNickname)">
+                            <span class="label">{{ user.isFollowed ? '팔로잉' : '팔로우' }}</span>
+                          </button>
         </div>
       </div>
       <div class="timeline-gallery more" style="border-radius: 4px">
@@ -50,9 +56,8 @@
               style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"
             ></p>
           </div>
-          <div class="post-date">
-            {{ formatRelativeDate(review.createDate) }}
-          </div>
+          
+          <div class="post-date">{{ formatRelativeDate(review.createDate) }}</div>
         </div>
         <!-- <h3 class="post-title">{{ review.summary }}</h3> -->
         <div class="post-content">
@@ -91,7 +96,7 @@
               alt="like"
               width="18"
               height="18"
-            />
+            />&nbsp;
             {{ review.likeCount }}
           </span>
         </div>
@@ -102,7 +107,7 @@
 
 <script>
 import moment from 'moment';
-import { likeReview } from '@/api/index.js';
+import { likeReview, addFollowUser } from '@/api/index.js';
 
 export default {
   name: 'ReviewCard',
@@ -116,6 +121,11 @@ export default {
       type: String,
       required: true,
     },
+    users: {
+      type: Array,
+      default: () => []
+    },
+    follow: Function
   },
   async created() {
     this.feedbackImageMap = await this.fetchFeedbackImageMap();
@@ -187,6 +197,16 @@ export default {
           console.error('좋아요/취소 실패:', error);
         });
     },
+    async follow(username) {
+      const user = this.users.find(user => user.nickname === username);
+      if (user) {
+        const data = await addFollowUser(username, this.userEmail);
+        if (data.status === 200) {
+          user.isFollowed = !user.isFollowed;
+          console.log(username + '님을 팔로우했습니다: ' + (user.isFollowed ? 'true' : 'false'));
+        }
+      }
+    },
   },
 };
 </script>
@@ -194,11 +214,17 @@ export default {
 <style>
 @import '@/css/review/review.css';
 
+.timeline-post-footer .__post-meta > span::before {
+  content: none;
+}
+.timeline-post-footer .__post-meta > span {
+  margin: 0;
+  padding: 0;
+}
 .feedback-icons {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  /* 아이콘과 텍스트 간격 조정 */
+  gap: 8px; /* 아이콘과 텍스트 간격 조정 */
 }
 
 .feedback {
@@ -212,5 +238,53 @@ export default {
 .emoji-icon {
   vertical-align: middle;
   margin-right: 4px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 200px;
+  cursor: pointer;
+}
+
+.image-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: #000;
+  width: 20px;
+  height: 20px;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.swiper-button-prev {
+  left: 10px;
+}
+
+.swiper-button-next {
+  right: 10px;
+}
+
+/* New CSS for heart icon */
+.__like.liked:before {
+  background-image: url('@/img/review/heart-new.svg');
+  background-size: cover;
+}
+
+.btn-grey {
+  background-color: grey;
+  border-radius: 10px;
+}
+
+.btn-rounded {
+  border-radius: 10px;
 }
 </style>
