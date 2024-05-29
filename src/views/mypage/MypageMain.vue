@@ -163,7 +163,9 @@ export default {
 .setting,
 .logout {
   position: relative;
-  left: 90%;
+  width: 35px;
+  height: 35px;
+  left: 85%;
   cursor: pointer;
 }
 .setting {
@@ -172,6 +174,7 @@ export default {
 .setting img,
 .logout img {
   width: 30px;
+  height: 30px;
 }
 
 .current-mall {

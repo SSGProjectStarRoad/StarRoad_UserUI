@@ -466,7 +466,7 @@ button {
   background-image: url(../../img/review/heart-new.svg);
 }
 
-.timeline-post-footer .__post-meta span:before,
+/* .timeline-post-footer .__post-meta span:before, */
 .timeline-post-footer .__post-meta a:before {
   display: block;
   width: 32px;
