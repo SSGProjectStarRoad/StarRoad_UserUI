@@ -123,11 +123,12 @@
             <label for="likes"></label>&nbsp;좋아요 순
           </p>
         </div>
-
         <reviewcard
-          :storeReview="filteredReviews"
-          @like-review="likeReviewHandler" 
-          :userEmail="userEmail"
+          v-for="(review, index) in filteredReviews.reviews"
+          :key="review.id"
+          :review="review"
+          @like-review="likeReviewHandler"
+          :user-email="userEmail"
           :likeReview="likeReview"
         />
       </div>
@@ -152,9 +153,9 @@ export default {
     return {
       storeReview: { reviews: [], commonReviewStats: {} },
       filteredReviews: { reviews: [], commonReviewStats: {} },
-      likeReview,
       selectedSort: 'latest',
       selectedButton: null,
+      likeReview,
       buttons: [
         '재방문 하고 싶어요',
         '서비스가 마음에 들어요',
@@ -293,14 +294,13 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 @import '@/css/common.css';
-
 .span-style {
   margin-left: 10px;
   color: var(--navy-color);
 }
-
 .store-introduce {
   color: var(--dgray-color);
   padding-left: 10px;
@@ -308,11 +308,9 @@ export default {
   margin-bottom: 10px;
   margin-top: 10px;
 }
-
 .store-review {
   margin-top: 40px;
 }
-
 .review-body {
   margin-top: 4%;
   background-image: url('https://picsum.photos/600?random=0');
@@ -320,24 +318,20 @@ export default {
   background-position: center;
   background-size: cover;
 }
-
 .review-content {
   padding-left: 15px;
   padding-right: 15px;
   font-size: 14px;
 }
-
 .review-date {
   font-size: 13px;
   color: grey;
   margin-top: -8px;
 }
-
 .user-header {
   height: 30px;
   padding: 10px;
 }
-
 .review-Data {
   width: 100%;
   height: 100%;
@@ -347,14 +341,11 @@ export default {
   margin-bottom: 1%;
   margin-top: 1%;
 }
-
 .review-data::before {
   background-color: var(--gray-color);
 }
-
 .review-content {
 }
-
 .user-profile {
   background-image: url('https://picsum.photos/100?random=0');
   width: 50px;
@@ -363,7 +354,6 @@ export default {
   border-radius: 50%;
   float: left;
 }
-
 .user-name {
   display: block;
   padding-left: 15%;
@@ -371,7 +361,6 @@ export default {
   font-size: 16px;
   font-weight: bold;
 }
-
 .review-count {
   padding-top: 0.7%;
   padding-left: 15%;
@@ -379,25 +368,21 @@ export default {
   color: gray;
   font-weight: 400;
 }
-
 .contents {
   overflow: hidden;
   position: relative;
   /* min-height: 100vh; */
   margin-top: 40px;
 }
-
 .slide {
   width: auto;
   position: relative;
   overflow: hidden;
 }
-
 .swiper-container {
   width: 100%;
   height: 100%;
 }
-
 .swiper-slide {
   width: 80px;
   text-align: center;
@@ -408,7 +393,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
 .d-button {
   margin-right: 10px;
   padding: 5px;
@@ -422,16 +406,13 @@ export default {
   color: black;
   white-space: nowrap;
 }
-
 .d-button.active {
   background-color: var(--mint-color);
   color: black;
 }
-
 input[type='radio'] {
   display: none;
 }
-
 label {
   display: inline-block;
   width: 3px;
@@ -442,24 +423,19 @@ label {
   cursor: pointer;
   margin-left: 5px;
 }
-
 input[type='radio']:checked + label {
   background-color: var(--navy-color);
 }
-
 .s-key-title {
   font-weight: bold;
 }
-
 .s-key {
   margin: 16px;
   margin-top: 30px;
 }
-
 .section {
   margin-top: 30px;
 }
-
 .section::before {
   content: '';
   display: block;
@@ -467,17 +443,14 @@ input[type='radio']:checked + label {
   width: 100%;
   background-color: var(--gray-color);
 }
-
 .c-key {
   margin-left: 10px;
   margin-right: 10px;
 }
-
 .keyword {
   font-weight: bold;
   margin-left: 10px;
 }
-
 .store-img {
   width: 50%;
   height: 50%;
@@ -485,7 +458,6 @@ input[type='radio']:checked + label {
   display: block;
   border-radius: 10px;
 }
-
 .store {
   display: flex;
   align-items: center;
@@ -497,13 +469,11 @@ input[type='radio']:checked + label {
   padding-left: 10px;
   padding-right: 10px;
 }
-
 .store-detail {
   display: flex;
   align-items: center;
   margin-left: auto;
 }
-
 .store-phone,
 .store-location {
   width: 20px;
@@ -514,7 +484,6 @@ input[type='radio']:checked + label {
   box-shadow: 0 0 8px var(--dgray-color);
   cursor: pointer;
 }
-
 .store-phone img {
   width: 100%;
   height: 100%;

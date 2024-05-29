@@ -1,10 +1,6 @@
 <template>
   <div>
-    <article
-      v-for="(review, index) in storeReview.reviews"
-      :key="index"
-      class="timeline-post-item timeline-post-item-feed"
-    >
+    <article class="timeline-post-item timeline-post-item-feed">
       <div class="timeline-header">
         <div class="profile">
           <div class="profile-pic">
@@ -48,12 +44,12 @@
             </div>
           </swiper-slide>
           <div
-            v-if="showPrevButton"
+            v-if="review.showPrevButton"
             class="swiper-button-prev"
             @click="slidePrev"
           ></div>
           <div
-            v-if="showNextButton"
+            v-if="review.showNextButton"
             class="swiper-button-next"
             @click="slideNext"
           ></div>
@@ -95,7 +91,7 @@
         <div class="__post-meta">
           <span
             :class="{ liked: review.liked }"
-            @click="toggleLike(review, index)"
+            @click="toggleLike"
             style="cursor: pointer"
           >
             <img
@@ -122,20 +118,19 @@ import 'moment/locale/ko';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/swiper-bundle.css';
 import SwiperCore, { Navigation, Pagination } from 'swiper';
-import { likeReview } from '@/api/index.js';
 
 SwiperCore.use([Navigation, Pagination]);
 
 export default {
   name: 'reviewCard',
   props: {
+    review: {
+      type: Object,
+      required: true,
+    },
     likeReview: {
       type: Function,
       required: true,
-    },
-    storeReview: {
-      type: Object,
-      default: () => ({}),
     },
     userEmail: {
       type: String,
@@ -145,8 +140,6 @@ export default {
   data() {
     return {
       swiper: null,
-      showPrevButton: false,
-      showNextButton: true,
       swiperOptions: {
         slidesPerView: 'auto',
         spaceBetween: 10,
@@ -217,8 +210,8 @@ export default {
       this.updateNavigationButtons(swiper);
     },
     updateNavigationButtons(swiper) {
-      this.showPrevButton = !swiper.isBeginning;
-      this.showNextButton = !swiper.isEnd;
+      this.review.showPrevButton = !swiper.isBeginning;
+      this.review.showNextButton = !swiper.isEnd;
     },
     slidePrev() {
       if (this.swiper) {
@@ -230,23 +223,21 @@ export default {
         this.swiper.slideNext();
       }
     },
-    toggleLike(review, index) {
-  const reviewId = review.id;
-  const userEmail = this.userEmail;
+    toggleLike() {
+      const reviewId = this.review.id;
+      const userEmail = this.userEmail;
 
-  this.likeReview(reviewId, userEmail)
-    .then(response => {
-      const { liked, likeCount } = response.data;
-      this.storeReview.reviews[index] = {
-        ...review,
-        liked,
-        likeCount,
-      };
-    })
-    .catch(error => {
-      console.error('좋아요/취소 실패:', error);
-    });
-},
+      this.likeReview(reviewId, userEmail)
+      .then(response => {
+          const { liked, likeCount } = response.data;
+          this.review.liked = liked;
+          this.review.likeCount = likeCount;
+          this.$emit('like-review', this.review);
+        })
+        .catch(error => {
+          console.error('좋아요/취소 실패:', error);
+        });
+    },
   },
   components: {
     Swiper,
