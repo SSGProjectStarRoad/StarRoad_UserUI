@@ -7,7 +7,10 @@
     <div class="modal" v-if="isModalVisible">
       <h3>별 탐색 완료!</h3>
       <p>나의 기록을 별에 새겨보세요</p>
-      <a href="/reward/main" @click="closeModal">리뷰 작성하기</a>
+      <a href="/reward/ocr" @click.prevent="navigateToReviewPage"
+        >리뷰 작성하기</a
+      >
+
       <!-- 리뷰쓰기로 나중에 바꿀것 -->
     </div>
     <div class="rewardcard">
@@ -129,6 +132,11 @@ export default {
     ...mapGetters(['isLogin']),
   },
   methods: {
+    navigateToReviewPage(event) {
+      event.preventDefault();
+      this.closeModal();
+      this.$router.push('/review/ocr');
+    },
     getImagePath(index) {
       return require(`@/img/reward/category/category${index + 1}.png`); // 인덱스에 1을 더해 이미지 파일명 생성
     },
