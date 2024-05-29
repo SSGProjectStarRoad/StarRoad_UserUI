@@ -128,6 +128,7 @@
           :storeReview="filteredReviews"
           @like-review="likeReviewHandler" 
           :userEmail="userEmail"
+          :likeReview="likeReview"
         />
       </div>
     </div>
