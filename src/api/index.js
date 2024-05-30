@@ -211,7 +211,7 @@ async function getAllReview(userEmail, page = 0, size = 10) {
     });
     if (response.status === 200) {
       const ReviewData = response.data;
-      console.log(ReviewData);
+      console.log("getAllReivew : " + JSON.stringify(ReviewData));
       return ReviewData;
     } else {
       throw new Error('리뷰를 가져오는데 실패했습니다.');
@@ -340,9 +340,9 @@ async function fetchAllUser(userEmail) {
     });
 
     if (response.status === 200) {
-      const RankData = response.data;
-      console.log(RankData);
-      return RankData;
+      const allUser = response.data;
+      console.log("fetchAllUser : " + allUser);
+      return allUser;
     } else {
       throw new Error('랭킹 유저를 가져오는데 실패했습니다.');
     }
@@ -445,5 +445,6 @@ export {
   fetchRankUser,
   addFollowUser,
   getMyReview,
+  fetchAllUser,
   getStoreKeywords,
 };
