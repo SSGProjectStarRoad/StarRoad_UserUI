@@ -1,30 +1,46 @@
 <template>
   <div>
-    <article v-for="(review, index) in reviews" :key="index" class="timeline-post-item timeline-post-item-feed">
+    <article
+      v-for="(review, index) in reviews"
+      :key="index"
+      class="timeline-post-item timeline-post-item-feed"
+    >
       <!-- 게시글 -->
       <div class="timeline-header">
         <!-- 게시글 헤더 -->
         <div class="profile">
           <div class="profile-pic">
-            <img :src="review.imagePath ||
-              'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'
-              " height="42" width="42" alt="" class="img" />
+            <img
+              :src="
+                review.imagePath ||
+                'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'
+              "
+              height="42"
+              width="42"
+              alt=""
+              class="img"
+            />
           </div>
           <div class="__info">
             <span class="name username">{{ review.userNickname }}</span>
             <span class="userinfo"> 리뷰 수 {{ review.reviewcount }} </span>
           </div>
 
-          <div>
-            <button type="button" :class="[
-              'btn',
-              isUserFollowed(review.userNickname) ? 'btn-grey' : 'btn-orange',
-              'btn-rounded',
-            ]" @click="follow(review.userNickname)">
-              <span class="label">{{ isUserFollowed(review.userNickname) ? '팔로잉' : '팔로우' }}</span>
+          <div v-if="showFollowButton">
+            <button
+              type="button"
+              :class="[
+                'btn',
+                isUserFollowed(review.userNickname) ? 'btn-grey' : 'btn-orange',
+                'btn-rounded',
+              ]"
+              @click="follow(review.userNickname)"
+            >
+              <span class="label">{{
+                isUserFollowed(review.userNickname) ? '팔로잉' : '팔로우'
+              }}</span>
             </button>
           </div>
-
         </div>
       </div>
       <div class="timeline-gallery more" style="border-radius: 4px">
@@ -32,15 +48,23 @@
           <div class="imgin">
             <!-- Loop through reviewImages to display all images -->
 
-            <img v-for="image in review.reviewImages" :key="image.id" :src="image.imagePath"
-              @error="setDefaultImage($event)" alt="" />
+            <img
+              v-for="image in review.reviewImages"
+              :key="image.id"
+              :src="image.imagePath"
+              @error="setDefaultImage($event)"
+              alt=""
+            />
           </div>
         </div>
       </div>
       <div class="timeline-post-content">
         <div class="__post-meta">
           <div class="rating-segment">
-            <p class="ooezpq2 _1ltqxco1e" style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"></p>
+            <p
+              class="ooezpq2 _1ltqxco1e"
+              style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"
+            ></p>
           </div>
 
           <div class="post-date">
@@ -52,20 +76,39 @@
           <div id="post-content1_2650757">{{ review.contents }}</div>
         </div>
         <div class="feedback-icons">
-          <span v-for="(feedback, index) in review.reviewFeedbacks" :key="index" class="feedback">
-            <img :src="getFeedbackImage(feedback.reviewFeedbackSelection)" class="emoji-icon" alt="" width="18"
-              height="18" />
+          <span
+            v-for="(feedback, index) in review.reviewFeedbacks"
+            :key="index"
+            class="feedback"
+          >
+            <img
+              :src="getFeedbackImage(feedback.reviewFeedbackSelection)"
+              class="emoji-icon"
+              alt=""
+              width="18"
+              height="18"
+            />
             {{ feedback.reviewFeedbackSelection }}
           </span>
         </div>
       </div>
       <div class="timeline-post-footer _10fm75h6 _10fm75hg _10fm75hj">
         <div class="__post-meta">
-          <span :class="{ liked: review.liked }" @click="toggleLike(review, index)" style="cursor: pointer">
-            <img :src="review.liked
-              ? require('@/img/imoji/heart-solid.svg')
-              : require('@/img/imoji/heart-regular.svg')
-              " alt="like" width="18" height="18" />&nbsp;
+          <span
+            :class="{ liked: review.liked }"
+            @click="toggleLike(review, index)"
+            style="cursor: pointer"
+          >
+            <img
+              :src="
+                review.liked
+                  ? require('@/img/imoji/heart-solid.svg')
+                  : require('@/img/imoji/heart-regular.svg')
+              "
+              alt="like"
+              width="18"
+              height="18"
+            />&nbsp;
             {{ review.likeCount }}
           </span>
         </div>
@@ -95,6 +138,10 @@ export default {
       default: () => [],
     },
     follow: Function,
+    showFollowButton: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -114,7 +161,7 @@ export default {
         '종류가 다양해요': require('@/img/imoji/하트와리본.png'),
         '시설이 청결했습니다': require('@/img/imoji/청결.png'),
         '재료가 신선해요': require('@/img/imoji/하트장식.png'),
-        '트랜디해요': require('@/img/imoji/오렌지하트.png'),
+        트랜디해요: require('@/img/imoji/오렌지하트.png'),
         '재고가 충분해요': require('@/img/imoji/재고.png'),
         '품질이 좋아요': require('@/img/imoji/반짝임.png'),
         '시간이 금방가요': require('@/img/imoji/시계.png'),
@@ -130,10 +177,10 @@ export default {
         'A/S가 세심해요': require('@/img/imoji/AS.png'),
         '아이들이 좋아해요': require('@/img/imoji/키즈.png'),
       },
-    }
+    };
   },
   created() {
-    console.log("ReviewCard Users : " + this.users);
+    console.log('ReviewCard Users : ' + this.users);
   },
   methods: {
     formatRelativeDate(date) {
@@ -174,11 +221,11 @@ export default {
 <style>
 @import '@/css/review/review.css';
 
-.timeline-post-footer .__post-meta>span::before {
+.timeline-post-footer .__post-meta > span::before {
   content: none;
 }
 
-.timeline-post-footer .__post-meta>span {
+.timeline-post-footer .__post-meta > span {
   margin: 0;
   padding: 0;
 }
