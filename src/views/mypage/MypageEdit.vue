@@ -101,6 +101,25 @@
     </div>
     <div class="withdrawal" @click="goToWitdrwaPage">계정 탈퇴하기</div>
   </div>
+
+  <!-- 알림 모달 -->
+  <div
+    v-if="showAlertModal"
+    class="modal-overlay"
+    @click.self="closeAlertModal"
+  >
+    <div class="modal">
+      <div class="modal-header">
+        <h3>알림</h3>
+      </div>
+      <div class="modal-body">
+        <p>{{ alertMessage }}</p>
+      </div>
+      <div class="modal-footer">
+        <button @click="closeAlertModal">확인</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -131,6 +150,8 @@ export default {
       passwordMatchMessage: '',
       profileImage: basicprofile,
       isLoading: true,
+      showAlertModal: false, // 알림 모달 표시 여부
+      alertMessage: '', // 알림 메시지
     };
   },
   computed: {
@@ -210,7 +231,8 @@ export default {
       try {
         const response = await checkNicknameDuplicate(this.nickname);
         this.nicknameChecked = true;
-        if (response.data.isDuplicate) {
+        console.log(response.data);
+        if (response.data) {
           this.nicknameError = '중복된 닉네임입니다';
           this.isNicknameChecked = false;
         } else {
@@ -237,11 +259,13 @@ export default {
     },
     async updateProfile() {
       if (!this.isNicknameChecked) {
-        alert('닉네임 중복 체크를 해주세요');
+        this.alertMessage = '닉네임 중복 체크를 해주세요';
+        this.showAlertModal = true;
         return;
       }
       if (this.password && this.password !== this.passwordcheck) {
-        alert('비밀번호가 일치하지 않습니다');
+        this.alertMessage = '비밀번호가 일치하지 않습니다';
+        this.showAlertModal = true;
         return;
       }
       try {
@@ -253,11 +277,19 @@ export default {
           requestData.password = this.password;
         }
         await updateUserProfile(requestData);
-        alert('프로필이 성공적으로 업데이트되었습니다');
-        this.$router.push('/mypage/main');
+        this.alertMessage = '프로필이 성공적으로 업데이트되었습니다';
+        this.showAlertModal = true;
+        // this.$router.push('/mypage/main');
       } catch (error) {
         console.error('Error updating profile:', error);
-        alert('프로필 수정에 실패했습니다');
+        this.alertMessage = '프로필 수정에 실패했습니다';
+        this.showAlertModal = true;
+      }
+    },
+    closeAlertModal() {
+      this.showAlertModal = false;
+      if (this.alertMessage === '프로필이 성공적으로 업데이트되었습니다') {
+        this.$router.push('/mypage/main');
       }
     },
 
@@ -451,5 +483,45 @@ export default {
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
+}
+
+/* 모달 스타일 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  margin-bottom: 20px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-footer button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  color: white;
+  background-color: var(--navy-color);
+  border-radius: 10px;
+  border: 0;
 }
 </style>
