@@ -212,7 +212,7 @@ export default {
     },
     isUserFollowed(nickname) {
       const user = this.users.find(user => user.nickname === nickname);
-      return user ? user.isFollowed : false;
+      return user ? user.followed : false;
     },
   },
 };

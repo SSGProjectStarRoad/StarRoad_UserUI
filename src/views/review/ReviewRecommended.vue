@@ -143,12 +143,8 @@ export default {
       if (user) {
         const data = await addFollowUser(username, this.userEmail);
         if (data.status === 200) {
-          user.isFollowed = !user.isFollowed;
-          console.log(
-            username +
-              '님을 팔로우했습니다: ' +
-              (user.isFollowed ? 'true' : 'false'),
-          );
+          user.followed = !user.followed;
+          console.log(username + '님을 팔로우했습니다: ' + (user.followed ? 'true' : 'false'));
         }
       }
     },
@@ -157,7 +153,6 @@ export default {
         const data = await fetchAllUser(this.userEmail);
         this.users = data.map(user => ({
           ...user,
-          isFollowed: false, // isFollowed 속성을 기본적으로 추가합니다.
         }));
       } catch (error) {
         console.error('사용자 목록을 불러오는 중 오류가 발생했습니다:', error);
