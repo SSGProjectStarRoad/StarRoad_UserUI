@@ -52,6 +52,9 @@
           />
         </div>
       </form>
+      <div v-if="notification" ref="notification" class="notification">
+        {{ notification }}
+      </div>
     </div>
     <div class="loginback">
       비밀번호가 기억나신다구요?
@@ -69,6 +72,7 @@ export default {
     return {
       name: '',
       email: '',
+      notification: '',
     };
   },
   computed: {
@@ -101,19 +105,37 @@ export default {
         if (response.data === true) {
           // 이메일이 데이터베이스에 존재하면 인증 코드 전송
           await sendAuthCode(this.email);
-          alert('인증 코드가 발송되었습니다.');
-          this.$router.push({
-            path: '/login/email',
-            query: { email: this.email },
+          this.showNotification('인증 코드가 발송되었습니다.', () => {
+            this.$router.push({
+              path: '/login/email',
+              query: { email: this.email },
+            });
           });
         } else {
           console.log(this.email);
-          alert('이메일이 존재하지 않습니다.');
+          this.showNotification('이메일이 존재하지 않습니다.');
         }
       } catch (error) {
         console.error(error);
-        alert('오류가 발생했습니다.');
+        this.showNotification('오류가 발생했습니다.');
       }
+    },
+    showNotification(message, callback) {
+      console.log('showNotification called with message:', message); // Debugging log
+      this.notification = message;
+      this.$nextTick(() => {
+        const notificationElement = this.$refs.notification;
+        console.log('notificationElement:', notificationElement); // Debugging log
+        notificationElement.classList.add('fade-in');
+        setTimeout(() => {
+          notificationElement.classList.remove('fade-in');
+          notificationElement.classList.add('fade-out');
+          setTimeout(() => {
+            this.notification = '';
+            if (callback) callback();
+          }, 500);
+        }, 1500);
+      });
     },
   },
 };
@@ -170,7 +192,7 @@ export default {
   cursor: pointer; /* 버튼 위에 마우스를 올렸을 때 커서 모양을 손가락 모양으로 변경 */
   text-align: center;
   margin-top: 45px;
-  margin-bottom: 250px;
+  margin-bottom: 100px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2); /* 테두리 대신 그림자를 추가합니다. */
 }
 .loginback {
@@ -196,5 +218,43 @@ export default {
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
+}
+.notification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  color: white;
+  background-color: var(--navy-color);
+  border-radius: 8px;
+  text-align: center;
+  width: 220px;
+  z-index: 2000;
+  opacity: 0.9;
+  animation: fadeIn 0.5s, fadeOut 0.5s 1.5s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.fade-in {
+  animation: fadeIn 0.5s forwards;
+}
+.fade-out {
+  animation: fadeOut 0.5s forwards;
 }
 </style>

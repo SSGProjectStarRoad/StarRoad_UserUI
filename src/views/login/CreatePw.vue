@@ -51,6 +51,9 @@
           />
         </div>
       </form>
+      <div v-if="notification" ref="notification" class="notification">
+        {{ notification }}
+      </div>
     </div>
   </div>
 </template>
@@ -74,6 +77,7 @@ export default {
       passwordMessage: '',
       isPasswordMatch: false,
       passwordEye: passwordEye,
+      notification: '',
     };
   },
   mounted() {
@@ -97,30 +101,46 @@ export default {
     },
     async updatePassword() {
       if (this.newPassword !== this.confirmPassword) {
-        alert('비밀번호가 일치하지 않습니다.');
+        this.showNotification('비밀번호가 일치하지 않습니다.');
         return;
       }
       if (!validateEmail(this.email)) {
-        alert('유효한 이메일 주소를 입력하세요.');
+        this.showNotification('유효한 이메일 주소를 입력하세요.');
         return;
       }
       try {
         console.log('Update Password: Email:', this.email); // 이메일 값 확인
         const response = await updatePassword(this.email, this.newPassword);
         if (response.status === 200) {
-          alert('비밀번호가 성공적으로 변경되었습니다.');
-          this.$router.push('/login/changepw');
+          this.showNotification('비밀번호가 성공적으로 변경되었습니다.', () => {
+            this.$router.push('/login/changepw');
+          });
         } else {
-          alert('비밀번호 변경에 실패했습니다.');
+          this.showNotification('비밀번호 변경에 실패했습니다.');
         }
       } catch (error) {
         console.error(error);
         if (error.response && error.response.data) {
-          alert(error.response.data); // 서버에서 반환된 오류 메시지 표시
+          this.showNotification(error.response.data); // 서버에서 반환된 오류 메시지 표시
         } else {
-          alert('비밀번호 변경 중 오류가 발생했습니다.');
+          this.showNotification('비밀번호 변경 중 오류가 발생했습니다.');
         }
       }
+    },
+    showNotification(message, callback) {
+      this.notification = message;
+      this.$nextTick(() => {
+        const notificationElement = this.$refs.notification;
+        notificationElement.classList.add('fade-in');
+        setTimeout(() => {
+          notificationElement.classList.remove('fade-in');
+          notificationElement.classList.add('fade-out');
+          setTimeout(() => {
+            this.notification = '';
+            if (callback) callback();
+          }, 500);
+        }, 1500);
+      });
     },
   },
 };
@@ -201,5 +221,43 @@ export default {
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
+}
+.notification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  color: white;
+  background-color: var(--navy-color);
+  border-radius: 8px;
+  text-align: center;
+  width: 230px;
+  z-index: 2000;
+  opacity: 0.9;
+  animation: fadeIn 0.5s, fadeOut 0.5s 1.5s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.fade-in {
+  animation: fadeIn 0.5s forwards;
+}
+.fade-out {
+  animation: fadeOut 0.5s forwards;
 }
 </style>
