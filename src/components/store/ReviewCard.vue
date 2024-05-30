@@ -1,10 +1,6 @@
 <template>
   <div>
-    <article
-      v-for="(review, index) in storeReview.reviews"
-      :key="index"
-      class="timeline-post-item timeline-post-item-feed"
-    >
+    <article class="timeline-post-item timeline-post-item-feed">
       <div class="timeline-header">
         <div class="profile">
           <div class="profile-pic">
@@ -22,7 +18,13 @@
           <div class="__info">
             <span class="name username">{{ review.userNickname }}</span>
             <span class="userinfo"> 리뷰 수 {{ review.reviewcount }} </span>
+            
           </div>
+          <button type="button"
+                            class='btn'
+                            @click="follow(review.userNickname)">
+                            <span class="label">팔로우</span>
+                          </button>
         </div>
       </div>
       <div
@@ -48,12 +50,12 @@
             </div>
           </swiper-slide>
           <div
-            v-if="showPrevButton"
+            v-if="review.showPrevButton"
             class="swiper-button-prev"
             @click="slidePrev"
           ></div>
           <div
-            v-if="showNextButton"
+            v-if="review.showNextButton"
             class="swiper-button-next"
             @click="slideNext"
           ></div>
@@ -72,7 +74,7 @@
           </div>
         </div>
         <div class="post-content">
-          <div id="post-content1_2650757">{{ review.contents }}</div>
+          <div id="post-content1_2650757" v-html="highlightedContents"></div>
         </div>
         <div class="feedback-icons">
           <span
@@ -95,7 +97,7 @@
         <div class="__post-meta">
           <span
             :class="{ liked: review.liked }"
-            @click="toggleLike(review, index)"
+            @click="toggleLike"
             style="cursor: pointer"
           >
             <img
@@ -122,20 +124,23 @@ import 'moment/locale/ko';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/swiper-bundle.css';
 import SwiperCore, { Navigation, Pagination } from 'swiper';
-import { likeReview } from '@/api/index.js';
 
 SwiperCore.use([Navigation, Pagination]);
 
 export default {
   name: 'reviewCard',
   props: {
+    review: {
+      type: Object,
+      required: true,
+    },
+    selectedKeyword: {
+      type: String,
+      default: '',
+    },
     likeReview: {
       type: Function,
       required: true,
-    },
-    storeReview: {
-      type: Object,
-      default: () => ({}),
     },
     userEmail: {
       type: String,
@@ -145,8 +150,6 @@ export default {
   data() {
     return {
       swiper: null,
-      showPrevButton: false,
-      showNextButton: true,
       swiperOptions: {
         slidesPerView: 'auto',
         spaceBetween: 10,
@@ -194,6 +197,17 @@ export default {
       },
     };
   },
+  computed: {
+    highlightedContents() {
+      if (this.selectedKeyword) {
+        const regex = new RegExp(`(${this.selectedKeyword})`, 'gi');
+        console.log(this.selectedKeyword),
+        console.log(regex)
+        return this.review.contents.replace(regex, '<span class="highlight">$1</span>');
+      }
+      return this.review.contents;
+    },
+  },
   methods: {
     getFeedbackImage(feedbackText) {
       return (
@@ -217,8 +231,8 @@ export default {
       this.updateNavigationButtons(swiper);
     },
     updateNavigationButtons(swiper) {
-      this.showPrevButton = !swiper.isBeginning;
-      this.showNextButton = !swiper.isEnd;
+      this.review.showPrevButton = !swiper.isBeginning;
+      this.review.showNextButton = !swiper.isEnd;
     },
     slidePrev() {
       if (this.swiper) {
@@ -230,23 +244,21 @@ export default {
         this.swiper.slideNext();
       }
     },
-    toggleLike(review, index) {
-  const reviewId = review.id;
-  const userEmail = this.userEmail;
+    toggleLike() {
+      const reviewId = this.review.id;
+      const userEmail = this.userEmail;
 
-  this.likeReview(reviewId, userEmail)
-    .then(response => {
-      const { liked, likeCount } = response.data;
-      this.storeReview.reviews[index] = {
-        ...review,
-        liked,
-        likeCount,
-      };
-    })
-    .catch(error => {
-      console.error('좋아요/취소 실패:', error);
-    });
-},
+      this.likeReview(reviewId, userEmail)
+        .then(response => {
+          const { liked, likeCount } = response.data;
+          this.review.liked = liked;
+          this.review.likeCount = likeCount;
+          this.$emit('like-review', this.review);
+        })
+        .catch(error => {
+          console.error('좋아요/취소 실패:', error);
+        });
+    },
   },
   components: {
     Swiper,
@@ -255,8 +267,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 @import '@/css/review/review.css';
+@import '@/css/common.css';
 .timeline-post-footer .__post-meta > span::before {
   content: none;
 }
@@ -320,5 +333,13 @@ export default {
 .__like.liked:before {
   background-image: url('@/img/review/heart-new.svg');
   background-size: cover;
+}
+.highlight {
+  color: var(--mint-color) !important; /* 강조 표시 색상을 빨간색으로 설정 */
+}
+.btn{
+  border-radius: 8px;
+  
+  
 }
 </style>

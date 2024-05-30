@@ -79,10 +79,36 @@ function rewardAdd(email) {
     reward_id: today,
   });
 }
+// axios 인스턴스가 'instance'로 정의되어 있다고 가정합니다.
+function getStoreKeywords(storeId){
+  return instance.get(`/store/${storeId}/keywords`)
+}
+
+
+
+
 
 function likeReview(reviewId, userId) {
   return instance.post(`/review-likes/${reviewId}/${userId}`);
 }
+
+
+async function addFollowUser(userName, userEmail) {
+  console.log("username : "  + userName);
+  try {
+    const response = await instance.post(`/reviews/addFollowUser?userName=${encodeURIComponent(userName)}&userEmail=${encodeURIComponent(userEmail)}`);
+
+    if (response.status === 200) {
+      console.log(response);
+      return response;
+    } else {
+      throw new Error('팔로우하는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
+  }
+}
+
 
 // 백엔드에서 보내는 매장 목록을 받아오는 fetchStoreList 함수를 추가합니다.
 async function fetchStoreList() {
@@ -99,11 +125,12 @@ async function selectStore(
   page = 0,
   size = 10,
   filter = '',
-  sort
+  sort,
+  keyword =''
 ) {
   try {
     const response = await instance.get(`/store/${storeId}/reviews`, {
-      params: { userEmail, page, size, filter ,sort},
+      params: { userEmail, page, size, filter ,sort,keyword },
     });
     if (response.status === 200) {
       const storeWithReviewData = response.data;
@@ -438,4 +465,6 @@ export {
   fetchRankUser,
   addFollowUser,
   getMyReview,
+  getStoreKeywords,
+  addFollowUser
 };
