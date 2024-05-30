@@ -153,15 +153,16 @@
           </p>
         </div>
 
-       <reviewcard
-  v-for="(review, index) in filteredReviews.reviews"
-  :key="review.id"
-  :review="review"
-  @like-review="likeReviewHandler"
-  :user-email="userEmail"
-  :likeReview="likeReview"
-  :selected-keyword="selectedKeyword"
-/>
+   <reviewcard
+      v-for="(review, index) in filteredReviews.reviews"
+      :key="review.id"
+      :review="review"
+      @like-review="likeReviewHandler"
+      :user-email="userEmail"
+      :likeReview="likeReview"
+      :selected-keyword="selectedKeyword"
+      :follow="follow"
+    />
       </div>
     </div>
     <reviewbutton />
@@ -171,7 +172,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import { likeReview, selectStore, getStoreKeywords } from '@/api/index.js';
+import { addFollowUser,likeReview, selectStore, getStoreKeywords } from '@/api/index.js';
 import reviewcard from '@/components/store/ReviewCard.vue';
 import ProgressBar from '@/components/store/ProgressBar.vue';
 import reviewbutton from '@/components/review/ReviewButton.vue';
@@ -189,6 +190,7 @@ export default {
       selectedButton: null,
       selectedKeyword: null,
       likeReview,
+      
       keywords: [],
       buttons: [
         '재방문 하고 싶어요',
@@ -238,6 +240,18 @@ export default {
     scrollToTopButton,
   },
   methods: {
+    
+    
+     async follow(username) {
+      try {
+        const response = await addFollowUser(username, this.userEmail);
+        if (response.status === 200) {
+          console.log(username + '님을 팔로우했습니다.');
+        }
+      } catch (error) {
+        console.error('팔로우 중 오류가 발생했습니다:', error);
+      }
+    },
     async loadKeywords() {
       try {
         const response = await getStoreKeywords(this.storeId);

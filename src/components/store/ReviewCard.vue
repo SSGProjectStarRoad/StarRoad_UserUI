@@ -18,98 +18,50 @@
           <div class="__info">
             <span class="name username">{{ review.userNickname }}</span>
             <span class="userinfo"> 리뷰 수 {{ review.reviewcount }} </span>
-            
           </div>
-          <button type="button"
-                            class='btn'
-                            @click="follow(review.userNickname)">
-                            <span class="label">팔로우</span>
-                          </button>
+          <div v-if="showFollowButton">
+            <button
+              type="button"
+              :class="['btn', isUserFollowed ? 'btn-grey' : 'btn-orange', 'btn-rounded']"
+              @click="toggleFollow"
+            >
+              <span class="label">{{ isUserFollowed ? '팔로잉' : '팔로우' }}</span>
+            </button>
+          </div>
         </div>
       </div>
-      <div
-        class="timeline-gallery more"
-        style="border-radius: 4px; position: relative"
-      >
-        <swiper
-          :options="swiperOptions"
-          @slideChange="onSlideChange"
-          @swiper="onSwiper"
-          v-if="review.reviewImages.length"
-        >
-          <swiper-slide
-            v-for="(image, imgIndex) in review.reviewImages"
-            :key="image.id"
-          >
+      <div class="timeline-gallery more" style="border-radius: 4px; position: relative">
+        <swiper :options="swiperOptions" @slideChange="onSlideChange" @swiper="onSwiper" v-if="review.reviewImages.length">
+          <swiper-slide v-for="(image, imgIndex) in review.reviewImages" :key="image.id">
             <div class="image-container">
-              <img
-                :src="image.imagePath"
-                @error="setDefaultImage($event)"
-                alt=""
-              />
+              <img :src="image.imagePath" @error="setDefaultImage($event)" alt="" />
             </div>
           </swiper-slide>
-          <div
-            v-if="review.showPrevButton"
-            class="swiper-button-prev"
-            @click="slidePrev"
-          ></div>
-          <div
-            v-if="review.showNextButton"
-            class="swiper-button-next"
-            @click="slideNext"
-          ></div>
+          <div v-if="review.showPrevButton" class="swiper-button-prev" @click="slidePrev"></div>
+          <div v-if="review.showNextButton" class="swiper-button-next" @click="slideNext"></div>
         </swiper>
       </div>
       <div class="timeline-post-content">
         <div class="__post-meta">
           <div class="rating-segment">
-            <p
-              class="ooezpq2 _1ltqxco1e"
-              style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"
-            ></p>
+            <p class="ooezpq2 _1ltqxco1e" style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"></p>
           </div>
-          <div class="post-date">
-            {{ formatRelativeDate(review.createDate) }}
-          </div>
+          <div class="post-date">{{ formatRelativeDate(review.createDate) }}</div>
         </div>
         <div class="post-content">
           <div id="post-content1_2650757" v-html="highlightedContents"></div>
         </div>
         <div class="feedback-icons">
-          <span
-            v-for="(feedback, index) in review.reviewFeedbacks"
-            :key="index"
-            class="feedback"
-          >
-            <img
-              :src="getFeedbackImage(feedback.reviewFeedbackSelection)"
-              class="emoji-icon"
-              alt=""
-              width="18"
-              height="18"
-            />
+          <span v-for="(feedback, index) in review.reviewFeedbacks" :key="index" class="feedback">
+            <img :src="getFeedbackImage(feedback.reviewFeedbackSelection)" class="emoji-icon" alt="" width="18" height="18" />
             {{ feedback.reviewFeedbackSelection }}
           </span>
         </div>
       </div>
       <div class="timeline-post-footer _10fm75h6 _10fm75hg _10fm75hj">
         <div class="__post-meta">
-          <span
-            :class="{ liked: review.liked }"
-            @click="toggleLike"
-            style="cursor: pointer"
-          >
-            <img
-              :src="
-                review.liked
-                  ? require('@/img/imoji/heart-solid.svg')
-                  : require('@/img/imoji/heart-regular.svg')
-              "
-              alt="like"
-              width="18"
-              height="18"
-            />&nbsp;
+          <span :class="{ liked: review.liked }" @click="toggleLike" style="cursor: pointer">
+            <img :src="review.liked ? require('@/img/imoji/heart-solid.svg') : require('@/img/imoji/heart-regular.svg')" alt="like" width="18" height="18" />&nbsp;
             {{ review.likeCount }}
           </span>
         </div>
@@ -146,10 +98,19 @@ export default {
       type: String,
       required: true,
     },
+    follow: {
+      type: Function,
+      required: true,
+    },
+    showFollowButton: {
+      type: Boolean,
+      default: true,
+    }
   },
   data() {
     return {
       swiper: null,
+      isUserFollowed: this.review.following,
       swiperOptions: {
         slidesPerView: 'auto',
         spaceBetween: 10,
@@ -179,7 +140,7 @@ export default {
         '종류가 다양해요': require('@/img/imoji/하트와리본.png'),
         '시설이 청결했습니다': require('@/img/imoji/청결.png'),
         '재료가 신선해요': require('@/img/imoji/하트장식.png'),
-        '트랜디해요' : require('@/img/imoji/오렌지하트.png'),
+        '트랜디해요': require('@/img/imoji/오렌지하트.png'),
         '재고가 충분해요': require('@/img/imoji/재고.png'),
         '품질이 좋아요': require('@/img/imoji/반짝임.png'),
         '시간이 금방가요': require('@/img/imoji/시계.png'),
@@ -201,19 +162,22 @@ export default {
     highlightedContents() {
       if (this.selectedKeyword) {
         const regex = new RegExp(`(${this.selectedKeyword})`, 'gi');
-        console.log(this.selectedKeyword),
-        console.log(regex)
         return this.review.contents.replace(regex, '<span class="highlight">$1</span>');
       }
       return this.review.contents;
     },
   },
   methods: {
+    async toggleFollow() {
+      try {
+        await this.follow(this.review.userNickname, this.userEmail);
+        this.isUserFollowed = !this.isUserFollowed;
+      } catch (error) {
+        console.error('팔로우 상태 변경 중 오류가 발생했습니다:', error);
+      }
+    },
     getFeedbackImage(feedbackText) {
-      return (
-        this.feedbackImageMap[feedbackText] ||
-        require('@/img/imoji/별눈얼굴.png')
-      );
+      return this.feedbackImageMap[feedbackText] || require('@/img/imoji/별눈얼굴.png');
     },
     formatRelativeDate(date) {
       moment.locale('ko');
@@ -266,6 +230,7 @@ export default {
   },
 };
 </script>
+
 
 <style>
 @import '@/css/review/review.css';
