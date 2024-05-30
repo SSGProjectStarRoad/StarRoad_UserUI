@@ -126,7 +126,7 @@
 
         <reviewcard
           :storeReview="filteredReviews"
-          @like-review="likeReviewHandler" 
+          @like-review="likeReviewHandler"
           :userEmail="userEmail"
           :likeReview="likeReview"
         />
@@ -145,6 +145,7 @@ import ProgressBar from '@/components/store/ProgressBar.vue';
 import reviewbutton from '@/components/review/ReviewButton.vue';
 import scrollToTopButton from '@/components/store/ScrollToTopButton.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { EventBus } from '@/eventBus';
 import 'swiper/css';
 
 export default {
@@ -184,10 +185,13 @@ export default {
     },
   },
   async created() {
+    EventBus.emit('loading', true);
     try {
       await this.loadReviews();
     } catch (error) {
       console.error('Error fetching store review:', error);
+    } finally {
+      EventBus.emit('loading', false); // 데이터 로드 완료 후 로딩 상태를 false로 설정합니다.
     }
   },
   components: {
@@ -225,7 +229,7 @@ export default {
           this.currentPage,
           this.pageSize,
           this.selectedButton,
-          this.selectedSort // 정렬 방식을 전달
+          this.selectedSort, // 정렬 방식을 전달
         );
         if (this.currentPage === 0) {
           this.storeReview = response;

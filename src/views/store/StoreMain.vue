@@ -89,6 +89,7 @@ import search from '@/components/store/Search.vue';
 import list from '@/components/store/list.vue';
 import ReviewCard from '@/components/store/ReviewCard';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { EventBus } from '@/eventBus';
 import 'swiper/css';
 
 export default {
@@ -183,7 +184,9 @@ export default {
     },
   },
   created() {
+    EventBus.emit('loading', true);
     this.fetchStores();
+    EventBus.emit('loading', false); // 데이터 로드 완료 후 로딩 상태를 false로 설정합니다.
   },
 };
 </script>

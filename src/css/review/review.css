@@ -255,6 +255,7 @@ button {
   display: flex;
   align-items: center;
   line-height: normal;
+  margin-right: 10px;
   flex: 1;
   font-weight: 700;
 }
