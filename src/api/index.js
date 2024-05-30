@@ -211,7 +211,7 @@ async function getAllReview(userEmail, page = 0, size = 10) {
     });
     if (response.status === 200) {
       const ReviewData = response.data;
-      console.log(ReviewData);
+      console.log("getAllReivew : " + JSON.stringify(ReviewData));
       return ReviewData;
     } else {
       throw new Error('리뷰를 가져오는데 실패했습니다.');

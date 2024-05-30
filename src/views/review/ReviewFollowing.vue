@@ -134,31 +134,19 @@ export default {
     EventBus.emit('loading', true);
     try {
       this.loadFollowingUser();
-      const initialData = await getFollowingReview(
-        this.userEmail,
-        this.currentPage,
-        this.pageSize,
-      );
-      console.log('userEmail : ' + this.userEmail);
-      if (initialData) {
-        console.log('Initial data:', initialData); // 데이터를 콘솔에 출력하여 확인합니다.
-        this.reviews = initialData.reviews;
-        console.log('this.reviews : ' + this.reviews);
-        this.hasNextPage = initialData.hasNext;
-        console.log('created - this.hasNextPage : ' + this.hasNextPage);
-        this.totalReviewCount = initialData.totalReviewCount || 0;
-      }
+      await this.loadReviews();
     } catch (error) {
       console.error('Error fetching store review:', error);
     } finally {
       EventBus.emit('loading', false); // 데이터 로드 완료 후 로딩 상태를 false로 설정합니다.
     }
   },
-  async mounted() {
-    console.log('mounted() users:', this.users);
-  },
+  async mounted()  {
+  console.log("mounted() users:", this.users);
+  window.addEventListener('scroll', this.handleScroll)
+},
   beforeUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     handleScroll() {
@@ -167,10 +155,8 @@ export default {
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      // 페이지 하단에서 100px 이내에 도달하면 추가 데이터 요청
-      if (scrollPosition + windowHeight >= documentHeight - 300) {
+      if (scrollPosition + windowHeight >= documentHeight - 50) {
         this.loadMoreReviews();
-        console.log('locadMoreReviews 호출');
       }
 
       this.showScrollToTopButton = scrollPosition > 300;
@@ -182,35 +168,12 @@ export default {
       });
     },
     async loadMoreReviews() {
-      console.log('this.loading : ' + this.loading);
-      console.log('!this.hasNextPage : ' + !this.hasNextPage);
-      if (this.loading || !this.hasNextPage) {
-        console.log('loadMoreReviews 리턴');
-        return;
-      }
-      console.log('loadMoreReviews 통과');
-      this.loading = true;
-      const nextPage = this.currentPage + 1;
+      if (this.loading || !this.hasNextPage) return;
 
+      this.loading = true;
       try {
-        const response = await getFollowingReview(
-          this.id,
-          nextPage,
-          this.pageSize,
-        );
-        if (response && response.reviews) {
-          console.log('this revies : ' + this.reviews);
-          console.log('loadMoreRevies response: ' + response);
-          console.log('loadMoreRevies response.reviews: ' + response.reviews);
-          this.reviews = [...this.reviews, ...response.reviews];
-          console.log('more Reviews : ' + this.reviews);
-          this.currentPage = nextPage;
-          console.log('currentPage : ' + this.currentPage);
-          this.hasNextPage = response.hasNext;
-          console.log('hasNextPage : ' + this.hasNextPage);
-        } else {
-          console.error('Invalid response data:', response);
-        }
+        this.currentPage += 1;
+        await this.loadReviews();
       } catch (error) {
         console.error('Error loading more reviews:', error);
       } finally {
@@ -245,6 +208,34 @@ export default {
       } catch (error) {
         console.error('사용자 목록을 불러오는 중 오류가 발생했습니다:', error);
         this.users = [];
+      }
+    },
+    async loadReviews() {
+      this.loading = true;
+      try {
+        console.log("loadReviews 시작 ");
+        const response = await getFollowingReview(
+        this.userEmail,
+        this.currentPage,
+        this.pageSize,
+      );
+        console.log("loadReviews response : " + JSON.stringify(response));
+        if (this.currentPage === 0) {
+          this.reviews = response.reviews;
+          console.log("loadMoreReview + 1");
+        } else {
+          console.log("loadMoreReview else");
+          this.reviews = [
+            ...this.reviews,
+            ...response.reviews,
+          ];
+        }
+        this.hasNextPage = response.hasNext;
+        this.totalReviewCount = response.totalReviewCount || 0;
+      } catch (error) {
+        console.error('Error loading more reviews:', error);
+      } finally {
+        this.loading = false;
       }
     },
   },
