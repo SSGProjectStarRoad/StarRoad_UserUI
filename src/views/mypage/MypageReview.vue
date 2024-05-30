@@ -7,6 +7,7 @@
       <reviewCard
         :reviews="storeReview.reviews"
         :userEmail="email"
+        :showFollowButton="false"
         @likeReview="handleLikeReview"
       />
     </div>
