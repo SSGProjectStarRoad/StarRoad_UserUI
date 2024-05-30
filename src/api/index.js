@@ -267,13 +267,11 @@ async function imageUpload(imageFile) {
         'Content-Type': 'multipart/form-data',
       },
     });
-    console.log('업로드 성공:', response);
-    alert('이미지 업로드 성공!');
+    console.log('index.js function(imageUpload) : 업로드 성공 : ', response);
     return response;
   } catch (error) {
     // try 블록 내에서 발생하는 예외를 캐치합니다.
-    console.error('업로드 실패:', error);
-    alert('이미지 업로드 실패');
+    console.error('index.js function(imageUpload) : 업로드 실패 : ', error);
   }
 }
 
@@ -316,6 +314,60 @@ async function submitSurvey(surveyData) {
   } catch (error) {
     console.error('설문 제출 실패:', error);
     alert('설문 제출에 실패했습니다.');
+  }
+}
+
+async function fetchRankUser(userEmail) {
+  try {
+    const response = await instance.get(
+      `/reviews/rank`, {
+    params: { userEmail },
+  });
+
+    if (response.status === 200) {
+      const RankData = response.data;
+      console.log(RankData);
+      return RankData;
+    } else {
+      throw new Error('랭킹 유저를 가져오는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
+  }
+}
+
+async function fetchAllUser(userEmail) {
+  try {
+    const response = await instance.get(
+      `/reviews/allUser`, {
+    params: { userEmail },
+  });
+
+    if (response.status === 200) {
+      const RankData = response.data;
+      console.log(RankData);
+      return RankData;
+    } else {
+      throw new Error('랭킹 유저를 가져오는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
+  }
+}
+
+async function addFollowUser(userName, userEmail) {
+  console.log("username : "  + userName);
+  try {
+    const response = await instance.post(`/reviews/addFollowUser?userName=${encodeURIComponent(userName)}&userEmail=${encodeURIComponent(userEmail)}`);
+
+    if (response.status === 200) {
+      console.log(response);
+      return response;
+    } else {
+      throw new Error('팔로우하는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
   }
 }
 
@@ -410,6 +462,8 @@ export {
   getFollowingReview,
   getEventList,
   getEventDetail,
+  fetchRankUser,
+  addFollowUser,
   getMyReview,
   getStoreKeywords,
   addFollowUser

@@ -124,7 +124,7 @@ export default {
   display: flex; /* Flexbox 레이아웃 사용 */
   flex-direction: column; /* 자식 요소들을 세로로 정렬 */
   align-items: center; /* 수평 방향 중앙 정렬 */
-  height: 100vh; /* 뷰포트 높이를 전체 크기로 설정 */
+  /* height: 100vh; 뷰포트 높이를 전체 크기로 설정 */
 }
 .forgotpwform {
   margin-top: 40px;

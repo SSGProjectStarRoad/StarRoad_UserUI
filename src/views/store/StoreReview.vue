@@ -152,6 +152,7 @@
             <label for="likes"></label>&nbsp;좋아요 순
           </p>
         </div>
+
        <reviewcard
   v-for="(review, index) in filteredReviews.reviews"
   :key="review.id"
@@ -176,6 +177,7 @@ import ProgressBar from '@/components/store/ProgressBar.vue';
 import reviewbutton from '@/components/review/ReviewButton.vue';
 import scrollToTopButton from '@/components/store/ScrollToTopButton.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { EventBus } from '@/eventBus';
 import 'swiper/css';
 
 export default {
@@ -217,11 +219,14 @@ export default {
     },
   },
   async created() {
+    EventBus.emit('loading', true);
     try {
       await this.loadReviews();
       await this.loadKeywords(); // 키워드 불러오기
     } catch (error) {
       console.error('Error fetching store review:', error);
+    } finally {
+      EventBus.emit('loading', false); // 데이터 로드 완료 후 로딩 상태를 false로 설정합니다.
     }
   },
   components: {
@@ -283,6 +288,7 @@ export default {
           this.selectedButton,
           this.selectedSort,
           this.selectedKeyword // 키워드 필터를 추가
+
         );
         if (this.currentPage === 0) {
           this.storeReview = response;

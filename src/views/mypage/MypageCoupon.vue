@@ -1,6 +1,5 @@
 <template>
   <div class="contents">
-    <BackButton class="back-button" />
     <div class="coupon-main">Coupon</div>
     <div class="coupon-sub">나의 쿠폰함을 확인하세요</div>
 

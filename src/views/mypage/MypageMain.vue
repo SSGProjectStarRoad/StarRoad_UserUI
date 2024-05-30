@@ -23,11 +23,11 @@
       <div class="review-follow" @click="goToFollowPage">
         <div class="follower">
           팔로워
-          <div class="follower-num">{{ follow.followerCount }}</div>
+          <div class="follower-num">{{ follow.followingCount }}</div>
         </div>
         <div class="following">
           팔로잉
-          <div class="following-num">{{ follow.followingCount }}</div>
+          <div class="following-num">{{ follow.followerCount }}</div>
         </div>
       </div>
       <div class="point-info">
@@ -163,7 +163,9 @@ export default {
 .setting,
 .logout {
   position: relative;
-  left: 90%;
+  width: 35px;
+  height: 35px;
+  left: 85%;
   cursor: pointer;
 }
 .setting {
@@ -172,6 +174,7 @@ export default {
 .setting img,
 .logout img {
   width: 30px;
+  height: 30px;
 }
 
 .current-mall {

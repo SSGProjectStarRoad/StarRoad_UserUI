@@ -15,16 +15,21 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 240px;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 1);
+  z-index: 9999;
 }
 .spinner {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   border: 5px solid #e0e0e0;
-  border-bottom: 5px solid #fe9616;
+  border-bottom: 5px solid var(--mint-color);
   animation: spin 1s linear infinite;
-  position: relative;
 }
 @keyframes spin {
   from {
