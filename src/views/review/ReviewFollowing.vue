@@ -82,7 +82,7 @@
       <div class="message">로딩 중...</div>
     </div>
     <div v-else-if="reviews.length === 0" class="container">
-      <div class="message">데이터가 없습니다.</div>
+      <!-- <div class="message">데이터가 없습니다.</div> -->
     </div>
     <reviewcard
       :reviews="reviews"
@@ -99,6 +99,7 @@ import { getFollowingReview, fetchRankUser, addFollowUser } from '@/api/index';
 import ReviewButton from '@/components/review/ReviewButton.vue';
 import reviewcard from '@/components/review/ReviewCard.vue';
 import { mapState, mapGetters } from 'vuex';
+import { EventBus } from '@/eventBus';
 
 export default {
   data() {
@@ -130,6 +131,7 @@ export default {
     reviewcard,
   },
   async created() {
+    EventBus.emit('loading', true);
     try {
       this.loadFollowingUser();
       const initialData = await getFollowingReview(
@@ -148,11 +150,13 @@ export default {
       }
     } catch (error) {
       console.error('Error fetching store review:', error);
+    } finally {
+      EventBus.emit('loading', false); // 데이터 로드 완료 후 로딩 상태를 false로 설정합니다.
     }
   },
-  async mounted()  {
-  console.log("mounted() users:", this.users);
-},
+  async mounted() {
+    console.log('mounted() users:', this.users);
+  },
   beforeUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   },
@@ -233,7 +237,7 @@ export default {
         this.users = data.map(user => ({
           ...user,
         }));
-        console.log("loadFollowingUser : " + this.users);
+        console.log('loadFollowingUser : ' + this.users);
       } catch (error) {
         console.error('사용자 목록을 불러오는 중 오류가 발생했습니다:', error);
         this.users = [];

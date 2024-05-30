@@ -23,11 +23,11 @@
       <div class="review-follow" @click="goToFollowPage">
         <div class="follower">
           팔로워
-          <div class="follower-num">{{ follow.followerCount }}</div>
+          <div class="follower-num">{{ follow.followingCount }}</div>
         </div>
         <div class="following">
           팔로잉
-          <div class="following-num">{{ follow.followingCount }}</div>
+          <div class="following-num">{{ follow.followerCount }}</div>
         </div>
       </div>
       <div class="point-info">
