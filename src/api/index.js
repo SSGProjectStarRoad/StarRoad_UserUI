@@ -317,9 +317,9 @@ async function fetchAllUser(userEmail) {
   });
 
     if (response.status === 200) {
-      const RankData = response.data;
-      console.log(RankData);
-      return RankData;
+      const allUser = response.data;
+      console.log("fetchAllUser : " + allUser);
+      return allUser;
     } else {
       throw new Error('랭킹 유저를 가져오는데 실패했습니다.');
     }
@@ -438,4 +438,5 @@ export {
   fetchRankUser,
   addFollowUser,
   getMyReview,
+  fetchAllUser,
 };

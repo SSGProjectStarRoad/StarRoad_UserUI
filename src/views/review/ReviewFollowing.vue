@@ -57,13 +57,13 @@
                             type="button"
                             :class="[
                               'btn',
-                              user.isFollowed ? 'btn-grey' : 'btn-orange',
+                              user.followed ? 'btn-grey' : 'btn-orange',
                               'btn-rounded',
                             ]"
                             @click="follow(user.nickname)"
                           >
                             <span class="label">{{
-                              user.isFollowed ? '팔로잉' : '팔로우'
+                              user.followed ? '팔로잉' : '팔로우'
                             }}</span>
                           </button>
                         </div>
@@ -215,14 +215,17 @@ export default {
     },
     async follow(username) {
       const user = this.users.find(user => user.nickname === username);
+      console.log("follow user 111 : " + JSON.stringify(user));
       if (user) {
         const data = await addFollowUser(username, this.userEmail);
+        console.log("follow data : " + data);
+        console.log("follow user : " + JSON.stringify(data));
         if (data.status === 200) {
-          user.isFollowed = !user.isFollowed;
+          user.followed = !user.followed;
           console.log(
             username +
               '님을 팔로우했습니다: ' +
-              (user.isFollowed ? 'true' : 'false'),
+              (user.followed ? 'true' : 'false'),
           );
         }
       }
@@ -233,7 +236,7 @@ export default {
         this.users = data.map(user => ({
           ...user,
         }));
-        console.log("loadFollowingUser : " + this.users);
+        console.log("loadFollowingUser : " + JSON.stringify(this.users));
       } catch (error) {
         console.error('사용자 목록을 불러오는 중 오류가 발생했습니다:', error);
         this.users = [];
