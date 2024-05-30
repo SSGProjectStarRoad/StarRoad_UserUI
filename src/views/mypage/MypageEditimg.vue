@@ -105,8 +105,9 @@ export default {
         });
         this.showNotification('이미지가 성공적으로 저장되었습니다.');
         // 프로필 이미지를 서버에서 받은 URL로 갱신할 수 있음
-        this.profileImage = response.data.imageUrl;
-        this.isLoading = false; // 이미지가 로드되었으므로 로딩 상태를 해제
+        setTimeout(async () => {
+          await this.loadImage();
+        }, 2000);
       } catch (error) {
         console.error('이미지 업로드 실패:', error);
         this.showNotification('이미지 업로드 실패.');
