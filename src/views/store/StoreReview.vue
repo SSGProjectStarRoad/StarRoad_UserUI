@@ -79,7 +79,7 @@
         <div class="slide">
           <swiper
             v-if="buttons.length > 0"
-            ref="mySwiper"
+            ref="reviewSwiper"
             :options="swiperOptions"
             :slidesPerView="'auto'"
             :spaceBetween="10"
@@ -103,6 +103,35 @@
             </swiper-slide>
           </swiper>
         </div>
+
+        <div class="slide">
+          <swiper
+            v-if="keywords.length > 0"
+            ref="keywordSwiper"
+            :options="swiperOptions"
+            :slidesPerView="'auto'"
+            :spaceBetween="10"
+            :freeMode="true"
+            :freeModeSticky="true"
+            :grabCursor="true"
+            :resistanceRatio="0.6"
+          >
+            <swiper-slide
+              v-for="keyword in keywords"
+              :key="keyword"
+              style="width: auto"
+            >
+              <button
+                class="d-button"
+                :class="{ active: selectedKeyword === keyword }"
+                @click="filterKeyword(keyword)"
+              >
+                {{ keyword }}
+              </button>
+            </swiper-slide>
+          </swiper>
+        </div>
+
         <div class="sort">
           <p>
             <input
@@ -124,12 +153,15 @@
           </p>
         </div>
 
-        <reviewcard
-          :storeReview="filteredReviews"
-          @like-review="likeReviewHandler" 
-          :userEmail="userEmail"
-          :likeReview="likeReview"
-        />
+       <reviewcard
+  v-for="(review, index) in filteredReviews.reviews"
+  :key="review.id"
+  :review="review"
+  @like-review="likeReviewHandler"
+  :user-email="userEmail"
+  :likeReview="likeReview"
+  :selected-keyword="selectedKeyword"
+/>
       </div>
     </div>
     <reviewbutton />
@@ -139,12 +171,13 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import { likeReview, selectStore } from '@/api/index.js';
+import { likeReview, selectStore, getStoreKeywords } from '@/api/index.js';
 import reviewcard from '@/components/store/ReviewCard.vue';
 import ProgressBar from '@/components/store/ProgressBar.vue';
 import reviewbutton from '@/components/review/ReviewButton.vue';
 import scrollToTopButton from '@/components/store/ScrollToTopButton.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { EventBus } from '@/eventBus';
 import 'swiper/css';
 
 export default {
@@ -152,9 +185,11 @@ export default {
     return {
       storeReview: { reviews: [], commonReviewStats: {} },
       filteredReviews: { reviews: [], commonReviewStats: {} },
-      likeReview,
       selectedSort: 'latest',
       selectedButton: null,
+      selectedKeyword: null,
+      likeReview,
+      keywords: [],
       buttons: [
         '재방문 하고 싶어요',
         '서비스가 마음에 들어요',
@@ -184,10 +219,14 @@ export default {
     },
   },
   async created() {
+    EventBus.emit('loading', true);
     try {
       await this.loadReviews();
+      await this.loadKeywords(); // 키워드 불러오기
     } catch (error) {
       console.error('Error fetching store review:', error);
+    } finally {
+      EventBus.emit('loading', false); // 데이터 로드 완료 후 로딩 상태를 false로 설정합니다.
     }
   },
   components: {
@@ -199,6 +238,14 @@ export default {
     scrollToTopButton,
   },
   methods: {
+    async loadKeywords() {
+      try {
+        const response = await getStoreKeywords(this.storeId);
+        this.keywords = response.data.map(keyword => keyword.name);
+      } catch (error) {
+        console.error('Error loading keywords:', error);
+      }
+    },
     goToguide() {
       this.$router.push(`/store/${this.storeReview.id}/guidemap`);
     },
@@ -207,15 +254,29 @@ export default {
       this.loadReviews(); // 정렬 방식을 변경하면 리뷰를 다시 불러옵니다.
     },
     async filterReviews(button) {
-      if (this.selectedButton === button) {
-        // 버튼을 재클릭하면 필터링을 해제하고 원래 데이터를 복구합니다.
-        this.selectedButton = null;
-      } else {
-        this.selectedButton = button;
-      }
-      this.currentPage = 0;
-      await this.loadReviews(); // 필터링된 데이터를 로드합니다.
-    },
+    if (this.selectedButton === button) {
+      // 버튼을 재클릭하면 필터링을 해제하고 원래 데이터를 복구합니다.
+      this.selectedButton = null;
+    } else {
+      // 다른 필터가 선택되면 키워드를 초기화합니다.
+      this.selectedKeyword = null;
+      this.selectedButton = button;
+    }
+    this.currentPage = 0;
+    await this.loadReviews(); // 필터링된 데이터를 로드합니다.
+  },
+  async filterKeyword(keyword) {
+    if (this.selectedKeyword === keyword) {
+      // 키워드를 재클릭하면 필터링을 해제하고 원래 데이터를 복구합니다.
+      this.selectedKeyword = null;
+    } else {
+      // 다른 키워드가 선택되면 필터를 초기화합니다.
+      this.selectedButton = null;
+      this.selectedKeyword = keyword;
+    }
+    this.currentPage = 0;
+    await this.loadReviews(); // 필터링된 데이터를 로드합니다.
+  },
     async loadReviews() {
       this.loading = true;
       try {
@@ -225,7 +286,9 @@ export default {
           this.currentPage,
           this.pageSize,
           this.selectedButton,
-          this.selectedSort // 정렬 방식을 전달
+          this.selectedSort,
+          this.selectedKeyword // 키워드 필터를 추가
+
         );
         if (this.currentPage === 0) {
           this.storeReview = response;
@@ -293,14 +356,13 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 @import '@/css/common.css';
-
 .span-style {
   margin-left: 10px;
   color: var(--navy-color);
 }
-
 .store-introduce {
   color: var(--dgray-color);
   padding-left: 10px;
@@ -308,11 +370,9 @@ export default {
   margin-bottom: 10px;
   margin-top: 10px;
 }
-
 .store-review {
   margin-top: 40px;
 }
-
 .review-body {
   margin-top: 4%;
   background-image: url('https://picsum.photos/600?random=0');
@@ -320,24 +380,20 @@ export default {
   background-position: center;
   background-size: cover;
 }
-
 .review-content {
   padding-left: 15px;
   padding-right: 15px;
   font-size: 14px;
 }
-
 .review-date {
   font-size: 13px;
   color: grey;
   margin-top: -8px;
 }
-
 .user-header {
   height: 30px;
   padding: 10px;
 }
-
 .review-Data {
   width: 100%;
   height: 100%;
@@ -347,14 +403,11 @@ export default {
   margin-bottom: 1%;
   margin-top: 1%;
 }
-
 .review-data::before {
   background-color: var(--gray-color);
 }
-
 .review-content {
 }
-
 .user-profile {
   background-image: url('https://picsum.photos/100?random=0');
   width: 50px;
@@ -363,7 +416,6 @@ export default {
   border-radius: 50%;
   float: left;
 }
-
 .user-name {
   display: block;
   padding-left: 15%;
@@ -371,7 +423,6 @@ export default {
   font-size: 16px;
   font-weight: bold;
 }
-
 .review-count {
   padding-top: 0.7%;
   padding-left: 15%;
@@ -379,25 +430,21 @@ export default {
   color: gray;
   font-weight: 400;
 }
-
 .contents {
   overflow: hidden;
   position: relative;
   /* min-height: 100vh; */
   margin-top: 40px;
 }
-
 .slide {
   width: auto;
   position: relative;
   overflow: hidden;
 }
-
 .swiper-container {
   width: 100%;
   height: 100%;
 }
-
 .swiper-slide {
   width: 80px;
   text-align: center;
@@ -408,7 +455,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
 .d-button {
   margin-right: 10px;
   padding: 5px;
@@ -422,16 +468,13 @@ export default {
   color: black;
   white-space: nowrap;
 }
-
 .d-button.active {
   background-color: var(--mint-color);
   color: black;
 }
-
 input[type='radio'] {
   display: none;
 }
-
 label {
   display: inline-block;
   width: 3px;
@@ -442,24 +485,19 @@ label {
   cursor: pointer;
   margin-left: 5px;
 }
-
 input[type='radio']:checked + label {
   background-color: var(--navy-color);
 }
-
 .s-key-title {
   font-weight: bold;
 }
-
 .s-key {
   margin: 16px;
   margin-top: 30px;
 }
-
 .section {
   margin-top: 30px;
 }
-
 .section::before {
   content: '';
   display: block;
@@ -467,17 +505,14 @@ input[type='radio']:checked + label {
   width: 100%;
   background-color: var(--gray-color);
 }
-
 .c-key {
   margin-left: 10px;
   margin-right: 10px;
 }
-
 .keyword {
   font-weight: bold;
   margin-left: 10px;
 }
-
 .store-img {
   width: 50%;
   height: 50%;
@@ -485,7 +520,6 @@ input[type='radio']:checked + label {
   display: block;
   border-radius: 10px;
 }
-
 .store {
   display: flex;
   align-items: center;
@@ -497,13 +531,11 @@ input[type='radio']:checked + label {
   padding-left: 10px;
   padding-right: 10px;
 }
-
 .store-detail {
   display: flex;
   align-items: center;
   margin-left: auto;
 }
-
 .store-phone,
 .store-location {
   width: 20px;
@@ -514,7 +546,6 @@ input[type='radio']:checked + label {
   box-shadow: 0 0 8px var(--dgray-color);
   cursor: pointer;
 }
-
 .store-phone img {
   width: 100%;
   height: 100%;

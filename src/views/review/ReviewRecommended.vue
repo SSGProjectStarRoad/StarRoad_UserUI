@@ -15,7 +15,7 @@
       <div class="message">로딩 중...</div>
     </div>
     <div v-else-if="reviews.length === 0" class="container">
-      <div class="message">데이터가 없습니다.</div>
+      <!-- <div class="message">데이터가 없습니다.</div> -->
     </div>
     <reviewcard
       :reviews="reviews"
@@ -29,10 +29,10 @@
 
 <script>
 import { getAllReview, addFollowUser, fetchAllUser } from '@/api/index';
-import ReviewButton from "@/components/review/ReviewButton.vue";
+import ReviewButton from '@/components/review/ReviewButton.vue';
 import reviewcard from '@/components/review/ReviewCard.vue';
 import { mapState, mapGetters } from 'vuex';
-
+import { EventBus } from '@/eventBus';
 
 export default {
   data() {
@@ -43,22 +43,29 @@ export default {
       hasNextPage: true,
       loading: false,
       users: [],
-    }
+    };
   },
   async created() {
+    EventBus.emit('loading', true);
     try {
       this.loadAllUser();
-      const initialData = await getAllReview(this.userEmail, this.currentPage, this.pageSize);
+      const initialData = await getAllReview(
+        this.userEmail,
+        this.currentPage,
+        this.pageSize,
+      );
       if (initialData) {
         console.log('Initial data:', initialData); // 데이터를 콘솔에 출력하여 확인합니다.
         this.reviews = initialData.reviews;
-        console.log("this.reviews : " + this.reviews);
+        console.log('this.reviews : ' + this.reviews);
         this.hasNextPage = initialData.hasNext;
-        console.log("created - this.hasNextPage : " + this.hasNextPage);
+        console.log('created - this.hasNextPage : ' + this.hasNextPage);
         this.totalReviewCount = initialData.totalReviewCount || 0;
       }
     } catch (error) {
       console.error('Error fetching store review:', error);
+    } finally {
+      EventBus.emit('loading', false); // 데이터 로드 완료 후 로딩 상태를 false로 설정합니다.
     }
   },
   computed: {
@@ -66,7 +73,7 @@ export default {
     ...mapGetters(['isLogin']),
     userEmail() {
       return this.email; // Vuex 스토어의 email을 userEmailComputed로 매핑합니다.
-    }
+    },
   },
   components: {
     ReviewButton,
@@ -80,14 +87,15 @@ export default {
   },
   methods: {
     handleScroll() {
-      const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollPosition =
+        window.pageYOffset || document.documentElement.scrollTop;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
       // 페이지 하단에서 100px 이내에 도달하면 추가 데이터 요청
       if (scrollPosition + windowHeight >= documentHeight - 100) {
         this.loadMoreReviews();
-        console.log("locadMoreReviews 호출");
+        console.log('locadMoreReviews 호출');
       }
 
       this.showScrollToTopButton = scrollPosition > 100;
@@ -99,28 +107,28 @@ export default {
       });
     },
     async loadMoreReviews() {
-      console.log("this.loading : " + this.loading);
-      console.log("!this.hasNextPage : " + !this.hasNextPage);
+      console.log('this.loading : ' + this.loading);
+      console.log('!this.hasNextPage : ' + !this.hasNextPage);
       if (this.loading || !this.hasNextPage) {
-        console.log("loadMoreReviews 리턴");
+        console.log('loadMoreReviews 리턴');
         return;
       }
-      console.log("loadMoreReviews 통과");
+      console.log('loadMoreReviews 통과');
       this.loading = true;
       const nextPage = this.currentPage + 1;
 
       try {
         const response = await getAllReview(nextPage, this.pageSize);
         if (response && response.reviews) {
-          console.log("this revies : " + this.reviews);
-          console.log("loadMoreRevies response: " + response);
-          console.log("loadMoreRevies response.reviews: " + response.reviews);
+          console.log('this revies : ' + this.reviews);
+          console.log('loadMoreRevies response: ' + response);
+          console.log('loadMoreRevies response.reviews: ' + response.reviews);
           this.reviews = [...this.reviews, ...response.reviews];
-          console.log("more Reviews : " + this.reviews);
+          console.log('more Reviews : ' + this.reviews);
           this.currentPage = nextPage;
-          console.log("currentPage : " + this.currentPage);
+          console.log('currentPage : ' + this.currentPage);
           this.hasNextPage = response.hasNext;
-          console.log("hasNextPage : " + this.hasNextPage);
+          console.log('hasNextPage : ' + this.hasNextPage);
         } else {
           console.error('Invalid response data:', response);
         }
@@ -147,7 +155,7 @@ export default {
           ...user,
         }));
       } catch (error) {
-        console.error("사용자 목록을 불러오는 중 오류가 발생했습니다:", error);
+        console.error('사용자 목록을 불러오는 중 오류가 발생했습니다:', error);
         this.users = [];
       }
     },
