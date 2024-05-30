@@ -240,13 +240,11 @@ async function imageUpload(imageFile) {
         'Content-Type': 'multipart/form-data',
       },
     });
-    console.log('업로드 성공:', response);
-    alert('이미지 업로드 성공!');
+    console.log('index.js function(imageUpload) : 업로드 성공 : ', response);
     return response;
   } catch (error) {
     // try 블록 내에서 발생하는 예외를 캐치합니다.
-    console.error('업로드 실패:', error);
-    alert('이미지 업로드 실패');
+    console.error('index.js function(imageUpload) : 업로드 실패 : ', error);
   }
 }
 

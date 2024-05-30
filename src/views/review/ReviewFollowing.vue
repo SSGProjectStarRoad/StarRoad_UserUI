@@ -150,10 +150,9 @@ export default {
       console.error('Error fetching store review:', error);
     }
   },
-  mounted() {
-    console.log('email : ' + this.userEmail);
-    window.addEventListener('scroll', this.handleScroll);
-  },
+  async mounted()  {
+  console.log("mounted() users:", this.users);
+},
   beforeUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   },
@@ -165,12 +164,12 @@ export default {
       const documentHeight = document.documentElement.scrollHeight;
 
       // 페이지 하단에서 100px 이내에 도달하면 추가 데이터 요청
-      if (scrollPosition + windowHeight >= documentHeight - 100) {
+      if (scrollPosition + windowHeight >= documentHeight - 300) {
         this.loadMoreReviews();
         console.log('locadMoreReviews 호출');
       }
 
-      this.showScrollToTopButton = scrollPosition > 100;
+      this.showScrollToTopButton = scrollPosition > 300;
     },
     scrollToTop() {
       window.scrollTo({
@@ -233,8 +232,8 @@ export default {
         const data = await fetchRankUser(this.userEmail);
         this.users = data.map(user => ({
           ...user,
-          isFollowed: false, // isFollowed 속성을 기본적으로 추가합니다.
         }));
+        console.log("loadFollowingUser : " + this.users);
       } catch (error) {
         console.error('사용자 목록을 불러오는 중 오류가 발생했습니다:', error);
         this.users = [];
