@@ -21,7 +21,7 @@ export default {
     this.getReward(); // 페이지 로드 시 getReward 메서드 호출
     setTimeout(() => {
       this.redirectToCompleted();
-    }, 3000);
+    }, 2000);
   },
   computed: {
     ...mapState(['email']),
@@ -30,7 +30,7 @@ export default {
   methods: {
     getCurrentMonthImage() {
       const month = new Date().getMonth() + 1; // 현재 월 가져오기
-      return require(`@/img/reward/mystar${month}.png`);
+      return `https://kr.object.ncloudstorage.com/ssg-starroad/ssg/starroad/rewards/mystar${month}.png`;
     },
     async getReward() {
       // const userId = 1;
