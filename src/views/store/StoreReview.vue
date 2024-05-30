@@ -79,7 +79,7 @@
         <div class="slide">
           <swiper
             v-if="buttons.length > 0"
-            ref="mySwiper"
+            ref="reviewSwiper"
             :options="swiperOptions"
             :slidesPerView="'auto'"
             :spaceBetween="10"
@@ -103,6 +103,35 @@
             </swiper-slide>
           </swiper>
         </div>
+
+        <div class="slide">
+          <swiper
+            v-if="keywords.length > 0"
+            ref="keywordSwiper"
+            :options="swiperOptions"
+            :slidesPerView="'auto'"
+            :spaceBetween="10"
+            :freeMode="true"
+            :freeModeSticky="true"
+            :grabCursor="true"
+            :resistanceRatio="0.6"
+          >
+            <swiper-slide
+              v-for="keyword in keywords"
+              :key="keyword"
+              style="width: auto"
+            >
+              <button
+                class="d-button"
+                :class="{ active: selectedKeyword === keyword }"
+                @click="filterKeyword(keyword)"
+              >
+                {{ keyword }}
+              </button>
+            </swiper-slide>
+          </swiper>
+        </div>
+
         <div class="sort">
           <p>
             <input
@@ -123,14 +152,15 @@
             <label for="likes"></label>&nbsp;좋아요 순
           </p>
         </div>
-        <reviewcard
-          v-for="(review, index) in filteredReviews.reviews"
-          :key="review.id"
-          :review="review"
-          @like-review="likeReviewHandler"
-          :user-email="userEmail"
-          :likeReview="likeReview"
-        />
+       <reviewcard
+  v-for="(review, index) in filteredReviews.reviews"
+  :key="review.id"
+  :review="review"
+  @like-review="likeReviewHandler"
+  :user-email="userEmail"
+  :likeReview="likeReview"
+  :selected-keyword="selectedKeyword"
+/>
       </div>
     </div>
     <reviewbutton />
@@ -140,7 +170,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import { likeReview, selectStore } from '@/api/index.js';
+import { likeReview, selectStore, getStoreKeywords } from '@/api/index.js';
 import reviewcard from '@/components/store/ReviewCard.vue';
 import ProgressBar from '@/components/store/ProgressBar.vue';
 import reviewbutton from '@/components/review/ReviewButton.vue';
@@ -155,7 +185,9 @@ export default {
       filteredReviews: { reviews: [], commonReviewStats: {} },
       selectedSort: 'latest',
       selectedButton: null,
+      selectedKeyword: null,
       likeReview,
+      keywords: [],
       buttons: [
         '재방문 하고 싶어요',
         '서비스가 마음에 들어요',
@@ -187,6 +219,7 @@ export default {
   async created() {
     try {
       await this.loadReviews();
+      await this.loadKeywords(); // 키워드 불러오기
     } catch (error) {
       console.error('Error fetching store review:', error);
     }
@@ -200,6 +233,14 @@ export default {
     scrollToTopButton,
   },
   methods: {
+    async loadKeywords() {
+      try {
+        const response = await getStoreKeywords(this.storeId);
+        this.keywords = response.data.map(keyword => keyword.name);
+      } catch (error) {
+        console.error('Error loading keywords:', error);
+      }
+    },
     goToguide() {
       this.$router.push(`/store/${this.storeReview.id}/guidemap`);
     },
@@ -208,15 +249,29 @@ export default {
       this.loadReviews(); // 정렬 방식을 변경하면 리뷰를 다시 불러옵니다.
     },
     async filterReviews(button) {
-      if (this.selectedButton === button) {
-        // 버튼을 재클릭하면 필터링을 해제하고 원래 데이터를 복구합니다.
-        this.selectedButton = null;
-      } else {
-        this.selectedButton = button;
-      }
-      this.currentPage = 0;
-      await this.loadReviews(); // 필터링된 데이터를 로드합니다.
-    },
+    if (this.selectedButton === button) {
+      // 버튼을 재클릭하면 필터링을 해제하고 원래 데이터를 복구합니다.
+      this.selectedButton = null;
+    } else {
+      // 다른 필터가 선택되면 키워드를 초기화합니다.
+      this.selectedKeyword = null;
+      this.selectedButton = button;
+    }
+    this.currentPage = 0;
+    await this.loadReviews(); // 필터링된 데이터를 로드합니다.
+  },
+  async filterKeyword(keyword) {
+    if (this.selectedKeyword === keyword) {
+      // 키워드를 재클릭하면 필터링을 해제하고 원래 데이터를 복구합니다.
+      this.selectedKeyword = null;
+    } else {
+      // 다른 키워드가 선택되면 필터를 초기화합니다.
+      this.selectedButton = null;
+      this.selectedKeyword = keyword;
+    }
+    this.currentPage = 0;
+    await this.loadReviews(); // 필터링된 데이터를 로드합니다.
+  },
     async loadReviews() {
       this.loading = true;
       try {
@@ -226,7 +281,8 @@ export default {
           this.currentPage,
           this.pageSize,
           this.selectedButton,
-          this.selectedSort // 정렬 방식을 전달
+          this.selectedSort,
+          this.selectedKeyword // 키워드 필터를 추가
         );
         if (this.currentPage === 0) {
           this.storeReview = response;
