@@ -1,23 +1,28 @@
 <template>
   <div class="wrapper">
-    <Header v-if="showHeaderFooter"></Header>
-    <router-view></router-view>
-    <Footer v-if="showHeaderFooter"></Footer>
+    <Header v-if="showHeaderFooter" />
+    <loading-spinner v-if="loading" />
+    <router-view />
+    <Footer v-if="showHeaderFooter" />
   </div>
 </template>
 
 <script>
 import Header from '@/views/Header.vue';
 import Footer from '@/views/Footer.vue';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import { EventBus } from '@/eventBus';
 
 export default {
   components: {
     Header,
     Footer,
+    LoadingSpinner,
   },
   data() {
     return {
       showHeaderFooter: true,
+      loading: false,
     };
   },
   watch: {
@@ -27,6 +32,9 @@ export default {
   },
   created() {
     this.checkRoute(this.$route);
+    EventBus.on('loading', status => {
+      this.loading = status;
+    });
   },
   methods: {
     checkRoute(route) {
@@ -37,6 +45,9 @@ export default {
       ];
       this.showHeaderFooter = !noHeaderFooterRoutes.includes(route.path);
     },
+  },
+  beforeUnmount() {
+    EventBus.off('loading');
   },
 };
 </script>

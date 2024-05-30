@@ -79,9 +79,33 @@ function rewardAdd(email) {
     reward_id: today,
   });
 }
+// axios 인스턴스가 'instance'로 정의되어 있다고 가정합니다.
+function getStoreKeywords(storeId) {
+  return instance.get(`/store/${storeId}/keywords`);
+}
 
 function likeReview(reviewId, userId) {
   return instance.post(`/review-likes/${reviewId}/${userId}`);
+}
+
+async function addFollowUser(userName, userEmail) {
+  console.log('username : ' + userName);
+  try {
+    const response = await instance.post(
+      `/reviews/addFollowUser?userName=${encodeURIComponent(
+        userName,
+      )}&userEmail=${encodeURIComponent(userEmail)}`,
+    );
+
+    if (response.status === 200) {
+      console.log(response);
+      return response;
+    } else {
+      throw new Error('팔로우하는데 실패했습니다.');
+    }
+  } catch (error) {
+    console.error('오류:', error);
+  }
 }
 
 // 백엔드에서 보내는 매장 목록을 받아오는 fetchStoreList 함수를 추가합니다.
@@ -99,11 +123,12 @@ async function selectStore(
   page = 0,
   size = 10,
   filter = '',
-  sort
+  sort,
+  keyword = '',
 ) {
   try {
     const response = await instance.get(`/store/${storeId}/reviews`, {
-      params: { userEmail, page, size, filter ,sort},
+      params: { userEmail, page, size, filter, sort, keyword },
     });
     if (response.status === 200) {
       const storeWithReviewData = response.data;
@@ -292,10 +317,9 @@ async function submitSurvey(surveyData) {
 
 async function fetchRankUser(userEmail) {
   try {
-    const response = await instance.get(
-      `/reviews/rank`, {
-    params: { userEmail },
-  });
+    const response = await instance.get(`/reviews/rank`, {
+      params: { userEmail },
+    });
 
     if (response.status === 200) {
       const RankData = response.data;
@@ -311,10 +335,9 @@ async function fetchRankUser(userEmail) {
 
 async function fetchAllUser(userEmail) {
   try {
-    const response = await instance.get(
-      `/reviews/allUser`, {
-    params: { userEmail },
-  });
+    const response = await instance.get(`/reviews/allUser`, {
+      params: { userEmail },
+    });
 
     if (response.status === 200) {
       const allUser = response.data;
@@ -322,22 +345,6 @@ async function fetchAllUser(userEmail) {
       return allUser;
     } else {
       throw new Error('랭킹 유저를 가져오는데 실패했습니다.');
-    }
-  } catch (error) {
-    console.error('오류:', error);
-  }
-}
-
-async function addFollowUser(userName, userEmail) {
-  console.log("username : "  + userName);
-  try {
-    const response = await instance.post(`/reviews/addFollowUser?userName=${encodeURIComponent(userName)}&userEmail=${encodeURIComponent(userEmail)}`);
-
-    if (response.status === 200) {
-      console.log(response);
-      return response;
-    } else {
-      throw new Error('팔로우하는데 실패했습니다.');
     }
   } catch (error) {
     console.error('오류:', error);
@@ -439,4 +446,5 @@ export {
   addFollowUser,
   getMyReview,
   fetchAllUser,
+  getStoreKeywords,
 };
