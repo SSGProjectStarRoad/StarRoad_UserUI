@@ -34,14 +34,14 @@ export default {
       try {
         const email = this.getEmail();
         const response = await inactiveUser(email);
-        alert(response.data);
+        // alert(response.data);
         // 직접 Vuex 스토어와 쿠키에서 데이터를 제거
         this.clearUserData();
         // 로그아웃 처리 또는 리다이렉트
         this.$router.push('/login');
       } catch (error) {
         console.error(error);
-        alert('탈퇴 처리 중 오류가 발생했습니다.');
+        // alert('탈퇴 처리 중 오류가 발생했습니다.');
       }
     },
     getEmail() {
