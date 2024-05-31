@@ -4,78 +4,141 @@
       <div class="timeline-header">
         <div class="profile">
           <div class="profile-pic">
-            <img :src="review.imagePath ||
-              'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'" 
-              height="42" width="42" alt="" class="img" />
+            <img
+              :src="
+                review.imagePath ||
+                'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'
+              "
+              height="42"
+              width="42"
+              alt=""
+              class="img"
+            />
           </div>
-
 
           <div class="__info">
             <span class="name username">{{ review.userNickname }}</span>
             <span class="userinfo"> 리뷰 수 {{ review.reviewcount }} </span>
           </div>
           <div v-if="showFollowButton">
-            <button type="button" :class="[
-              'btn',
-              isUserFollowed(review.userNickname) ? 'btn-grey' : 'btn-orange',
-              'btn-rounded',
-            ]" @click="follow(review.userNickname)">
-              <span class="label">{{ isUserFollowed(review.userNickname) ? '팔로잉' : '팔로우' }}</span>
+            <button
+              type="button"
+              :class="[
+                'btn',
+                isUserFollowed(review.userNickname) ? 'btn-grey' : 'btn-orange',
+                'btn-rounded',
+              ]"
+              @click="follow(review.userNickname)"
+            >
+              <span class="label">{{
+                isUserFollowed(review.userNickname) ? '팔로잉' : '팔로우'
+              }}</span>
             </button>
           </div>
         </div>
       </div>
       <div class="timeline-gallery more" style="border-radius: 4px">
-        <swiper :options="swiperOptions" @slideChange="onSlideChange" @swiper="onSwiper"
-          v-if="review.reviewImages.length">
-          <swiper-slide v-for="(image, imgIndex) in review.reviewImages" :key="image.id" :data-id="image.id">
+        <swiper
+          :options="swiperOptions"
+          @slideChange="onSlideChange"
+          @swiper="onSwiper"
+          v-if="review.reviewImages.length"
+        >
+          <swiper-slide
+            v-for="(image, imgIndex) in review.reviewImages"
+            :key="image.id"
+            :data-id="image.id"
+          >
             <div class="image-container">
-              <img :src="image.imagePath" @error="setDefaultImage($event)" alt="" />
+              <img
+                :src="image.imagePath"
+                @error="setDefaultImage($event)"
+                alt=""
+              />
             </div>
           </swiper-slide>
-          <div v-if="review.reviewImages.length > 1 && review.showPrevButton" class="swiper-button-prev"
-            @click="slidePrev"></div>
-          <div v-if="review.reviewImages.length > 1 && review.showNextButton" class="swiper-button-next"
-            @click="slideNext"></div>
+          <div
+            v-if="review.reviewImages.length > 1 && review.showPrevButton"
+            class="swiper-button-prev"
+            @click="slidePrev"
+          ></div>
+          <div
+            v-if="review.reviewImages.length > 1 && review.showNextButton"
+            class="swiper-button-next"
+            @click="slideNext"
+          ></div>
         </swiper>
       </div>
       <div class="timeline-post-content">
         <div class="__post-meta">
           <div class="rating-segment">
-            <p class="ooezpq2 _1ltqxco1e" style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"></p>
+            <p
+              class="ooezpq2 _1ltqxco1e"
+              style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"
+            ></p>
           </div>
-          <div class="post-date">{{ formatRelativeDate(review.createDate) }}</div>
+          <div class="post-date">
+            {{ formatRelativeDate(review.createDate) }}
+          </div>
         </div>
         <div class="post-content">
           <div id="post-content1_2650757">{{ review.contents }}</div>
         </div>
         <div class="feedback-icons">
-          <span v-for="(feedback, index) in review.reviewFeedbacks" :key="index" class="feedback">
-            <img :src="getFeedbackImage(feedback.reviewFeedbackSelection)" class="emoji-icon" alt="" width="18"
-              height="18" />
+          <span
+            v-for="(feedback, index) in review.reviewFeedbacks"
+            :key="index"
+            class="feedback"
+          >
+            <img
+              :src="getFeedbackImage(feedback.reviewFeedbackSelection)"
+              class="emoji-icon"
+              alt=""
+              width="18"
+              height="18"
+            />
             {{ feedback.reviewFeedbackSelection }}
           </span>
         </div>
-        
       </div>
       <br />
       <div class="restaurant-info">
-        <img v-if="review && review.store" :src="review.store.imagePath" art="" class="thumb" alt="" style="
-                background: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')
-                  center center no-repeat transparent;
-              " />
+        <img
+          v-if="review && review.store"
+          :src="review.store.imagePath"
+          art=""
+          class="thumb"
+          alt=""
+          style="
+            background: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')
+              center center no-repeat transparent;
+          "
+        />
         <div class="__info">
           <h4 class="__name" @click="goToStoreReview(review.store.id)">
-        <span>{{ review.store ? review.store.name : '가게 이름 없음' }}</span>
-      </h4>
+            <span>{{
+              review.store ? review.store.name : '가게 이름 없음'
+            }}</span>
+          </h4>
         </div>
-
       </div>
       <div class="timeline-post-footer _10fm75h6 _10fm75hg _10fm75hj">
         <div class="__post-meta">
-          <span :class="{ liked: review.liked }" @click="toggleLike(review)" style="cursor: pointer">
-            <img :src="review.liked ? require('@/img/imoji/heart-solid.svg') : require('@/img/imoji/heart-regular.svg')"
-              alt="like" width="18" height="18" />&nbsp;
+          <span
+            :class="{ liked: review.liked }"
+            @click="toggleLike(review)"
+            style="cursor: pointer"
+          >
+            <img
+              :src="
+                review.liked
+                  ? require('@/img/imoji/heart-solid.svg')
+                  : require('@/img/imoji/heart-regular.svg')
+              "
+              alt="like"
+              width="18"
+              height="18"
+            />&nbsp;
             {{ review.likeCount }}
           </span>
         </div>
@@ -129,7 +192,7 @@ export default {
         '종류가 다양해요': require('@/img/imoji/하트와리본.png'),
         '시설이 청결했습니다': require('@/img/imoji/청결.png'),
         '재료가 신선해요': require('@/img/imoji/하트장식.png'),
-        '트랜디해요': require('@/img/imoji/오렌지하트.png'),
+        트랜디해요: require('@/img/imoji/오렌지하트.png'),
         '재고가 충분해요': require('@/img/imoji/재고.png'),
         '품질이 좋아요': require('@/img/imoji/반짝임.png'),
         '시간이 금방가요': require('@/img/imoji/시계.png'),
@@ -166,10 +229,14 @@ export default {
       return moment(date).fromNow();
     },
     setDefaultImage(event) {
-      event.target.src = 'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/default.png';
+      event.target.src =
+        'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/default.png';
     },
     getFeedbackImage(feedbackText) {
-      return this.feedbackImageMap[feedbackText] || require('@/img/imoji/별눈얼굴.png');
+      return (
+        this.feedbackImageMap[feedbackText] ||
+        require('@/img/imoji/별눈얼굴.png')
+      );
     },
     toggleLike(review) {
       const reviewId = review.id;
@@ -219,7 +286,6 @@ export default {
     goToStoreReview(storeId) {
       this.$router.push(`/store/${storeId}/reviews`);
     },
-
   },
   components: {
     Swiper,
@@ -230,11 +296,11 @@ export default {
 <style scoped>
 @import '@/css/review/review.css';
 
-.timeline-post-footer .__post-meta>span::before {
+.timeline-post-footer .__post-meta > span::before {
   content: none;
 }
 
-.timeline-post-footer .__post-meta>span {
+.timeline-post-footer .__post-meta > span {
   margin: 0;
   padding: 0;
 }
@@ -248,7 +314,7 @@ export default {
 .feedback {
   display: flex;
   align-items: center;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
   border-radius: 8px;
   padding: 4px 8px;
 }
@@ -301,8 +367,9 @@ export default {
 }
 
 .restaurant-info {
-  background-color: #ccc;
   /* 회색 배경 */
+  width: 230px;
+  /* border: 3px solid var(--mint-color); */
   display: flex;
   /* 가로 방향으로 요소들을 나열 */
   align-items: center;
@@ -312,11 +379,11 @@ export default {
 }
 
 .thumb {
-  width: 55px;
+  width: 110px;
   /* 이미지 크기 설정 */
-  height: 40;
+  height: 60px;
   /* 이미지 높이 자동 설정 */
-  margin-right: 10px;
+  /* margin-right: 10px; */
   /* 이미지와 이름 사이 간격 */
   background-size: cover;
   /* 이미지 크기를 컨테이너 전체를 채우도록 설정 */
@@ -331,10 +398,14 @@ export default {
   display: flex;
   align-items: center; /* 세로 중앙 정렬 */
 }
+.restaurant-info .__info {
+  margin-bottom: 0px;
+  /* border: 1px solid var(--mint-color); */
+}
 
 .__name {
   cursor: pointer; /* 클릭 가능한 커서 표시 */
-  margin-bottom: 10px; /* 아래쪽 여백 */
+  /* margin-bottom: 10px; 아래쪽 여백 */
 }
 
 .__name:hover {
