@@ -4,9 +4,18 @@
       <div class="timeline-header">
         <div class="profile">
           <div class="profile-pic">
-            <img :src="review.imagePath || 'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/default.png'"
-                 height="42" width="42" alt="" class="img" />
+            <img
+              :src="
+                review.imagePath ||
+                'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'
+              "
+              height="42"
+              width="42"
+              alt=""
+              class="img"
+            />
           </div>
+          
           <div class="__info">
             <span class="name username">{{ review.userNickname }}</span>
             <span class="userinfo"> 리뷰 수 {{ review.reviewcount }} </span>
