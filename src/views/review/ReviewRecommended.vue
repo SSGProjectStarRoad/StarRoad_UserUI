@@ -17,12 +17,7 @@
     <div v-else-if="reviews.length === 0" class="container">
       <!-- <div class="message">데이터가 없습니다.</div> -->
     </div>
-    <reviewcard
-      :reviews="reviews"
-      :userEmail="userEmail"
-      :users="users"
-      :follow="follow"
-    />
+    <reviewcard v-for="(review, index) in reviews" :key="review.id" :review="review" :userEmail="userEmail" :users="users" :follow="follow" />
   </div>
   <ReviewButton />
 </template>
@@ -129,15 +124,21 @@ export default {
     async loadReviews() {
       this.loading = true;
       try {
-        console.log("loadReviews 시작 ");
         const response = await getAllReview(this.userEmail, this.currentPage, this.pageSize);
-        console.log("loadReviews response : " + response);
         if (this.currentPage === 0) {
-          this.reviews = response.reviews;
+          this.reviews = response.reviews.map(review => ({
+            ...review,
+            showPrevButton: false,
+            showNextButton: false,
+          }));
         } else {
           this.reviews = [
             ...this.reviews,
-            ...response.reviews,
+            ...response.reviews.map(review => ({
+              ...review,
+              showPrevButton: false,
+              showNextButton: false,
+            }))
           ];
         }
         this.hasNextPage = response.hasNext;
@@ -150,6 +151,8 @@ export default {
     },
   },
 };
+
+
 </script>
 
 <style>
