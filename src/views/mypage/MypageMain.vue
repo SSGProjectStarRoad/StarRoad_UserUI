@@ -36,7 +36,7 @@
           <div class="mypoint">{{ mydata.point }}</div>
         </div>
         <div class="charge">
-          <div class="pointcharge">POINT CHARGE</div>
+          <!-- <div class="pointcharge">POINT CHARGE</div> -->
           <!-- <div class="qr">QR 넣기?</div> -->
         </div>
       </div>
