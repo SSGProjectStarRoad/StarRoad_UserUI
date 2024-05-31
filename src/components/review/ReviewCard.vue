@@ -4,18 +4,12 @@
       <div class="timeline-header">
         <div class="profile">
           <div class="profile-pic">
-            <img
-              :src="
-                review.imagePath ||
-                'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'
-              "
-              height="42"
-              width="42"
-              alt=""
-              class="img"
-            />
+            <img :src="review.imagePath ||
+              'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'" 
+              height="42" width="42" alt="" class="img" />
           </div>
-          
+
+
           <div class="__info">
             <span class="name username">{{ review.userNickname }}</span>
             <span class="userinfo"> 리뷰 수 {{ review.reviewcount }} </span>
@@ -32,14 +26,17 @@
         </div>
       </div>
       <div class="timeline-gallery more" style="border-radius: 4px">
-        <swiper :options="swiperOptions" @slideChange="onSlideChange" @swiper="onSwiper" v-if="review.reviewImages.length">
+        <swiper :options="swiperOptions" @slideChange="onSlideChange" @swiper="onSwiper"
+          v-if="review.reviewImages.length">
           <swiper-slide v-for="(image, imgIndex) in review.reviewImages" :key="image.id" :data-id="image.id">
             <div class="image-container">
               <img :src="image.imagePath" @error="setDefaultImage($event)" alt="" />
             </div>
           </swiper-slide>
-          <div v-if="review.reviewImages.length > 1 && review.showPrevButton" class="swiper-button-prev" @click="slidePrev"></div>
-          <div v-if="review.reviewImages.length > 1 && review.showNextButton" class="swiper-button-next" @click="slideNext"></div>
+          <div v-if="review.reviewImages.length > 1 && review.showPrevButton" class="swiper-button-prev"
+            @click="slidePrev"></div>
+          <div v-if="review.reviewImages.length > 1 && review.showNextButton" class="swiper-button-next"
+            @click="slideNext"></div>
         </swiper>
       </div>
       <div class="timeline-post-content">
@@ -54,15 +51,31 @@
         </div>
         <div class="feedback-icons">
           <span v-for="(feedback, index) in review.reviewFeedbacks" :key="index" class="feedback">
-            <img :src="getFeedbackImage(feedback.reviewFeedbackSelection)" class="emoji-icon" alt="" width="18" height="18" />
+            <img :src="getFeedbackImage(feedback.reviewFeedbackSelection)" class="emoji-icon" alt="" width="18"
+              height="18" />
             {{ feedback.reviewFeedbackSelection }}
           </span>
         </div>
+        
+      </div>
+      <br />
+      <div class="restaurant-info">
+        <img v-if="review && review.store" :src="review.store.imagePath" art="" class="thumb" alt="" style="
+                background: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')
+                  center center no-repeat transparent;
+              " />
+        <div class="__info">
+          <h4 class="__name" @click="goToStoreReview(review.store.id)">
+        <span>{{ review.store ? review.store.name : '가게 이름 없음' }}</span>
+      </h4>
+        </div>
+
       </div>
       <div class="timeline-post-footer _10fm75h6 _10fm75hg _10fm75hj">
         <div class="__post-meta">
           <span :class="{ liked: review.liked }" @click="toggleLike(review)" style="cursor: pointer">
-            <img :src="review.liked ? require('@/img/imoji/heart-solid.svg') : require('@/img/imoji/heart-regular.svg')" alt="like" width="18" height="18" />&nbsp;
+            <img :src="review.liked ? require('@/img/imoji/heart-solid.svg') : require('@/img/imoji/heart-regular.svg')"
+              alt="like" width="18" height="18" />&nbsp;
             {{ review.likeCount }}
           </span>
         </div>
@@ -203,6 +216,10 @@ export default {
         this.updateNavigationButtons(this.swiper);
       }
     },
+    goToStoreReview(storeId) {
+      this.$router.push(`/store/${storeId}/reviews`);
+    },
+
   },
   components: {
     Swiper,
@@ -212,18 +229,22 @@ export default {
 </script>
 <style scoped>
 @import '@/css/review/review.css';
+
 .timeline-post-footer .__post-meta>span::before {
   content: none;
 }
+
 .timeline-post-footer .__post-meta>span {
   margin: 0;
   padding: 0;
 }
+
 .feedback-icons {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
+
 .feedback {
   display: flex;
   align-items: center;
@@ -231,10 +252,12 @@ export default {
   border-radius: 8px;
   padding: 4px 8px;
 }
+
 .emoji-icon {
   vertical-align: middle;
   margin-right: 4px;
 }
+
 .image-container {
   display: flex;
   justify-content: center;
@@ -243,12 +266,14 @@ export default {
   height: 200px;
   cursor: pointer;
 }
+
 .image-container img {
   max-width: 100%;
   max-height: 100%;
   object-fit: cover;
   border-radius: 8px;
 }
+
 .swiper-button-prev,
 .swiper-button-next {
   color: #000;
@@ -257,17 +282,63 @@ export default {
   z-index: 10;
   cursor: pointer;
 }
+
 .swiper-button-prev {
   left: 10px;
 }
+
 .swiper-button-next {
   right: 10px;
 }
+
 .btn-grey {
   background-color: grey;
   border-radius: 10px;
 }
+
 .btn-rounded {
   border-radius: 10px;
+}
+
+.restaurant-info {
+  background-color: #ccc;
+  /* 회색 배경 */
+  display: flex;
+  /* 가로 방향으로 요소들을 나열 */
+  align-items: center;
+  /* 세로 중앙 정렬 */
+  height: fit-content;
+  /* 높이를 콘텐츠에 맞춤 */
+}
+
+.thumb {
+  width: 55px;
+  /* 이미지 크기 설정 */
+  height: 40;
+  /* 이미지 높이 자동 설정 */
+  margin-right: 10px;
+  /* 이미지와 이름 사이 간격 */
+  background-size: cover;
+  /* 이미지 크기를 컨테이너 전체를 채우도록 설정 */
+}
+
+.thumb img {
+  display: block;
+  /* 이미지를 블록 요소로 설정 */
+}
+
+.__info {
+  display: flex;
+  align-items: center; /* 세로 중앙 정렬 */
+}
+
+.__name {
+  cursor: pointer; /* 클릭 가능한 커서 표시 */
+  margin-bottom: 10px; /* 아래쪽 여백 */
+}
+
+.__name:hover {
+  color: var(--primary-color); /* hover 시 글자색 변경 */
+  text-decoration: underline; /* hover 시 밑줄 추가 */
 }
 </style>
