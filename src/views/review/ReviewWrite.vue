@@ -200,6 +200,20 @@ export default {
 
       return canvas;
     },
+    showNotification(message) {
+      this.notification = message;
+      this.$nextTick(() => {
+        const notificationElement = this.$refs.notification;
+        notificationElement.classList.add('fade-in');
+        setTimeout(() => {
+          notificationElement.classList.remove('fade-in');
+          notificationElement.classList.add('fade-out');
+          setTimeout(() => {
+            this.notification = '';
+          }, 500);
+        }, 1500);
+      });
+    },
     async confirmUpload() {
       try {
         const formData = new FormData();
@@ -243,8 +257,9 @@ export default {
         } else {
           this.showNotification('리뷰 데이터 업로드에 실패하였습니다. 다시 시도해주세요.')
         }
-        this.$router.push('/review/recommended');
+        
       }
+      this.$router.push('/review/recommended');
     },
     showNotification(message) {
       this.notification = message;

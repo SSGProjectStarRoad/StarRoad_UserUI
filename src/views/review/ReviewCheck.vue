@@ -55,36 +55,7 @@
             </button>
           </div>
         </div>
-        <div class="date-time-container">
-          <!-- TimeModal 컴포넌트 적용 -->
-          <TimeModal :isVisible="showTimeModal" @update:isVisible="showTimeModal = $event"
-            @timeSelected="handleTimeSelected"></TimeModal>
-          <label for="timepicker" class="input-label input-label-inner">
-            <!-- 시간 표시 -->
-            <span class="date-time-display">
-              <span class="place_blind">방문시간</span>
-              <time aria-hidden="true">{{ selectedTime }}</time>
-              <!-- 수정된 부분 -->
-              <span class="place_blind">Invalid Date</span>
-            </span>
-          </label>
-          <!-- 시간 선택 버튼 추가 -->
-          <button class="button-base" @click="showTimeModal = true">
-            시간 수정
-          </button>
-        </div>
       </div>
-      <div class="confirmation-message">
-        방문하신 날짜와 시간을 확인해 주세요.
-      </div>
-    </div>
-    <div class="decision-buttons-container">
-      <button class="button-base button-secondary" type="button">
-        이 장소가 아니에요
-      </button>
-      <button class="button-base button-secondary button-confirm" type="button" @click="confirmReceipt">
-        이 장소가 맞아요
-      </button>
     </div>
     </div>
 </template>
