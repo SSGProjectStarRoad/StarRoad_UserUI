@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="current-mall">
-      <div class="mall-name">스타로드 뱅뱅</div>
+      <div class="mall-name">스타필드 하남</div>
       <div class="mall-time">(10:00~22:00)</div>
     </div>
     <div class="myinfo">
