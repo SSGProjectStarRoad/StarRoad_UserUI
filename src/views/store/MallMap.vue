@@ -1,6 +1,5 @@
 <template>
   <div class="contents">
-    <BackButton class="back-button" />
     <div class="title">
       <h2>ACCESS</h2>
       <h2>오시는길</h2>
