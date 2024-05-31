@@ -136,9 +136,15 @@ button {
 }
 
 .timeline-post-item-feed {
-  border-radius: 10px;
-  border: 1px solid #e8e8e8;
+  /* border-radius: 50px; */
+  border: 5px solid var(--navy-color);
+  margin-top: 30px;
+  border-bottom: 7px solid transparent;
+  border-image: linear-gradient(to left, var(--navy-color), #a4b3ff) 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  
 }
+
 
 .timeline-post-item {
   padding: 16px 20px 20px;
@@ -249,6 +255,7 @@ button {
   display: flex;
   align-items: center;
   line-height: normal;
+  margin-right: 10px;
   flex: 1;
   font-weight: 700;
 }
@@ -401,13 +408,16 @@ button {
 .timeline-post-content .restaurant-info {
   overflow: hidden;
   display: flex;
+  text-align: center;
   align-items: center;
   gap: 10px;
-  background: #f1f2fa;
-  border-radius: 4px;
+  background: var(--gray-color);
+  border-radius: 20px;
+  border: 7px solid var(--mint-color);
   isolation: isolate;
   margin-top: 16px;
-  padding-right: 12px;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.4)
+  /* padding-right: 12px; */
 }
 
 .timeline-post-content .restaurant-info .thumb {
@@ -423,9 +433,10 @@ button {
 .timeline-post-content .restaurant-info .__info {
   overflow: hidden;
   flex: 1;
-  margin-right: 10px;
-  padding: 10px;
-  font-size: 12px;
+  font-size: 30px;
+  /* margin-right: 10px; */
+  padding-top: 15px;
+  padding-bottom: 10px;
 }
 
 .timeline-post-content .restaurant-info .__info .__meta {
@@ -456,7 +467,7 @@ button {
   background-image: url(../../img/review/heart-new.svg);
 }
 
-.timeline-post-footer .__post-meta span:before,
+/* .timeline-post-footer .__post-meta span:before, */
 .timeline-post-footer .__post-meta a:before {
   display: block;
   width: 32px;
@@ -499,12 +510,6 @@ button {
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
   clip-path: inset(50%);
-}
-
-.timeline-post-item-feed {
-  margin-top: 10px;
-  border-bottom: 10px solid #ececec;
-  
 }
 
 .tab-menu.sticky {
@@ -627,6 +632,7 @@ a {
   font-size: 1.4rem;
   text-align: center;
   vertical-align: top;
+  margin-top: 40px;
   margin-bottom: 10px;
   color: var(--navy-color);
   font-weight: 600;
@@ -646,6 +652,11 @@ a {
 }
 .survey{
   position: relative;
+  margin-top: 20px;
+  padding-bottom: 60px;
+  border: 4px solid var(--navy-color);
+  border-radius: 20px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
 }
 .counter {
   position: absolute;
@@ -800,10 +811,12 @@ a {
   font-weight: 500;
   line-height: 2.7rem;
   text-align: center;
+  
 }
 
 .date-info-wrapper .visit-date-message em {
   font-weight: 800;
+  color: var(--navy-color);
 }
 
 address, cite, dfn, em, i {
@@ -837,7 +850,7 @@ input[type="time" i] {
 
 
 .date-info-wrapper .confirmation-message {
-  margin-top: 15px;
+  margin-top: 40px;
   font-size: 1.4rem;
   color: #287cff;
   color: rgba(var(--place-color-myplace-blue), 1);
@@ -964,8 +977,9 @@ input[type="time" i] {
 /* 부모 컨테이너 스타일 */
 .decision-buttons-container {
   display: flex;
+  margin-top: 15px;
   justify-content: center; /* 요소들을 가로축에서 중앙으로 정렬 */
-  gap: 10px; /* 버튼 사이의 간격 */
+  gap: 20px; /* 버튼 사이의 간격 */
 }
 
 /* 모든 버튼에 공통으로 적용되는 기본 스타일 */
@@ -986,13 +1000,13 @@ input[type="time" i] {
 
 /* '이 장소가 맞아요' 버튼 스타일 */
 .button-confirm {
-  background-color: #4CAF50; /* 배경색 */
+  background-color: var(--mint-color); /* 배경색 */
   color: white; /* 글자색 */
 }
 
 /* 버튼 호버 효과 */
 .button-base:hover {
-  filter: brightness(90%); /* 버튼 호버 시 밝기 감소 */
+  filter: brightness(92%); /* 버튼 호버 시 밝기 감소 */
 }
 
 
@@ -1002,19 +1016,26 @@ input[type="time" i] {
   align-items: center;
   gap: 10px;
   padding: 20px;
-  border: 1px solid #287cff;
+  border: 3px solid #287cff;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
   max-width: 400px; /* 가로 최대 크기 설정 */
   margin: auto; /* 수평 중앙 정렬 */
 }
 
 .date-time-container {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  width: 100%;
+  flex-direction: row;
+  /* width: 100%; */
 }
-
+.date-time-container button {
+  position: absolute;
+  top: 14px;
+  right: 20px;
+  background-color: var(--navy-color);
+  color: white;
+}
 .input-field-style {
   padding: 10px;
   margin-bottom: 5px;
@@ -1034,13 +1055,15 @@ input[type="time" i] {
 }
 
 .input-label-inner {
+  /* margin-top: 20px; */
+  /* margin-bottom: 20px; */
   font-size: 14px;
   color: #333;
 }
 
 .date-time-display {
   display: flex; /* Flexbox를 사용하여 항목을 정렬합니다 */
-  justify-content: center; /* 가로축 기준으로 중앙 정렬 */
+  /* justify-content: center; 가로축 기준으로 중앙 정렬 */
   width: 100%; /* 필요에 따라 조정 */
 }
 
@@ -1066,15 +1089,14 @@ input[type="time" i] {
 }
 
 .date-info-wrapper .date-time-picker-container .input-label .date-time-display {
-  font-size: 1rem; /* 글씨 크기를 동일하게 조정 */
+  font-size: 1.2rem; /* 글씨 크기를 동일하게 조정 */
   font-weight: normal; /* 글씨 두께를 표준으로 설정 */
 }
 
 .date-info-wrapper .date-time-picker-container {
   display: flex; /* flex로 변경하여 요소들을 수평으로 정렬 */
-  flex-direction: row; /* 요소들이 수평으로 정렬되도록 설정 */
+  flex-direction: column; /* 요소들이 수평으로 정렬되도록 설정 */
   margin-top: 28px;
-  padding: 0 10px;
   gap: 10px; /* 요소 사이의 간격을 10px로 설정 */
 }
 
@@ -1083,7 +1105,8 @@ input[type="time" i] {
   display: flex; /* label을 flex로 설정하여 내부 요소를 수평 정렬 */
   align-items: center; /* 내부 요소를 중앙 정렬 */
   width: auto; /* 너비를 자동으로 설정하여 내용에 맞게 조정 */
-  padding: 14px;
+  padding: 20px;
+  width: 360px;
   border: 1px solid #287cff;
   border-radius: 8px;
   box-sizing: border-box;

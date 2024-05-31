@@ -9,6 +9,8 @@
 
 <script>
 import { rewardAdd } from '@/api/index';
+import { mapState, mapGetters } from 'vuex';
+
 export default {
   data() {
     return {
@@ -19,17 +21,21 @@ export default {
     this.getReward(); // 페이지 로드 시 getReward 메서드 호출
     setTimeout(() => {
       this.redirectToCompleted();
-    }, 3000);
+    }, 2000);
+  },
+  computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
   },
   methods: {
     getCurrentMonthImage() {
       const month = new Date().getMonth() + 1; // 현재 월 가져오기
-      return require(`@/img/reward/mystar${month}.png`);
+      return `https://kr.object.ncloudstorage.com/ssg-starroad/ssg/starroad/rewards/mystar${month}.png`;
     },
     async getReward() {
-      const userId = 1;
+      // const userId = 1;
       try {
-        const response = await rewardAdd(userId);
+        const response = await rewardAdd(this.email);
         console.log('Response:', response);
       } catch (error) {
         console.error('Error:', error);

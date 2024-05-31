@@ -20,50 +20,83 @@
       <div>
         <!-- 이벤트 페이지 -->
         <div class="event_list">
-          <div>
-            <a href="#">
-              <img src="@/img/event_test.png" />
+          <div v-for="event in events" :key="event.id">
+            <a @click.prevent="openModal(event.id)">
+              <img :src="event.content" alt="Event Image" />
             </a>
-          </div>
-          <div>
-            <a href="#"><img src="@/img/event_test.png" /></a>
-          </div>
-          <div>
-            <a href="#"><img src="@/img/event_test.png" /></a>
           </div>
         </div>
       </div>
     </div>
-    <button class="review_button">
+    <reviewbutton />
+    <!-- <button class="review_button">
       <div><img src="@/img/review/pencil.png" alt="Pencil Logo" /></div>
       <div class="review_text">Write a Review</div>
-    </button>
+    </button> -->
+
+    <!-- 모달 구조 -->
+    <div v-if="isModalVisible" class="modal-overlay" @click="closeModal">
+      <div class="modal-content" @click.stop>
+        <button class="modal-close" @click="closeModal">X</button>
+        <img :src="modalImageUrl" alt="Event Detail Image" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import ProgressBar from '@/components/store/ProgressBar.vue';
-import { mypageData } from '@/api/index';
-
+import { mypageData, getEventList, getEventDetail } from '@/api/index';
+import { mapState, mapGetters } from 'vuex';
+import reviewbutton from '@/components/review/ReviewButton.vue';
 export default {
   data() {
     return {
       mydata: [],
+      events: [],
+      isModalVisible: false,
+      modalImageUrl: '',
     };
   },
   methods: {
     async getMydata() {
       try {
-        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
-        const response = await mypageData(userId);
+        // const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await mypageData(this.email);
         console.log('Response:', response.data);
         this.mydata = response.data;
       } catch (error) {
         console.error('Error:', error);
       }
     },
+    async getEvents() {
+      try {
+        const list = await getEventList();
+        this.events = list.data;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+    async openModal(eventId) {
+      try {
+        const response = await getEventDetail(eventId);
+        this.modalImageUrl = response.data.imagePath;
+        console.log(this.modalImageUrl);
+        this.isModalVisible = true;
+        this.$emit('open-modal');
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+    closeModal() {
+      this.isModalVisible = false;
+      this.modalImageUrl = '';
+      this.$emit('close-modal');
+    },
   },
   computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
     reviewExp() {
       return this.mydata.reviewExp || 0;
     },
@@ -85,9 +118,11 @@ export default {
   },
   mounted() {
     this.getMydata();
+    this.getEvents();
   },
   components: {
     ProgressBar,
+    reviewbutton,
   },
 };
 </script>
@@ -155,7 +190,7 @@ export default {
   display: flex;
   flex-basis: 100%;
   align-items: center;
-  color: rgba(0, 0, 0, 0.35);
+  color: var(--mint-color);
   font-size: 20px;
   margin: 20px 0px;
 }
@@ -175,21 +210,18 @@ export default {
   margin-bottom: 20px;
 }
 
-.event_list div {
+.event_list div img {
   text-align: center;
   border-radius: 20px;
+  width: 100%;
   height: 100%;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
   background-color: var(--navy-color);
 }
 
-.event_list div img {
-  width: 100%;
-}
-
 .review_button {
   position: fixed;
-  right: calc(55% - 240px);
+  right: calc(55% - 270px);
   top: calc(100% - 120px);
   background-color: var(--navy-color);
   border-radius: 20px;
@@ -242,5 +274,58 @@ export default {
   margin-left: auto;
   margin-right: 10px;
   z-index: 1000; /* z-index를 높게 설정 */
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 460px;
+  max-height: 750px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow-y: auto; /* 스크롤 추가 */
+}
+.modal-content img {
+  max-width: 460px;
+  max-height: 750px;
+}
+
+.modal-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-body img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
 }
 </style>

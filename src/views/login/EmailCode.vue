@@ -56,9 +56,17 @@
         </div>
 
         <div class="codeinput">
-          <input id="codeclear" type="button" value="인증 완료" />
+          <input
+            id="codeclear"
+            type="button"
+            value="인증 완료"
+            @click="verifyCode"
+          />
         </div>
       </form>
+      <div v-if="notification" ref="notification" class="notification">
+        {{ notification }}
+      </div>
     </div>
     <div class="forgotpwback">
       코드를 받지 못하셨다구요?
@@ -68,6 +76,8 @@
 </template>
 
 <script>
+import { verifyAuthCode } from '@/api/index';
+
 export default {
   data() {
     return {
@@ -75,7 +85,13 @@ export default {
       code2: '',
       code3: '',
       code4: '',
+      email: '',
+      notification: '',
     };
+  },
+  mounted() {
+    // 쿼리 파라미터로 전달된 이메일 값을 설정합니다.
+    this.email = this.$route.query.email || '';
   },
   methods: {
     autoTab(refName) {
@@ -89,6 +105,60 @@ export default {
           this.$refs[nextRef].focus();
         });
       }
+    },
+    async verifyCode() {
+      const code = this.code1 + this.code2 + this.code3 + this.code4;
+      try {
+        const response = await verifyAuthCode(this.email, code);
+        if (response.data) {
+          alert('인증이 완료되었습니다.');
+          // 이메일 값을 쿼리 파라미터로 전달하여 라우팅
+          this.$router.push({
+            path: '/login/newpw',
+            query: { email: this.email },
+          });
+        } else {
+          alert('인증 코드가 올바르지 않습니다.');
+        }
+      } catch (error) {
+        console.error(error);
+        alert('오류가 발생했습니다.');
+      }
+    },
+    async verifyCode() {
+      const code = this.code1 + this.code2 + this.code3 + this.code4;
+      try {
+        const response = await verifyAuthCode(this.email, code);
+        if (response.data) {
+          this.showNotification('인증이 완료되었습니다.', () => {
+            // 이메일 값을 쿼리 파라미터로 전달하여 라우팅
+            this.$router.push({
+              path: '/login/newpw',
+              query: { email: this.email },
+            });
+          });
+        } else {
+          this.showNotification('인증 코드가 올바르지 않습니다.');
+        }
+      } catch (error) {
+        console.error(error);
+        this.showNotification('오류가 발생했습니다.');
+      }
+    },
+    showNotification(message, callback) {
+      this.notification = message;
+      this.$nextTick(() => {
+        const notificationElement = this.$refs.notification;
+        notificationElement.classList.add('fade-in');
+        setTimeout(() => {
+          notificationElement.classList.remove('fade-in');
+          notificationElement.classList.add('fade-out');
+          setTimeout(() => {
+            this.notification = '';
+            if (callback) callback();
+          }, 500);
+        }, 1500);
+      });
     },
     gotoForgotPassword() {
       this.$router.push('/login/forgotpw');
@@ -139,7 +209,8 @@ export default {
 /* 입력값이 있는 경우 */
 .emailinput input.filled {
   background-color: white; /* 입력되었을 때의 배경색 */
-  border: 2px solid var(--mint-color); /* 입력되었을 때의 테두리색 */
+  border: 2px solid var(--mint-color) !important;
+  outline: none; /* 입력되었을 때의 테두리색 */
 }
 #codeclear {
   box-sizing: border-box;
@@ -153,7 +224,7 @@ export default {
   font-size: 18px; /* 글씨 크기를 18px로 조정 */
   cursor: pointer; /* 버튼 위에 마우스를 올렸을 때 커서 모양을 손가락 모양으로 변경 */
   text-align: center; /* 텍스트 중앙 정렬 */
-  margin-bottom: 250px;
+  margin-bottom: 150px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2); /* 테두리 대신 그림자를 추가합니다. */
 }
 .forgotpwback {
@@ -169,5 +240,43 @@ export default {
   color: var(--mint-color);
   font-weight: bold;
   cursor: pointer;
+}
+.notification {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  color: white;
+  background-color: var(--navy-color);
+  border-radius: 8px;
+  text-align: center;
+  width: 220px;
+  z-index: 2000;
+  opacity: 0.9;
+  animation: fadeIn 0.5s, fadeOut 0.5s 1.5s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.fade-in {
+  animation: fadeIn 0.5s forwards;
+}
+.fade-out {
+  animation: fadeOut 0.5s forwards;
 }
 </style>

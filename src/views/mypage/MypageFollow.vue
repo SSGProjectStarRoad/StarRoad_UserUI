@@ -1,6 +1,5 @@
 <template>
   <div class="contents">
-    <BackButton class="back-button" />
     <div class="follow-type">
       <div
         class="follower"
@@ -37,7 +36,23 @@
           <div class="follower-num">#{{ person.id }}</div>
         </div>
         <div class="delete" v-if="activeTab !== 'followers'">
-          <button @click="deletePerson(person.id)">삭제</button>
+          <button @click="showModal(person.id)">삭제</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 모달 -->
+    <div v-if="showConfirmModal" class="modal-overlay" @click.self="closeModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>팔로잉 삭제</h3>
+        </div>
+        <div class="modal-body">
+          <p>팔로잉 삭제 하시겠습니까?</p>
+        </div>
+        <div class="modal-footer">
+          <button @click="confirmDelete">확인</button>
+          <button @click="closeModal">취소</button>
         </div>
       </div>
     </div>
@@ -46,24 +61,31 @@
 
 <script>
 import basicprofile from '@/img/spaceman_big.png';
+import { mapState, mapGetters } from 'vuex';
 import {
   myfollowerData,
   myfollowingData,
   deletemyfollowingData,
-  deletemyfollowerData,
 } from '@/api/index';
+
 export default {
   data() {
     return {
-      activeTab: 'followers', // Initial active tab
+      activeTab: 'followers',
       persons: [],
       followers: [],
       followings: [],
       basicprofile,
+      showConfirmModal: false,
+      personToDelete: null, // ID of the person to delete
     };
   },
+  computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
+  },
   mounted() {
-    this.loadFollowSummary(); // 페이지 로드 시 요약 데이터 로드
+    this.loadFollowSummary();
   },
   methods: {
     handleImageError(event) {
@@ -74,12 +96,11 @@ export default {
     },
     async loadFollowSummary() {
       try {
-        const userId = 1;
-        const responseFollowing = await myfollowingData(userId);
-        const responseFollower = await myfollowerData(userId);
+        const responseFollowing = await myfollowingData(this.email);
+        const responseFollower = await myfollowerData(this.email);
         this.followers = responseFollower.data;
         this.followings = responseFollowing.data;
-        this.loadFollowers(); // 초기 로드 시 팔로워 데이터를 기본으로 로드
+        this.loadFollowers();
       } catch (error) {
         console.error('Failed to load follow summary:', error);
       }
@@ -92,18 +113,36 @@ export default {
       this.persons = this.followings;
       this.activeTab = 'followings';
     },
-    async deletePerson(id) {
-      if (confirm('정말로 삭제하시겠습니까?')) {
-        const userId = 1;
-        if (this.activeTab === 'followers') {
-          // await deletemyfollowerData(id);
-          this.followers = this.followers.filter(person => person.id !== id);
-        } else {
-          await deletemyfollowingData(userId, id);
-
-          this.followings = this.followings.filter(person => person.id !== id);
+    showModal(personId) {
+      this.personToDelete = personId;
+      this.showConfirmModal = true;
+    },
+    closeModal() {
+      this.showConfirmModal = false;
+      this.personToDelete = null;
+    },
+    async confirmDelete() {
+      if (this.personToDelete !== null) {
+        try {
+          if (this.activeTab === 'followers') {
+            // await deletemyfollowerData(this.personToDelete);
+            this.followers = this.followers.filter(
+              person => person.id !== this.personToDelete,
+            );
+          } else {
+            await deletemyfollowingData(this.email, this.personToDelete);
+            this.followings = this.followings.filter(
+              person => person.id !== this.personToDelete,
+            );
+          }
+          this.persons = this.persons.filter(
+            person => person.id !== this.personToDelete,
+          );
+        } catch (error) {
+          console.error('Failed to delete person:', error);
+        } finally {
+          this.closeModal();
         }
-        this.persons = this.persons.filter(person => person.id !== id);
       }
     },
   },
@@ -194,5 +233,45 @@ export default {
   border: 0;
   width: 50px;
   height: 30px;
+}
+
+/* 모달 스타일 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  margin-bottom: 20px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-footer button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  color: white;
+  background-color: var(--navy-color);
+  border-radius: 10px;
+  border: 0;
 }
 </style>

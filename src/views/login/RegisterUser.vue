@@ -14,8 +14,14 @@
             type="text"
             placeholder="이름을 입력해주세요"
             v-model="name"
+            @input="validateName"
           />
         </div>
+        <p class="validation-text">
+          <span class="warning" v-if="name && !isNameValid"
+            >이름을 확인해주세요</span
+          >
+        </p>
 
         <div class="nicknameinput">
           <input
@@ -23,23 +29,55 @@
             type="text"
             placeholder="닉네임을 입력해주세요"
             v-model="nickname"
+            @input="validateNickname"
           />
           <div class="nicknamecheck">
-            <input id="nicknamechecking" type="button" value="중복 체크" />
+            <input
+              id="nicknamechecking"
+              type="button"
+              @click="validateAndCheckNickname"
+              value="중복 체크"
+            />
           </div>
         </div>
+        <p class="validation-text">
+          <span class="warning" v-if="nickname && !isNicknameValid"
+            >3자 이상 10자 이하로 문자(영어, 한국어), 숫자, 특수문자를
+            포함해주세요</span
+          >
+          <span class="warning" v-if="nicknameChecked && nicknameError">{{
+            nicknameError
+          }}</span>
+          <span class="success" v-if="nicknameChecked && nicknameSuccess">{{
+            nicknameSuccess
+          }}</span>
+        </p>
 
         <div class="emailinput">
           <input
             id="email"
             type="text"
-            placeholder="이메일 주소를 입력해주세요"
+            placeholder="이메일을 입력해주세요"
             v-model="email"
+            @input="validateEmail"
           />
           <div class="emailcheck">
-            <input id="emailchecking" type="button" value="메일 인증" />
+            <input
+              id="emailchecking"
+              type="button"
+              @click="validateAndCheckEmail"
+              value="메일 인증"
+            />
           </div>
         </div>
+        <p class="validation-text">
+          <span
+            v-if="emailError"
+            :class="{ warning: isEmailDuplicate, success: !isEmailDuplicate }"
+          >
+            {{ emailError }}
+          </span>
+        </p>
 
         <div class="emailcodeinput">
           <input
@@ -49,9 +87,22 @@
             v-model="emailcode"
           />
           <div class="emailcodecheck">
-            <input id="emailcodechecking" type="button" value="인증 확인" />
+            <input
+              id="emailcodechecking"
+              type="button"
+              value="인증 확인"
+              @click="verifyEmailCode"
+            />
           </div>
         </div>
+        <p class="validation-text">
+          <span
+            v-if="emailCodeMessage"
+            :class="{ warning: !emailCodeVerified, success: emailCodeVerified }"
+          >
+            {{ emailCodeMessage }}
+          </span>
+        </p>
 
         <div class="passwordinput">
           <img class="passwordeye" :src="passwordEye" alt="" />
@@ -60,8 +111,15 @@
             type="password"
             placeholder="비밀번호를 입력해주세요"
             v-model="password"
+            @input="validatePassword"
           />
         </div>
+        <p class="validation-text">
+          <span class="warning" v-if="password && !isPasswordValid">
+            8자 이상, 숫자, 영문(대/소문자), 특수문자를 각각 하나 이상
+            포함해주세요
+          </span>
+        </p>
 
         <div class="passwordcheckinput">
           <img class="passwordeye" :src="passwordEye" alt="" />
@@ -70,8 +128,17 @@
             type="password"
             placeholder="비밀번호를 한번 더 입력해주세요"
             v-model="passwordcheck"
+            @input="validatePasswordMatch"
           />
         </div>
+        <p class="validation-text">
+          <span
+            v-if="passwordcheck"
+            :class="{ warning: !isPasswordMatch, success: isPasswordMatch }"
+          >
+            {{ passwordMatchMessage }}
+          </span>
+        </p>
 
         <div class="birthinput">
           <input
@@ -80,8 +147,8 @@
             maxlength="4"
             placeholder="YYYY"
             v-model="birthYear"
-            @input="validateBirthInput"
-            :class="{ 'invalid-input': !birthYearValid }"
+            @input="validateBirthYear"
+            ref="birthYear"
           />
           <span>/</span>
           <input
@@ -90,7 +157,8 @@
             maxlength="2"
             placeholder="MM"
             v-model="birthMonth"
-            @input="validateBirthInput"
+            @input="validateBirthMonth"
+            ref="birthMonth"
           />
           <span>/</span>
           <input
@@ -99,71 +167,117 @@
             maxlength="2"
             placeholder="DD"
             v-model="birthDay"
-            @input="validateBirthInput"
+            @input="validateBirthDay"
+            ref="birthDay"
           />
         </div>
+        <p class="validation-text">
+          <span
+            v-if="birthYearValidationMessage"
+            :class="{ warning: !birthYearValid, success: birthYearValid }"
+          >
+            {{ birthYearValidationMessage }}
+          </span>
+          <span
+            v-if="birthMonthValidationMessage"
+            :class="{ warning: !birthMonthValid, success: birthMonthValid }"
+          >
+            {{ birthMonthValidationMessage }}
+          </span>
+          <span
+            v-if="birthDayValidationMessage"
+            :class="{ warning: !birthDayValid, success: birthDayValid }"
+          >
+            {{ birthDayValidationMessage }}
+          </span>
+          <span
+            v-if="birthValidationMessage && isBirthValid"
+            :class="{ success: isBirthValid }"
+          >
+            {{ birthValidationMessage }}
+          </span>
+        </p>
 
         <div class="phoneinput">
           <input
             id="phone"
             type="text"
             placeholder="핸드폰 번호를 입력해주세요(- 제외 11자리)"
-            v-model="nickname"
+            v-model="phone"
+            @input="validatePhone"
           />
         </div>
+        <p class="validation-text">
+          <span class="warning" v-if="phone && !isPhoneValid"
+            >핸드폰 번호를 확인해주세요</span
+          >
+        </p>
 
         <div class="genderinput">
-          <select name="gender" id="gender">
+          <select name="gender" id="gender" v-model="gender">
             <option value="choice" disabled selected hidden>
               성별을 선택해주세요
             </option>
-            <option value="male" style="color: black">남성</option>
+            <option value="male">남성</option>
             <option value="female">여성</option>
-            <option value="none">선택안함</option>
           </select>
         </div>
-        <!-- <input type="radio" class="radio" name="gender" id="male" />
-          <label for="male" style="margin-left: 6px">남성 </label>
-          <input type="radio" class="radio" name="gender" id="female" />
-          <label for="female" style="margin-left: 6px">여성 </label>
-          <input type="radio" class="radio" name="gender" id="none" />
-          <label for="none" style="margin-left: 6px">선택안함</label> -->
-      </form>
 
-      <div class="agreeinput1">
-        <input type="checkbox" class="agree" id="agreecheck1" />
-        <label for="agreecheck1" class="small-text" style="margin-left: 6px"
-          >서비스 약관에 동의합니다.
-        </label>
-        <a href="#" target="_blank">내용보기</a>
-      </div>
-      <div class="agreeinput2">
-        <input type="checkbox" class="agree" id="agreecheck2" />
-        <label for="agreecheck2" class="small-text" style="margin-left: 6px"
-          >개인정보 수집 및 이용에 동의합니다.
-        </label>
-        <a href="#" target="_blank">내용보기</a>
-      </div>
-      <div class="registerinput">
-        <input id="registerclear" type="button" value="회원가입 완료" />
-      </div>
-      <div class="snsregister">Or Register with</div>
-      <div class="snsimg">
-        <div class="sns">
-          <img class="kakao" :src="kakao" alt="" />
+        <div class="agreeinput1">
+          <input
+            type="checkbox"
+            class="agree"
+            id="agreecheck1"
+            v-model="agreecheck1"
+          />
+          <label for="agreecheck1" class="small-text" style="margin-left: 6px"
+            >서비스 약관에 동의합니다.</label
+          >
+          <a href="#" @click.prevent="openTermsModal">내용보기</a>
         </div>
-        <div class="sns">
-          <img class="google" :src="google" alt="" />
+        <div class="agreeinput2">
+          <input
+            type="checkbox"
+            class="agree"
+            id="agreecheck2"
+            v-model="agreecheck2"
+          />
+          <label for="agreecheck2" class="small-text" style="margin-left: 6px"
+            >개인정보 수집 및 이용에 동의합니다.</label
+          >
+          <a href="#" @click.prevent="openPrivacyModal">내용보기</a>
         </div>
-        <div class="sns">
-          <img class="naver" :src="naver" alt="" />
+        <div class="registerinput">
+          <button id="registerclear" type="submit">회원가입 완료</button>
         </div>
-      </div>
+        <p class="validation-text">
+          <span class="warning" v-if="formSubmitted && !isFormValid"
+            >위에 모든 사항을 입력해주세요</span
+          >
+        </p>
+        <div class="snsregister">Or Register with</div>
+        <div class="snsimg">
+          <div class="sns">
+            <img class="kakao" :src="kakao" alt="" />
+          </div>
+          <div class="sns">
+            <img class="google" :src="google" alt="" />
+          </div>
+          <div class="sns">
+            <img class="naver" :src="naver" alt="" />
+          </div>
+        </div>
+      </form>
     </div>
     <div class="loginback">
       이미 계정이 있으시다구요?
       <div class="login" @click="gotoLogin">로그인</div>
     </div>
+    <TermsModal :isVisible="isTermsModalVisible" @close="closeTermsModal" />
+    <PrivacyModal
+      :isVisible="isPrivacyModalVisible"
+      @close="closePrivacyModal"
+    />
   </div>
 </template>
 
@@ -172,28 +286,319 @@ import passwordEye from '@/img/login/passwordeye.png';
 import kakao from '@/img/login/kakaologo.png';
 import google from '@/img/login/googlelogo.png';
 import naver from '@/img/login/naverlogo.png';
+import TermsModal from '@/components/TermsModal.vue';
+import PrivacyModal from '@/components/PrivacyModal.vue';
+import { registerUser } from '@/api/index';
+import {
+  checkNicknameDuplicate,
+  checkEmailDuplicate,
+  sendAuthCode,
+  verifyAuthCode,
+} from '@/api/index';
+import {
+  validateName,
+  validateNickname,
+  validateEmail,
+  validatePassword,
+  validatePhone,
+  validateYear,
+  validateMonth,
+  validateDay,
+  validateBirth,
+} from '@/utils/validation';
 
 export default {
+  components: {
+    TermsModal,
+    PrivacyModal,
+  },
   data() {
     return {
+      name: '',
+      nickname: '',
+      nicknameError: '',
+      nicknameSuccess: '',
+      isNicknameDuplicate: false,
+      nicknameChecked: false,
+      email: '',
+      emailError: '',
+      isEmailDuplicate: false,
+      emailcode: '',
+      emailCodeMessage: '',
+      emailCodeVerified: false,
+      password: '',
+      passwordcheck: '',
+      passwordMatchMessage: '',
       passwordEye: passwordEye,
       birthYear: '',
       birthMonth: '',
       birthDay: '',
+      birthYearValid: true,
+      birthMonthValid: true,
+      birthDayValid: true,
+      birthYearValidationMessage: '',
+      birthMonthValidationMessage: '',
+      birthDayValidationMessage: '',
+      birthValidationMessage: '',
+      isBirthValid: true,
+      phone: '',
+      gender: 'choice',
+      agreecheck1: false,
+      agreecheck2: false,
+      formSubmitted: false,
+      formErrorMessage: '',
+      isTermsModalVisible: false, // 서비스 약관 모달 표시 여부 상태 추가
+      isPrivacyModalVisible: false, // 개인정보 수집 및 이용 모달 표시 여부 상태 추가
       kakao: kakao,
       google: google,
       naver: naver,
     };
   },
+  computed: {
+    isNameValid() {
+      return validateName(this.name);
+    },
+    isNicknameValid() {
+      return validateNickname(this.nickname);
+    },
+    isEmailValid() {
+      return validateEmail(this.email);
+    },
+    isPasswordValid() {
+      return validatePassword(this.password);
+    },
+    isPasswordMatch() {
+      return this.password === this.passwordcheck;
+    },
+    isPhoneValid() {
+      return validatePhone(this.phone);
+    },
+    isFormValid() {
+      return (
+        this.isNameValid &&
+        this.isEmailValid &&
+        this.isNicknameValid &&
+        this.isPasswordValid &&
+        this.isPasswordMatch &&
+        this.isBirthValid &&
+        this.isPhoneValid &&
+        this.gender !== 'choice' &&
+        this.agreecheck1 &&
+        this.agreecheck2 &&
+        !this.nicknameError &&
+        !this.emailError
+      );
+    },
+  },
+  watch: {
+    name() {
+      this.validateName();
+    },
+    nickname() {
+      this.validateNickname();
+    },
+    email() {
+      this.validateEmailWatcher();
+    },
+    password() {
+      this.validatePassword();
+    },
+    passwordcheck() {
+      this.validatePasswordMatch();
+    },
+    birthYear() {
+      this.validateBirthYear();
+    },
+    birthMonth() {
+      this.validateBirthMonth();
+    },
+    birthDay() {
+      this.validateBirthDay();
+    },
+    phone() {
+      this.validatePhone();
+    },
+  },
   methods: {
-    validateBirthInput(event) {
-      // 입력 검증 로직을 여기에 추가하세요.
-      // 예: 연도가 4자리인지, 월이 01-12 범위 내에 있는지, 일이 01-31 범위 내에 있는지 등
-      const yearInput = event.target.value; // 현재 입력된 연도
-      this.birthYearValid = yearInput.length === 4; // 연도가 4자리인지 확인
+    validateName() {
+      return validateName(this.name);
+    },
+    validateNickname() {
+      this.nicknameChecked = false;
+      if (!validateNickname(this.nickname)) {
+        this.nicknameError =
+          '3자 이상 10자 이하로 문자(영어, 한국어), 숫자, 특수문자를 포함해주세요';
+      } else {
+        this.nicknameError = '';
+      }
+    },
+    async validateAndCheckNickname() {
+      this.validateNickname();
+      if (this.nicknameError) {
+        this.nicknameSuccess = '';
+        this.isNicknameDuplicate = false;
+        return;
+      }
+      this.nicknameChecked = true;
+      this.nicknameError = '';
+      this.nicknameSuccess = '';
+      try {
+        const response = await checkNicknameDuplicate(this.nickname);
+        if (response.data) {
+          this.nicknameError = '중복된 닉네임입니다';
+          this.isNicknameDuplicate = true;
+        } else {
+          this.nicknameSuccess = '사용 가능한 닉네임입니다';
+          this.isNicknameDuplicate = false;
+        }
+      } catch (error) {
+        this.nicknameError = '닉네임 중복 체크 중 오류가 발생했습니다';
+        this.isNicknameDuplicate = true;
+      }
+    },
+    validateEmailWatcher() {
+      return validateEmail(this.email);
+    },
+    async validateAndCheckEmail() {
+      if (!validateEmail(this.email)) {
+        this.emailError = '이메일 주소를 확인해주세요';
+        this.isEmailDuplicate = false;
+        return;
+      }
+      this.emailError = '';
+      try {
+        const response = await checkEmailDuplicate(this.email);
+        if (response.data) {
+          this.emailError = '중복된 이메일입니다';
+          this.isEmailDuplicate = true;
+        } else {
+          this.emailError = '인증 코드가 전송되었습니다';
+          this.isEmailDuplicate = false;
+          await sendAuthCode(this.email);
+        }
+      } catch (error) {
+        this.emailError = '이메일 중복 체크 중 오류가 발생했습니다';
+        this.isEmailDuplicate = true;
+      }
+    },
+    async verifyEmailCode() {
+      try {
+        const response = await verifyAuthCode(this.email, this.emailcode);
+        if (response.data) {
+          this.emailCodeMessage = '이메일 인증이 완료되었습니다';
+          this.emailCodeVerified = true;
+          this.emailError = '';
+        } else {
+          this.emailCodeMessage = '인증 코드가 올바르지 않습니다';
+          this.emailCodeVerified = false;
+        }
+      } catch (error) {
+        this.emailCodeMessage = '이메일 인증 코드 검증 중 오류가 발생했습니다';
+        this.emailCodeVerified = false;
+      }
+    },
+    validatePassword() {
+      return validatePassword(this.password);
+    },
+    validatePasswordMatch() {
+      if (this.password === this.passwordcheck) {
+        this.passwordMatchMessage = '비밀번호가 일치합니다';
+      } else {
+        this.passwordMatchMessage = '비밀번호가 일치하지 않습니다';
+      }
+      return this.password === this.passwordcheck;
+    },
+    validateBirthYear() {
+      const isValid = validateYear(this.birthYear);
+      this.birthYearValid = isValid;
+      this.updateBirthValidationMessage();
+      return isValid;
+    },
+    validateBirthMonth() {
+      const isValid = validateMonth(this.birthMonth);
+      this.birthMonthValid = isValid;
+      this.updateBirthValidationMessage();
+      return isValid;
+    },
+    validateBirthDay() {
+      const isValid = validateDay(this.birthDay);
+      this.birthDayValid = isValid;
+      this.updateBirthValidationMessage();
+      return isValid;
+    },
+    updateBirthValidationMessage() {
+      const isValid = validateBirth(
+        this.birthYear,
+        this.birthMonth,
+        this.birthDay,
+      );
+      this.birthValidationMessage = isValid ? '' : '유효한 날짜를 입력해주세요';
+      this.isBirthValid = isValid;
+    },
+    validatePhone() {
+      return validatePhone(this.phone);
     },
     gotoLogin() {
       this.$router.push('/login');
+    },
+    openTermsModal() {
+      this.isTermsModalVisible = true;
+    },
+    closeTermsModal() {
+      this.isTermsModalVisible = false;
+    },
+    openPrivacyModal() {
+      this.isPrivacyModalVisible = true;
+    },
+    closePrivacyModal() {
+      this.isPrivacyModalVisible = false;
+    },
+    async submitForm() {
+      this.formSubmitted = true;
+      console.log(this.isFormValid);
+      console.log(this.isNameValid);
+      console.log(this.isEmailValid);
+      console.log(this.isNicknameValid);
+      console.log(this.isPasswordValid);
+      console.log(this.isPasswordMatch);
+      console.log(this.isBirthValid);
+      console.log(this.isPhoneValid);
+      console.log(this.isNicknameValid);
+      console.log(this.gender);
+      console.log(this.agreecheck1);
+      console.log(this.agreecheck2);
+      console.log(this.nicknameError);
+      console.log(this.emailError);
+      if (this.isFormValid) {
+        try {
+          const userData = {
+            name: this.name,
+            nickname: this.nickname,
+            email: this.email,
+            password: this.password,
+            birth: `${this.birthYear}-${this.birthMonth}-${this.birthDay}`,
+            phone: this.phone,
+            gender: this.gender.toUpperCase(),
+            provider_type: 'LOCAL',
+            agreecheck1: this.agreecheck1,
+            agreecheck2: this.agreecheck2,
+          };
+
+          const response = await registerUser(userData);
+          if (response.status === 200) {
+            console.log('회원가입 성공');
+            this.$router.push('/main'); // 회원가입 성공 후 메인 페이지로 이동
+          } else {
+            console.log('회원가입 실패');
+            this.formErrorMessage = '회원가입에 실패했습니다.';
+          }
+        } catch (error) {
+          console.log('API 호출 오류:', error);
+          this.formErrorMessage = '회원가입 중 오류가 발생했습니다.';
+        }
+      } else {
+        this.formErrorMessage = '위에 모든 사항을 입력해주세요';
+      }
     },
   },
 };
@@ -205,11 +610,15 @@ export default {
   flex-direction: column; /* 자식 요소들을 세로로 정렬 */
   align-items: center; /* 수평 방향 중앙 정렬 */
   height: 100vh; /* 뷰포트 높이를 전체 크기로 설정 */
+  padding-bottom: 0px;
 }
 .registerform {
   text-align: center;
   position: relative;
   width: 350px;
+}
+.input.my-input:focus {
+  border-color: var(--mint-color); /* 원하는 색상으로 변경 */
 }
 .nameinput,
 .passwordinput,
@@ -303,6 +712,20 @@ export default {
   border: 0;
   padding-left: 10px;
 }
+#name:focus,
+#nickname:focus,
+#email:focus,
+#emailcode:focus,
+#password:focus,
+#passwordcheck:focus,
+#birthYear:focus,
+#birthMonth:focus,
+#birthDay:focus,
+#phone:focus,
+#gender:focus {
+  border: 2px solid var(--mint-color) !important;
+  outline: none;
+}
 #registerclear {
   box-sizing: border-box;
   width: 100%;
@@ -393,5 +816,18 @@ export default {
   color: var(--mint-color);
   font-weight: bold;
   cursor: pointer;
+}
+.success {
+  color: var(--mint-color);
+}
+.warning {
+  color: #ff4057;
+}
+.validation-text {
+  margin-top: 5px;
+  font-size: 12.5px;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
 }
 </style>

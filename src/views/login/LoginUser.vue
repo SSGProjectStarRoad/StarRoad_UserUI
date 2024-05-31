@@ -16,6 +16,11 @@
             placeholder="이메일을 입력해주세요"
             v-model="email"
           />
+          <p class="validation-text">
+            <span class="warning" v-if="!isEmailValid && email">
+              이메일 주소를 입력해주세요
+            </span>
+          </p>
         </div>
 
         <div class="password-input">
@@ -25,7 +30,6 @@
             placeholder="비밀번호를 입력해주세요"
             v-model="password"
           />
-          <img class="passwordeye" :src="passwordEye" alt="" />
         </div>
 
         <div class="forgot-password" @click="gotoForgotPassword">
@@ -33,22 +37,31 @@
         </div>
 
         <div class="login-input">
-          <input id="loginclear" type="button" value="로그인" />
+          <button
+            id="loginclear"
+            :disabled="!isEmailValid || !password"
+            type="submit"
+          >
+            로그인
+          </button>
         </div>
 
         <div class="sns-login">Or Login with</div>
         <div class="snsimg">
-          <div class="sns">
-            <img class="kakao" :src="kakao" alt="" />
+          <div class="sns" @click="loginWith('kakao')">
+            <img class="kakao" :src="kakao" />
           </div>
-          <div class="sns">
-            <img class="google" :src="google" alt="" />
+          <div class="sns" @click="loginWith('google')">
+            <img class="google" :src="google" />
           </div>
-          <div class="sns">
-            <img class="naver" :src="naver" alt="" />
+          <div class="sns" @click="loginWith('naver')">
+            <img class="naver" :src="naver" />
           </div>
         </div>
       </form>
+      <div v-if="notification" ref="notification" class="notification">
+        {{ notification }}
+      </div>
     </div>
     <div class="registerback">
       계정이 없으신가요?
@@ -59,27 +72,97 @@
 
 <script>
 import loginlogo from '@/img/telescope_big.png';
-import passwordEye from '@/img/login/passwordeye.png';
 import kakao from '@/img/login/kakaologo.png';
 import google from '@/img/login/googlelogo.png';
 import naver from '@/img/login/naverlogo.png';
+import { validateEmail } from '@/utils/validation';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   data() {
     return {
       loginlogo: loginlogo,
-      passwordEye: passwordEye,
       kakao: kakao,
       google: google,
       naver: naver,
+      email: '',
+      password: '',
+      logMessage: '',
+      notification: '',
     };
   },
+  computed: {
+    ...mapState(['errorMessage']),
+    isEmailValid() {
+      return validateEmail(this.email);
+    },
+  },
+  watch: {
+    errorMessage(newMessage) {
+      if (newMessage) {
+        this.showNotification(newMessage);
+      }
+    },
+  },
   methods: {
+    ...mapMutations(['setErrorMessage']),
+    async submitForm() {
+      try {
+        const userData = {
+          email: this.email,
+          password: this.password,
+        };
+        const response = await this.$store.dispatch('login', userData);
+        if (
+          response.data &&
+          response.data.accessToken &&
+          response.data.refreshToken
+        ) {
+          this.$router.push('/main');
+        } else {
+          throw new Error('Invalid API response');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        // 에러 처리는 Vuex store에서 하므로 여기서는 추가 작업 필요 없음
+      } finally {
+        this.initForm();
+      }
+    },
+    showNotification(message) {
+      this.notification = message;
+      this.$nextTick(() => {
+        const notificationElement = this.$refs.notification;
+        notificationElement.classList.add('fade-in');
+        setTimeout(() => {
+          notificationElement.classList.remove('fade-in');
+          notificationElement.classList.add('fade-out');
+          setTimeout(() => {
+            this.notification = '';
+            this.setErrorMessage(''); // Vuex의 errorMessage 상태도 초기화
+          }, 500);
+        }, 1500);
+      });
+    },
+    initForm() {
+      this.email = '';
+      this.password = '';
+    },
     gotoRegister() {
       this.$router.push('/login/register');
     },
     gotoForgotPassword() {
       this.$router.push('/login/forgotpw');
+    },
+    loginWith(provider) {
+      const combineURLs = (baseURL, relativeURL) => {
+        return (
+          baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '')
+        );
+      };
+      const baseUrl = process.env.VUE_APP_API_URL;
+      const url = combineURLs(baseUrl, `/oauth2/authorization/${provider}`);
+      window.location.href = url;
     },
   },
 };
@@ -90,8 +173,9 @@ export default {
   display: flex; /* Flexbox 레이아웃 사용 */
   flex-direction: column; /* 자식 요소들을 세로로 정렬 */
   align-items: center; /* 수평 방향 중앙 정렬 */
-  height: 100vh; /* 뷰포트 높이를 전체 크기로 설정 */
+  /* height: 100vh; 뷰포트 높이를 전체 크기로 설정 */
   padding-top: 60px;
+  padding-bottom: 0px;
 }
 .login-logo {
   width: 130px; /* 로고의 크기를 조정합니다. */
@@ -117,6 +201,9 @@ export default {
   position: relative;
   margin-bottom: 10px;
 }
+/* .password-input {
+  margin-top: 25px;
+} */
 #email,
 #password {
   box-sizing: border-box;
@@ -126,6 +213,11 @@ export default {
   background-color: var(--gray-color);
   border: 0;
   padding-left: 10px;
+}
+#email:focus,
+#password:focus {
+  border: 2px solid var(--mint-color) !important;
+  outline: none;
 }
 .passwordeye {
   position: absolute; /* 이미지를 절대 위치로 설정 */
@@ -217,5 +309,53 @@ export default {
   color: var(--mint-color);
   font-weight: bold;
   cursor: pointer;
+}
+.warning {
+  color: #ff4057;
+}
+.validation-text {
+  margin-top: 5px;
+  font-size: 11px;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+.notification {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  color: white;
+  background-color: var(--navy-color);
+  border-radius: 8px;
+  text-align: center;
+  width: 220px;
+  z-index: 1000;
+  opacity: 0.9;
+  animation: fadeIn 0.5s, fadeOut 0.5s 1.5s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.fade-in {
+  animation: fadeIn 0.5s forwards;
+}
+.fade-out {
+  animation: fadeOut 0.5s forwards;
 }
 </style>

@@ -1,10 +1,16 @@
 <template>
-  <div class="contents">
-    <div class="setting" @click="goToEditPage">
-      <img src="@/img/setting.png" alt="" />
+  <LoadingSpinner v-if="isLoading" />
+  <div class="contents" v-else>
+    <div class="img">
+      <div class="setting" @click="goToEditPage">
+        <img src="@/img/setting.png" alt="" />
+      </div>
+      <div class="logout" @click="logoutUser">
+        <img src="@/img/logout.png" alt="" />
+      </div>
     </div>
     <div class="current-mall">
-      <div class="mall-name">스타로드 뱅뱅</div>
+      <div class="mall-name">스타필드 하남</div>
       <div class="mall-time">(10:00~22:00)</div>
     </div>
     <div class="myinfo">
@@ -12,15 +18,16 @@
         <div class="myname">{{ mydata.name }}</div>
         &nbsp님
         <div :class="levelClass">{{ levelText }}</div>
+        <div class="mynickname">{{ mydata.nickname }}</div>
       </div>
       <div class="review-follow" @click="goToFollowPage">
         <div class="follower">
           팔로워
-          <div class="follower-num">{{ follow.followerCount }}</div>
+          <div class="follower-num">{{ follow.followingCount }}</div>
         </div>
         <div class="following">
           팔로잉
-          <div class="following-num">{{ follow.followingCount }}</div>
+          <div class="following-num">{{ follow.followerCount }}</div>
         </div>
       </div>
       <div class="point-info">
@@ -29,7 +36,7 @@
           <div class="mypoint">{{ mydata.point }}</div>
         </div>
         <div class="charge">
-          <div class="pointcharge">POINT CHARGE</div>
+          <!-- <div class="pointcharge">POINT CHARGE</div> -->
           <!-- <div class="qr">QR 넣기?</div> -->
         </div>
       </div>
@@ -59,7 +66,12 @@
 
 <script>
 import { mypageData, followData } from '@/api/index';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import { mapState, mapGetters } from 'vuex';
 export default {
+  components: {
+    LoadingSpinner,
+  },
   data() {
     return {
       mydata: [],
@@ -67,6 +79,8 @@ export default {
     };
   },
   computed: {
+    ...mapState(['email']),
+    ...mapGetters(['isLogin']),
     levelText() {
       const reviewExp = this.mydata.reviewExp;
       if (reviewExp >= 300) return 'Green Level';
@@ -83,8 +97,8 @@ export default {
   methods: {
     async getMyFollowCount() {
       try {
-        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
-        const response = await followData(userId);
+        // const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await followData(this.email);
         console.log('Response:', response.data);
         this.follow = response.data;
       } catch (error) {
@@ -93,8 +107,8 @@ export default {
     },
     async getMydata() {
       try {
-        const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
-        const response = await mypageData(userId);
+        // const userId = 1; // 예시 ID, 실제 적용시 적절한 ID 사용
+        const response = await mypageData(this.email);
         console.log('Response:', response.data);
         this.mydata = response.data;
       } catch (error) {
@@ -117,7 +131,24 @@ export default {
     goToMallMap() {
       this.$router.push('/store/mallmap');
     },
+    logoutUser() {
+      console.log(
+        'Logging out user:',
+        this.$store.state.email,
+        this.$store.state.accessToken,
+      );
+      this.$store
+        .dispatch('logout')
+        .then(() => {
+          this.$router.push('/login');
+        })
+        .catch(error => {
+          console.error('Failed to logout', error);
+          this.$router.push('/mypage/main');
+        });
+    },
   },
+
   mounted() {
     this.getMydata();
     this.getMyFollowCount();
@@ -126,13 +157,24 @@ export default {
 </script>
 
 <style scoped>
-.setting {
+.img {
+  display: flex;
+}
+.setting,
+.logout {
   position: relative;
-  left: 90%;
+  width: 35px;
+  height: 35px;
+  left: 85%;
   cursor: pointer;
 }
-.setting img {
+.setting {
+  margin-right: 5px;
+}
+.setting img,
+.logout img {
   width: 30px;
+  height: 30px;
 }
 
 .current-mall {
@@ -162,6 +204,12 @@ export default {
   font-size: 23px;
   /* color: var(--navy-color); */
   font-weight: 900;
+}
+.mynickname {
+  position: absolute;
+  top: 30px;
+  font-size: 14px;
+  color: var(--dgray-color);
 }
 .mylevel {
   width: 90px;
