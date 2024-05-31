@@ -1,114 +1,59 @@
 <template>
   <div>
-    <article
-      v-for="(review, index) in reviews"
-      :key="index"
-      class="timeline-post-item timeline-post-item-feed"
-    >
-      <!-- 게시글 -->
+    <article class="timeline-post-item timeline-post-item-feed">
       <div class="timeline-header">
-        <!-- 게시글 헤더 -->
         <div class="profile">
           <div class="profile-pic">
-            <img
-              :src="
-                review.imagePath ||
-                'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'
-              "
-              height="42"
-              width="42"
-              alt=""
-              class="img"
-            />
+            <img :src="review.imagePath || 'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/default.png'"
+                 height="42" width="42" alt="" class="img" />
           </div>
           <div class="__info">
             <span class="name username">{{ review.userNickname }}</span>
             <span class="userinfo"> 리뷰 수 {{ review.reviewcount }} </span>
           </div>
-
           <div v-if="showFollowButton">
-            <button
-              type="button"
-              :class="[
-                'btn',
-                isUserFollowed(review.userNickname) ? 'btn-grey' : 'btn-orange',
-                'btn-rounded',
-              ]"
-              @click="follow(review.userNickname)"
-            >
-              <span class="label">{{
-                isUserFollowed(review.userNickname) ? '팔로잉' : '팔로우'
-              }}</span>
+            <button type="button" :class="[
+              'btn',
+              isUserFollowed(review.userNickname) ? 'btn-grey' : 'btn-orange',
+              'btn-rounded',
+            ]" @click="follow(review.userNickname)">
+              <span class="label">{{ isUserFollowed(review.userNickname) ? '팔로잉' : '팔로우' }}</span>
             </button>
           </div>
         </div>
       </div>
       <div class="timeline-gallery more" style="border-radius: 4px">
-        <div class="gallery" style="border-radius: 4px">
-          <div class="imgin">
-            <!-- Loop through reviewImages to display all images -->
-
-            <img
-              v-for="image in review.reviewImages"
-              :key="image.id"
-              :src="image.imagePath"
-              @error="setDefaultImage($event)"
-              alt=""
-            />
-          </div>
-        </div>
+        <swiper :options="swiperOptions" @slideChange="onSlideChange" @swiper="onSwiper" v-if="review.reviewImages.length">
+          <swiper-slide v-for="(image, imgIndex) in review.reviewImages" :key="image.id" :data-id="image.id">
+            <div class="image-container">
+              <img :src="image.imagePath" @error="setDefaultImage($event)" alt="" />
+            </div>
+          </swiper-slide>
+          <div v-if="review.reviewImages.length > 1 && review.showPrevButton" class="swiper-button-prev" @click="slidePrev"></div>
+          <div v-if="review.reviewImages.length > 1 && review.showNextButton" class="swiper-button-next" @click="slideNext"></div>
+        </swiper>
       </div>
       <div class="timeline-post-content">
         <div class="__post-meta">
           <div class="rating-segment">
-            <p
-              class="ooezpq2 _1ltqxco1e"
-              style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"
-            ></p>
+            <p class="ooezpq2 _1ltqxco1e" style="--ooezpq0: 4px; --ooezpq1: var(--_1ltqxcoa)"></p>
           </div>
-
-          <div class="post-date">
-            {{ formatRelativeDate(review.createDate) }}
-          </div>
+          <div class="post-date">{{ formatRelativeDate(review.createDate) }}</div>
         </div>
-        <!-- <h3 class="post-title">{{ review.summary }}</h3> -->
         <div class="post-content">
           <div id="post-content1_2650757">{{ review.contents }}</div>
         </div>
         <div class="feedback-icons">
-          <span
-            v-for="(feedback, index) in review.reviewFeedbacks"
-            :key="index"
-            class="feedback"
-          >
-            <img
-              :src="getFeedbackImage(feedback.reviewFeedbackSelection)"
-              class="emoji-icon"
-              alt=""
-              width="18"
-              height="18"
-            />
+          <span v-for="(feedback, index) in review.reviewFeedbacks" :key="index" class="feedback">
+            <img :src="getFeedbackImage(feedback.reviewFeedbackSelection)" class="emoji-icon" alt="" width="18" height="18" />
             {{ feedback.reviewFeedbackSelection }}
           </span>
         </div>
       </div>
       <div class="timeline-post-footer _10fm75h6 _10fm75hg _10fm75hj">
         <div class="__post-meta">
-          <span
-            :class="{ liked: review.liked }"
-            @click="toggleLike(review, index)"
-            style="cursor: pointer"
-          >
-            <img
-              :src="
-                review.liked
-                  ? require('@/img/imoji/heart-solid.svg')
-                  : require('@/img/imoji/heart-regular.svg')
-              "
-              alt="like"
-              width="18"
-              height="18"
-            />&nbsp;
+          <span :class="{ liked: review.liked }" @click="toggleLike(review)" style="cursor: pointer">
+            <img :src="review.liked ? require('@/img/imoji/heart-solid.svg') : require('@/img/imoji/heart-regular.svg')" alt="like" width="18" height="18" />&nbsp;
             {{ review.likeCount }}
           </span>
         </div>
@@ -116,18 +61,19 @@
     </article>
   </div>
 </template>
-
 <script>
 import moment from 'moment';
-import { likeReview, addFollowUser } from '@/api/index.js';
-
+import { likeReview } from '@/api/index.js';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/swiper-bundle.css';
+import SwiperCore, { Navigation, Pagination } from 'swiper';
+SwiperCore.use([Navigation, Pagination]);
 export default {
   name: 'ReviewCard',
   props: {
-    reviews: {
-      type: Array,
-
-      default: () => [],
+    review: {
+      type: Object,
+      required: true,
     },
     userEmail: {
       type: String,
@@ -161,7 +107,7 @@ export default {
         '종류가 다양해요': require('@/img/imoji/하트와리본.png'),
         '시설이 청결했습니다': require('@/img/imoji/청결.png'),
         '재료가 신선해요': require('@/img/imoji/하트장식.png'),
-        트랜디해요: require('@/img/imoji/오렌지하트.png'),
+        '트랜디해요': require('@/img/imoji/오렌지하트.png'),
         '재고가 충분해요': require('@/img/imoji/재고.png'),
         '품질이 좋아요': require('@/img/imoji/반짝임.png'),
         '시간이 금방가요': require('@/img/imoji/시계.png'),
@@ -177,29 +123,35 @@ export default {
         'A/S가 세심해요': require('@/img/imoji/AS.png'),
         '아이들이 좋아해요': require('@/img/imoji/키즈.png'),
       },
+      swiper: null,
+      swiperOptions: {
+        slidesPerView: 'auto',
+        spaceBetween: 10,
+        centeredSlides: true,
+        loop: false,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+          clickable: true,
+        },
+      },
     };
-  },
-  created() {
-    console.log('ReviewCard Users : ' + this.users);
   },
   methods: {
     formatRelativeDate(date) {
       return moment(date).fromNow();
     },
     setDefaultImage(event) {
-      event.target.src =
-        'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png';
+      event.target.src = 'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/default.png';
     },
     getFeedbackImage(feedbackText) {
-      return (
-        this.feedbackImageMap[feedbackText] ||
-        require('@/img/imoji/별눈얼굴.png')
-      );
+      return this.feedbackImageMap[feedbackText] || require('@/img/imoji/별눈얼굴.png');
     },
-    toggleLike(review, index) {
+    toggleLike(review) {
       const reviewId = review.id;
       const userEmail = this.userEmail;
-
       likeReview(reviewId, userEmail)
         .then(response => {
           const { liked, likeCount } = response.data;
@@ -214,42 +166,66 @@ export default {
       const user = this.users.find(user => user.nickname === nickname);
       return user ? user.followed : false;
     },
+    updateNavigationButtons(swiper) {
+      const activeIndex = swiper.activeIndex;
+      const slides = swiper.slides;
+      const review = this.review;
+      if (review) {
+        review.showPrevButton = !swiper.isBeginning;
+        review.showNextButton = !swiper.isEnd;
+      }
+    },
+    onSwiper(swiper) {
+      this.swiper = swiper;
+      this.updateNavigationButtons(swiper);
+    },
+    onSlideChange(swiper) {
+      this.updateNavigationButtons(swiper);
+    },
+    slidePrev() {
+      if (this.swiper) {
+        this.swiper.slidePrev();
+        this.updateNavigationButtons(this.swiper);
+      }
+    },
+    slideNext() {
+      if (this.swiper) {
+        this.swiper.slideNext();
+        this.updateNavigationButtons(this.swiper);
+      }
+    },
+  },
+  components: {
+    Swiper,
+    SwiperSlide,
   },
 };
 </script>
-
-<style>
+<style scoped>
 @import '@/css/review/review.css';
-
-.timeline-post-footer .__post-meta > span::before {
+.timeline-post-footer .__post-meta>span::before {
   content: none;
 }
-
-.timeline-post-footer .__post-meta > span {
+.timeline-post-footer .__post-meta>span {
   margin: 0;
   padding: 0;
 }
-
 .feedback-icons {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  /* 아이콘과 텍스트 간격 조정 */
 }
-
 .feedback {
   display: flex;
   align-items: center;
-  background-color: #f5f5f5;
+  background-color: #F5F5F5;
   border-radius: 8px;
   padding: 4px 8px;
 }
-
 .emoji-icon {
   vertical-align: middle;
   margin-right: 4px;
 }
-
 .image-container {
   display: flex;
   justify-content: center;
@@ -258,14 +234,12 @@ export default {
   height: 200px;
   cursor: pointer;
 }
-
 .image-container img {
   max-width: 100%;
   max-height: 100%;
   object-fit: cover;
   border-radius: 8px;
 }
-
 .swiper-button-prev,
 .swiper-button-next {
   color: #000;
@@ -274,26 +248,16 @@ export default {
   z-index: 10;
   cursor: pointer;
 }
-
 .swiper-button-prev {
   left: 10px;
 }
-
 .swiper-button-next {
   right: 10px;
 }
-
-/* New CSS for heart icon */
-.__like.liked:before {
-  background-image: url('@/img/review/heart-new.svg');
-  background-size: cover;
-}
-
 .btn-grey {
   background-color: grey;
   border-radius: 10px;
 }
-
 .btn-rounded {
   border-radius: 10px;
 }

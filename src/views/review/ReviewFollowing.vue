@@ -10,61 +10,33 @@
         </li>
       </ul>
     </div>
-
     <div>
-      <div
-        class="timeline-post-item timeline-recom-follow"
-        id="influencerList_0"
-      >
+      <div class="timeline-post-item timeline-recom-follow" id="influencerList_0">
         <div class="__follow-list">
           <div class="swiper">
             <div class="swiper-wrapper">
               <div class="v-scroll">
                 <div class="v-scroll-inner">
                   <div class="" style="display: flex; flex-wrap: nowrap">
-                    <div
-                      class="swiper-container"
-                      style="display: flex; flex-wrap: nowrap"
-                    >
-                      <div
-                        v-for="(user, index) in users"
-                        :key="index"
-                        class="swiper-slide"
-                        :id="'influencer_' + index + '_0'"
-                        style="margin-right: 12px"
-                      >
+                    <div class="swiper-container" style="display: flex; flex-wrap: nowrap">
+                      <div v-for="(user, index) in users" :key="index" class="swiper-slide" :id="'influencer_' + index + '_0'" style="margin-right: 12px">
                         <div class="__follow-list-item">
                           <div class="__user-info">
                             <div class="profile">
                               <div class="profile-pic">
-                                <img
-                                  :src="
-                                    user.imagePath ||
-                                    'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'
-                                  "
-                                  height="42"
-                                  width="42"
-                                  alt="profile"
-                                  class="img"
-                                />
+                                <img :src="user.imagePath || 'https://kr.object.ncloudstorage.com/ssg-starroad/ssg/user/profile/3d39940d-eca8-4b43-8720-014ca10af220_aW1hZ2U%3D.png'" height="42" width="42" alt="profile" class="img" />
                               </div>
                               <h4 class="name username">
                                 <span class="txt">{{ user.nickname }}</span>
                               </h4>
                             </div>
                           </div>
-                          <button
-                            type="button"
-                            :class="[
-                              'btn',
-                              user.followed ? 'btn-grey' : 'btn-orange',
-                              'btn-rounded',
-                            ]"
-                            @click="follow(user.nickname)"
-                          >
-                            <span class="label">{{
-                              user.followed ? '팔로잉' : '팔로우'
-                            }}</span>
+                          <button type="button" :class="[
+                            'btn',
+                            user.followed ? 'btn-grey' : 'btn-orange',
+                            'btn-rounded',
+                          ]" @click="follow(user.nickname)">
+                            <span class="label">{{ user.followed ? '팔로잉' : '팔로우' }}</span>
                           </button>
                         </div>
                       </div>
@@ -77,41 +49,26 @@
         </div>
       </div>
     </div>
-
     <div v-if="reviews === null" class="container">
       <div class="message">로딩 중...</div>
     </div>
     <div v-else-if="reviews.length === 0" class="container">
       <!-- <div class="message">데이터가 없습니다.</div> -->
     </div>
-    <reviewcard
-      :reviews="reviews"
-      :userEmail="userEmail"
-      :users="users"
-      :follow="follow"
-    />
+    <reviewcard v-for="(review, index) in reviews" :key="review.id" :review="review" :userEmail="userEmail" :users="users" :follow="follow" />
     <ReviewButton />
   </div>
 </template>
-
 <script>
 import { getFollowingReview, fetchRankUser, addFollowUser } from '@/api/index';
 import ReviewButton from '@/components/review/ReviewButton.vue';
 import reviewcard from '@/components/review/ReviewCard.vue';
 import { mapState, mapGetters } from 'vuex';
 import { EventBus } from '@/eventBus';
-
 export default {
   data() {
     return {
-      id: [],
-      name: [],
-      nickname: [],
-      imagePath: [],
       reviews: [],
-      reviewExp: [],
-      point: [],
-      activeStatus: [],
       currentPage: 0,
       pageSize: 10,
       hasNextPage: true,
@@ -123,7 +80,7 @@ export default {
     ...mapState(['email']),
     ...mapGetters(['isLogin']),
     userEmail() {
-      return this.email; // Vuex 스토어의 email을 userEmail로 매핑합니다.
+      return this.email;
     },
   },
   components: {
@@ -133,43 +90,35 @@ export default {
   async created() {
     EventBus.emit('loading', true);
     try {
-      this.loadFollowingUser();
+      await this.loadFollowingUser();
       await this.loadReviews();
     } catch (error) {
       console.error('Error fetching store review:', error);
     } finally {
-      EventBus.emit('loading', false); // 데이터 로드 완료 후 로딩 상태를 false로 설정합니다.
+      EventBus.emit('loading', false);
     }
   },
-  async mounted()  {
-  console.log("mounted() users:", this.users);
-  window.addEventListener('scroll', this.handleScroll)
-},
+  async mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
   beforeUnmount() {
-    window.removeEventListener('scroll', this.handleScroll)
+    window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
     handleScroll() {
-      const scrollPosition =
-        window.pageYOffset || document.documentElement.scrollTop;
+      const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
-
       if (scrollPosition + windowHeight >= documentHeight - 50) {
         this.loadMoreReviews();
       }
-
       this.showScrollToTopButton = scrollPosition > 300;
     },
     scrollToTop() {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     },
     async loadMoreReviews() {
       if (this.loading || !this.hasNextPage) return;
-
       this.loading = true;
       try {
         this.currentPage += 1;
@@ -182,29 +131,17 @@ export default {
     },
     async follow(username) {
       const user = this.users.find(user => user.nickname === username);
-      console.log("follow user 111 : " + JSON.stringify(user));
       if (user) {
         const data = await addFollowUser(username, this.userEmail);
-        console.log("follow data : " + data);
-        console.log("follow user : " + JSON.stringify(data));
         if (data.status === 200) {
           user.followed = !user.followed;
-          console.log(
-            username +
-              '님을 팔로우했습니다: ' +
-              (user.followed ? 'true' : 'false'),
-          );
         }
       }
     },
     async loadFollowingUser() {
       try {
         const data = await fetchRankUser(this.userEmail);
-        this.users = data.map(user => ({
-          ...user,
-        }));
-
-        console.log("loadFollowingUser : " + JSON.stringify(this.users));
+        this.users = data.map(user => ({ ...user }));
       } catch (error) {
         console.error('사용자 목록을 불러오는 중 오류가 발생했습니다:', error);
         this.users = [];
@@ -213,21 +150,21 @@ export default {
     async loadReviews() {
       this.loading = true;
       try {
-        console.log("loadReviews 시작 ");
-        const response = await getFollowingReview(
-        this.userEmail,
-        this.currentPage,
-        this.pageSize,
-      );
-        console.log("loadReviews response : " + JSON.stringify(response));
+        const response = await getFollowingReview(this.userEmail, this.currentPage, this.pageSize);
         if (this.currentPage === 0) {
-          this.reviews = response.reviews;
-          console.log("loadMoreReview + 1");
+          this.reviews = response.reviews.map(review => ({
+            ...review,
+            showPrevButton: false,
+            showNextButton: false,
+          }));
         } else {
-          console.log("loadMoreReview else");
           this.reviews = [
             ...this.reviews,
-            ...response.reviews,
+            ...response.reviews.map(review => ({
+              ...review,
+              showPrevButton: false,
+              showNextButton: false,
+            }))
           ];
         }
         this.hasNextPage = response.hasNext;
@@ -241,36 +178,27 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 @import '@/css/review/review.css';
-
 .contents {
   width: 400px;
   margin: auto;
 }
-
 .btn-grey {
   background-color: grey;
   border-radius: 10px;
 }
-
 .btn-rounded {
   border-radius: 10px;
 }
-
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 50vh;
-  /* 화면 전체 높이 */
   text-align: center;
-  /* 텍스트 중앙 정렬 */
 }
-
 .message {
   font-size: 1.5em;
-  /* 글자 크기 조정 */
 }
 </style>
