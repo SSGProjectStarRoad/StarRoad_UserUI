@@ -149,7 +149,7 @@ export default {
       } else {
         this.selectedCategory = category;
       }
-      this.fetchStores();
+      // this.fetchStores();
     },
     toggleFloor(floor) {
       if (this.selectedFloor === floor) {
@@ -157,7 +157,7 @@ export default {
       } else {
         this.selectedFloor = floor;
       }
-      this.fetchStores();
+      // this.fetchStores();
     },
     goToStoreReview(storeId) {
       this.$router.push(`/store/${storeId}/reviews`);
@@ -165,27 +165,27 @@ export default {
     searchStore(event) {
       this.searchKeyword = event.target.value;
     },
-    async fetchStores() {
-      try {
-        let url = '/api/stores';
-        if (this.selectedCategory && this.selectedFloor) {
-          url += `?category=${this.selectedCategory}&floor=${this.selectedFloor}`;
-        } else if (this.selectedCategory) {
-          url += `?category=${this.selectedCategory}`;
-        } else if (this.selectedFloor) {
-          url += `?floor=${this.selectedFloor}`;
-        }
-        const response = await fetch(url);
-        const data = await response.json();
-        this.stores = data;
-      } catch (error) {
-        console.error('Error fetching store data:', error);
-      }
-    },
+    // async fetchStores() {
+    //   try {
+    //     let url = '/api/stores';
+    //     if (this.selectedCategory && this.selectedFloor) {
+    //       url += `?category=${this.selectedCategory}&floor=${this.selectedFloor}`;
+    //     } else if (this.selectedCategory) {
+    //       url += `?category=${this.selectedCategory}`;
+    //     } else if (this.selectedFloor) {
+    //       url += `?floor=${this.selectedFloor}`;
+    //     }
+    //     // const response = await fetch(url);
+    //     const data = await response.json();
+    //     this.stores = data;
+    //   } catch (error) {
+    //     console.error('Error fetching store data:', error);
+    //   }
+    // },
   },
   created() {
     EventBus.emit('loading', true);
-    this.fetchStores();
+    // this.fetchStores();
     EventBus.emit('loading', false); // 데이터 로드 완료 후 로딩 상태를 false로 설정합니다.
   },
 };
